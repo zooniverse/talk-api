@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141113171921) do
+ActiveRecord::Schema.define(version: 20141113173235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,24 @@ ActiveRecord::Schema.define(version: 20141113171921) do
     t.boolean  "is_deleted",        default: false
     t.json     "versions",          default: []
     t.json     "upvotes",           default: {}
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "discussions", force: true do |t|
+    t.string   "title",                             null: false
+    t.integer  "first_comment_id"
+    t.string   "section"
+    t.integer  "board_id"
+    t.string   "board_title"
+    t.integer  "user_id",                           null: false
+    t.string   "user_name",                         null: false
+    t.string   "user_display_name"
+    t.boolean  "sticky",            default: false
+    t.boolean  "locked",            default: false
+    t.json     "last_comment"
+    t.integer  "users_count",       default: 0
+    t.integer  "comments_count",    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
