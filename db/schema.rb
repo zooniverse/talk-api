@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118124228) do
+ActiveRecord::Schema.define(version: 20141118135801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(version: 20141118124228) do
     t.string   "title",                                                       null: false
     t.string   "description",                                                 null: false
     t.string   "section"
-    t.json     "last_comment"
     t.integer  "users_count",       default: 0
     t.integer  "comments_count",    default: 0
     t.integer  "discussions_count", default: 0
@@ -31,21 +30,17 @@ ActiveRecord::Schema.define(version: 20141118124228) do
 
   create_table "comments", force: true do |t|
     t.string   "category"
-    t.text     "body",                              null: false
-    t.json     "tags",              default: {}
+    t.text     "body",                          null: false
+    t.json     "tags",          default: {}
     t.integer  "focus_id"
     t.string   "focus_type"
     t.string   "section"
     t.integer  "discussion_id"
-    t.string   "discussion_title"
-    t.integer  "board_id"
-    t.string   "board_title"
-    t.integer  "user_id",                           null: false
-    t.string   "user_name",                         null: false
-    t.string   "user_display_name"
-    t.boolean  "is_deleted",        default: false
-    t.json     "versions",          default: []
-    t.json     "upvotes",           default: {}
+    t.integer  "user_id",                       null: false
+    t.string   "user_name",                     null: false
+    t.boolean  "is_deleted",    default: false
+    t.json     "versions",      default: []
+    t.json     "upvotes",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -57,25 +52,20 @@ ActiveRecord::Schema.define(version: 20141118124228) do
   end
 
   create_table "discussions", force: true do |t|
-    t.string   "title",                             null: false
-    t.integer  "first_comment_id"
+    t.string   "title",                          null: false
     t.string   "section"
     t.integer  "board_id"
-    t.string   "board_title"
-    t.integer  "user_id",                           null: false
-    t.string   "user_name",                         null: false
-    t.string   "user_display_name"
-    t.boolean  "sticky",            default: false
-    t.boolean  "locked",            default: false
-    t.json     "last_comment"
-    t.integer  "users_count",       default: 0
-    t.integer  "comments_count",    default: 0
+    t.integer  "user_id",                        null: false
+    t.string   "user_name",                      null: false
+    t.boolean  "sticky",         default: false
+    t.boolean  "locked",         default: false
+    t.integer  "users_count",    default: 0
+    t.integer  "comments_count", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "focuses", id: false, force: true do |t|
-    t.integer  "id",                          null: false
+  create_table "focuses", force: true do |t|
     t.string   "type",                        null: false
     t.string   "section"
     t.string   "name",                        null: false
@@ -123,8 +113,7 @@ ActiveRecord::Schema.define(version: 20141118124228) do
     t.datetime "updated_at"
   end
 
-  create_table "users", id: false, force: true do |t|
-    t.integer  "id",                        null: false
+  create_table "users", force: true do |t|
     t.string   "name",                      null: false
     t.string   "display_name"
     t.json     "roles",        default: {}
