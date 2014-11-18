@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141113183451) do
+ActiveRecord::Schema.define(version: 20141118115317) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,12 @@ ActiveRecord::Schema.define(version: 20141113183451) do
     t.datetime "updated_at"
   end
 
+  create_table "conversations", force: true do |t|
+    t.string   "title",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "discussions", force: true do |t|
     t.string   "title",                             null: false
     t.integer  "first_comment_id"
@@ -77,6 +83,23 @@ ActiveRecord::Schema.define(version: 20141113183451) do
     t.integer  "comments_count", default: 0
     t.json     "data",           default: {}
     t.json     "tags",           default: {}
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "messages", force: true do |t|
+    t.integer  "conversation_id", null: false
+    t.integer  "sender_id",       null: false
+    t.integer  "recipient_id",    null: false
+    t.string   "body",            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_conversations", force: true do |t|
+    t.integer  "user_id",                        null: false
+    t.integer  "conversation_id",                null: false
+    t.boolean  "is_unread",       default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
