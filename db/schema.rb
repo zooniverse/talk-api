@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118115317) do
+ActiveRecord::Schema.define(version: 20141118123258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,17 @@ ActiveRecord::Schema.define(version: 20141118115317) do
     t.integer  "sender_id",       null: false
     t.integer  "recipient_id",    null: false
     t.string   "body",            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "moderations", force: true do |t|
+    t.integer  "target_id",                null: false
+    t.string   "target_type",              null: false
+    t.integer  "state",       default: 0
+    t.json     "reports",     default: []
+    t.json     "action"
+    t.datetime "actioned_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
