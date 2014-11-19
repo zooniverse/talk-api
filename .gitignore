@@ -6,4 +6,4 @@
 /config/*.yml
 /.rvmrc
 **.orig
-
+.DS_Store
