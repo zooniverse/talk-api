@@ -3,7 +3,6 @@ FactoryGirl.define do
     title 'A board'
     description 'Some board'
     
-    
     factory :board_with_discussions do
       transient do
         discussion_count 2

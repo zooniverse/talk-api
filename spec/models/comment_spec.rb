@@ -34,5 +34,32 @@ RSpec.describe Comment, type: :model do
       focus_comment = create :comment, focus: build(:focus)
       expect(focus_comment.focus_type).to be_nil
     end
+    
+    it 'should update the discussion comment count' do
+      discussion = create :discussion
+      expect {
+        create :comment, discussion: discussion
+      }.to change {
+        discussion.reload.comments_count
+      }.by 1
+    end
+    
+    it 'should update the discussion updated_at timestamp' do
+      discussion = create :discussion
+      expect {
+        create :comment, discussion: discussion
+      }.to change {
+        discussion.reload.updated_at
+      }
+    end
+    
+    it 'should update the focus comment count' do
+      focus = create :focus
+      expect {
+        create :comment_for_focus, focus: focus
+      }.to change {
+        focus.reload.comments_count
+      }.by 1
+    end
   end
 end

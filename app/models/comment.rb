@@ -1,7 +1,7 @@
 class Comment < ActiveRecord::Base
   belongs_to :user
-  belongs_to :discussion
-  belongs_to :focus
+  belongs_to :discussion, counter_cache: true, touch: true
+  belongs_to :focus, counter_cache: true
   
   validates :body, presence: true
   validates :user, presence: true

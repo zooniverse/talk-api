@@ -26,5 +26,14 @@ RSpec.describe Discussion, type: :model do
       discussion = create :discussion
       expect(discussion.user_name).to eq discussion.user.name
     end
+    
+    it 'should update the board discussion count' do
+      board = create :board_with_discussions, discussion_count: 2
+      expect {
+        create :discussion, board: board
+      }.to change {
+        board.reload.discussions_count
+      }.by 1
+    end
   end
 end
