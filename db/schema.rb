@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118135801) do
+ActiveRecord::Schema.define(version: 20141119114610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20141118135801) do
   end
 
   create_table "focuses", force: true do |t|
-    t.string   "type",                        null: false
+    t.string   "type"
     t.string   "section"
     t.string   "name",                        null: false
     t.string   "description"

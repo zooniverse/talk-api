@@ -1,6 +1,14 @@
 FactoryGirl.define do
-  factory :focuse, :class => 'Focus' do
+  factory :focus do
+    external_id
+    name { "focus_#{ id }" }
     
+    factory :subject, class: Subject do
+      
+    end
+    
+    factory :collection, class: Collection do
+      
+    end
   end
-
 end
