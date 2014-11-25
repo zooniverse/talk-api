@@ -8,6 +8,11 @@ class Discussion < ActiveRecord::Base
   
   before_create :denormalize_attributes
   
+  def count_users!
+    self.users_count = comments.select(:user_id).distinct.count
+    save if changed?
+  end
+  
   protected
   
   def denormalize_attributes

@@ -61,5 +61,33 @@ RSpec.describe Comment, type: :model do
         focus.reload.comments_count
       }.by 1
     end
+    
+    it 'should update the discussion user count' do
+      discussion = create :discussion
+      expect {
+        comment = create :comment, discussion: discussion
+        create_list :comment, 2, discussion: discussion
+        create :comment, discussion: discussion, user: comment.user
+      }.to change {
+        discussion.reload.users_count
+      }.by 3
+    end
+    
+    context 'updating board counts' do
+      let(:board) do
+        discussion1 = create :board_discussion_with_comments, comment_count: 3, user_count: 2
+        board = discussion1.board
+        discussion2 = create :board_discussion_with_comments, board: board, comment_count: 3, user_count: 2
+        board
+      end
+      
+      it 'should update the comment count' do
+        expect(board.comments_count).to eql 6
+      end
+      
+      it 'should update the user count' do
+        expect(board.users_count).to eql 4
+      end
+    end
   end
 end
