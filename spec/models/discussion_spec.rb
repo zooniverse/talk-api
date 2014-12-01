@@ -36,4 +36,43 @@ RSpec.describe Discussion, type: :model do
       }.by 1
     end
   end
+  
+  context 'destroying' do
+    it 'should not be destroyable when comments exist' do
+      discussion = create :discussion_with_comments, comment_count: 2
+      expect{ discussion.destroy! }.to raise_exception ActiveRecord::RecordNotDestroyed
+    end
+    
+    it 'should report an error when comments exist' do
+      discussion = create :discussion_with_comments, comment_count: 2
+      discussion.destroy
+      message = discussion.errors.messages[:comments].try(:first) || ''
+      expect(message).to include 'dependent comments exist'
+    end
+    
+    it 'should not destroy comments unless all comments are marked as deleted' do
+      discussion = create :discussion_with_comments, comment_count: 2
+      discussion.comments.first.update_attribute 'is_deleted', true
+      discussion.destroy
+      expect(discussion.comments.count).to eql 2
+    end
+    
+    it 'should be destroyable when no comments exist' do
+      discussion = create :discussion
+      expect{ discussion.destroy! }.to_not raise_exception
+    end
+    
+    it 'should be destroyable when all comments are marked as deleted' do
+      discussion = create :discussion_with_comments, comment_count: 2
+      discussion.comments.update_all is_deleted: true
+      expect{ discussion.destroy! }.to_not raise_exception
+    end
+    
+    it 'should destroy comments when all comments are marked as deleted' do
+      discussion = create :discussion_with_comments, comment_count: 2
+      discussion.comments.update_all is_deleted: true
+      discussion.destroy!
+      expect(discussion.comments.count).to eql 0
+    end
+  end
 end
