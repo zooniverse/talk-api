@@ -1,10 +1,9 @@
 class Discussion < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :user, required: true
   belongs_to :board, counter_cache: true
   has_many :comments
   
   validates :title, presence: true, length: 3..140
-  validates :user, presence: true
   
   before_create :denormalize_attributes
   before_destroy :clear_deleted_comments

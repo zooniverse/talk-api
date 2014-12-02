@@ -1,8 +1,6 @@
 class UserConversation < ActiveRecord::Base
   belongs_to :conversation
-  belongs_to :user
-  
-  validates :user, presence: true
+  belongs_to :user, required: true
   
   after_destroy :remove_conversation
   

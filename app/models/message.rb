@@ -1,12 +1,9 @@
 class Message < ActiveRecord::Base
-  belongs_to :conversation
-  belongs_to :sender, class_name: 'User'
-  belongs_to :recipient, class_name: 'User'
+  belongs_to :conversation, required: true
+  belongs_to :sender, class_name: 'User', required: true
+  belongs_to :recipient, class_name: 'User', required: true
   
   validates :body, presence: true
-  validates :sender, presence: true
-  validates :recipient, presence: true
-  validates :conversation, presence: true
   
   after_create :set_conversation_unread!
   
