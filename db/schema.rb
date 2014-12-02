@@ -11,19 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141119114610) do
+ActiveRecord::Schema.define(version: 20141202160742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "boards", force: true do |t|
-    t.string   "title",                                                       null: false
-    t.string   "description",                                                 null: false
+    t.string   "title",                          null: false
+    t.string   "description",                    null: false
     t.string   "section"
     t.integer  "users_count",       default: 0
     t.integer  "comments_count",    default: 0
     t.integer  "discussions_count", default: 0
-    t.json     "permissions",       default: {"read"=>"all", "write"=>"all"}
+    t.jsonb    "permissions",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20141119114610) do
   create_table "comments", force: true do |t|
     t.string   "category"
     t.text     "body",                          null: false
-    t.json     "tags",          default: {}
+    t.jsonb    "tags",          default: {}
     t.integer  "focus_id"
     t.string   "focus_type"
     t.string   "section"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20141119114610) do
     t.string   "user_name",                     null: false
     t.boolean  "is_deleted",    default: false
     t.json     "versions",      default: []
-    t.json     "upvotes",       default: {}
+    t.jsonb    "upvotes",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20141119114610) do
     t.string   "description"
     t.integer  "comments_count", default: 0
     t.json     "data",           default: {}
-    t.json     "tags",           default: {}
+    t.jsonb    "tags",           default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 20141119114610) do
   create_table "users", force: true do |t|
     t.string   "name",                      null: false
     t.string   "display_name"
-    t.json     "roles",        default: {}
+    t.jsonb    "roles",        default: {}
     t.json     "preferences",  default: {}
     t.json     "stats",        default: {}
     t.datetime "created_at"
