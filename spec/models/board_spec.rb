@@ -16,7 +16,7 @@ RSpec.describe Board, type: :model do
     
     it 'should restrict deletion with dependent discussions' do
       board = create :board_with_discussions
-      expect{ board.destroy! }.to raise_error ActiveRecord::RecordNotDestroyed
+      expect{ board.reload.destroy! }.to raise_error ActiveRecord::RecordNotDestroyed
       board.discussions.destroy_all
       expect{ board.destroy! }.to_not raise_error
     end
