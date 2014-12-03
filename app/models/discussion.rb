@@ -1,4 +1,6 @@
 class Discussion < ActiveRecord::Base
+  include Moderatable
+  
   belongs_to :user, required: true
   belongs_to :board, counter_cache: true
   has_many :comments

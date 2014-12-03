@@ -1,4 +1,6 @@
 class Comment < ActiveRecord::Base
+  include Moderatable
+  
   belongs_to :user, required: true
   belongs_to :discussion, counter_cache: true, touch: true, required: true
   belongs_to :focus, counter_cache: true
