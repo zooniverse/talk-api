@@ -13,6 +13,10 @@ class Comment < ActiveRecord::Base
   after_create :update_counters
   after_destroy :update_counters
   
+  moderatable_with :destroy, by: [:moderator, :admin]
+  moderatable_with :ignore, by: [:moderator, :admin]
+  moderatable_with :report, by: [:all]
+  
   protected
   
   def denormalize_attributes

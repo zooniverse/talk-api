@@ -6,4 +6,8 @@ class Conversation < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   
   validates :title, presence: true, length: 3..140
+  
+  moderatable_with :destroy, by: [:moderator, :admin]
+  moderatable_with :ignore, by: [:moderator, :admin]
+  moderatable_with :report, by: [:owner]
 end

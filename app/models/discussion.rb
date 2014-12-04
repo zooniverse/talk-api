@@ -10,6 +10,11 @@ class Discussion < ActiveRecord::Base
   before_create :denormalize_attributes
   before_destroy :clear_deleted_comments
   
+  moderatable_with :destroy, by: [:moderator, :admin]
+  moderatable_with :ignore, by: [:moderator, :admin]
+  moderatable_with :report, by: [:all]
+  moderatable_with :watch, by: [:moderator, :admin]
+  
   def count_users!
     self.users_count = comments.select(:user_id).distinct.count
     save if changed?
