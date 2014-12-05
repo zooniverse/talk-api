@@ -11,7 +11,9 @@ Bundler.require(*Rails.groups)
 module Talk
   class Application < Rails::Application
     config.autoload_paths += [
-      'app/services'
+      'app/services',
+      'app/serializers/concerns',
+      'app/serializers'
     ].collect{ |path| Rails.root.join path }
   end
 end

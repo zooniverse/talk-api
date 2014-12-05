@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2.0.rc1'
 gem 'pg'
-gem 'jbuilder', '~> 2.2'
+gem 'restpack_serializer', '~> 0.5.6'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 
