@@ -37,7 +37,7 @@ RSpec.describe MessagePolicy, type: :policy do
     let(:message){ create :message }
     let(:record){ create :message, conversation: message.conversation }
     let(:user){ record.user }
-    let(:subject){ MessagePolicy::Scope.new(user, Message).resolve.to_a }
+    let(:subject){ MessagePolicy::Scope.new(user, Message).resolve }
     
     it{ is_expected.to match_array [record, message] }
   end
