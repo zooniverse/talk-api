@@ -24,4 +24,13 @@ RSpec.describe ModerationPolicy, type: :policy do
     let(:user){ create :user, roles: { test: ['admin'] } }
     it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
   end
+  
+  context 'with scope' do
+    let!(:other_records){ create_list :moderation, 2, section: 'other' }
+    let(:user){ create :user, roles: { test: ['moderator'] } }
+    let(:records){ create_list :moderation, 2, section: 'test' }
+    let(:subject){ ModerationPolicy::Scope.new(user, Moderation).resolve }
+    
+    it{ is_expected.to match_array records }
+  end
 end

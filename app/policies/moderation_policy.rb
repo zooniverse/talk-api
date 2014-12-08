@@ -21,7 +21,17 @@ class ModerationPolicy < ApplicationPolicy
   
   class Scope < Scope
     def resolve
-      scope
+      if zooniverse_roles.any?
+        scope
+      else
+        scope.where 'section = any(array[:sections])', sections: privileged_sections
+      end
+    end
+    
+    def privileged_sections
+      user.roles.select do |section, roles|
+        'moderator'.in?(roles) || 'admin'.in?(roles)
+      end.keys
     end
   end
 end
