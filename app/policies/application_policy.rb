@@ -26,34 +26,36 @@ class ApplicationPolicy
     false
   end
   
-  def logged_in?
-    !!user
-  end
-  
-  def owner?
-    logged_in? && user.id == record.user_id
-  end
-  
-  def moderator?
-    logged_in? && 'moderator'.in?(user_roles)
-  end
-  
-  def admin?
-    logged_in? && 'admin'.in?(user_roles)
-  end
-  
-  def user_roles
-    (section_roles + zooniverse_roles).uniq
-  end
-  
-  def section_roles
-    return [] unless logged_in? && record.respond_to?(:section)
-    user.roles.fetch record.section, []
-  end
-  
-  def zooniverse_roles
-    return [] unless logged_in?
-    user.roles.fetch 'zooniverse', []
+  concerning :UserPredicates do
+    def logged_in?
+      !!user
+    end
+    
+    def owner?
+      logged_in? && user.id == record.user_id
+    end
+    
+    def moderator?
+      logged_in? && 'moderator'.in?(user_roles)
+    end
+    
+    def admin?
+      logged_in? && 'admin'.in?(user_roles)
+    end
+    
+    def user_roles
+      (section_roles + zooniverse_roles).uniq
+    end
+    
+    def section_roles
+      return [] unless logged_in? && record.respond_to?(:section)
+      user.roles.fetch record.section, []
+    end
+    
+    def zooniverse_roles
+      return [] unless logged_in?
+      user.roles.fetch 'zooniverse', []
+    end
   end
   
   def scope
@@ -61,6 +63,7 @@ class ApplicationPolicy
   end
   
   class Scope
+    include UserPredicates
     attr_reader :user, :scope
     
     def initialize(user, scope)
