@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 RSpec.shared_context 'existing conversation' do
   let!(:conversation){ create :read_conversation }
   let(:sender){ conversation.messages.first.sender }

@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 RSpec.shared_context 'a serializer' do
   let(:serializer){ described_class }
   let(:model){ serializer.model_class }
@@ -6,7 +8,7 @@ RSpec.shared_context 'a serializer' do
   let(:json){ serializer.as_json model_instance }
 end
 
-RSpec.shared_examples 'a talk serializer' do |exposing: nil, including: nil|
+RSpec.shared_examples_for 'a talk serializer' do |exposing: nil, including: nil|
   include_context 'a serializer'
   let(:model_instance){ defined?(object) ? object : instance }
   

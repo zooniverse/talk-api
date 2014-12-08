@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 RSpec::Matchers.define :fail_validation do |attrs_and_messages|
   matching_errors = { }
   

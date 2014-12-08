@@ -1,4 +1,6 @@
-shared_examples 'a created message' do
+require 'spec_helper'
+
+RSpec.shared_examples_for 'a created message' do
   it 'should create a message' do
     expect(message).to be_a Message
   end
