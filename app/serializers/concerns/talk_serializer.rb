@@ -5,12 +5,15 @@ module TalkSerializer
     include RestPack::Serializer
     attr_reader :model
     attributes :href, :links
-    can_filter_by(:section) if model_class.columns_hash.has_key? 'section'
+    
+    is_sectioned = model_class.columns_hash.has_key?('section') rescue false
+    can_filter_by(:section) if is_sectioned
   end
   
   module ClassMethods
     def all_attributes
-      attributes *model_class.attribute_names
+      attrs = model_class.attribute_names rescue []
+      attributes *attrs
     end
   end
   
