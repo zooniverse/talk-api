@@ -6,11 +6,8 @@ RSpec.describe ApplicationPolicy, type: :policy do
   let(:subject){ ApplicationPolicy.new user, record }
   
   describe 'default actions' do
-    it{ is_expected.to permit :index }
-    it{ is_expected.to permit :show }
-    it{ is_expected.to_not permit :create }
-    it{ is_expected.to_not permit :update }
-    it{ is_expected.to_not permit :destroy }
+    it_behaves_like 'a policy permitting', :index, :show
+    it_behaves_like 'a policy forbidding', :create, :update, :destroy
   end
   
   context 'without a user' do
