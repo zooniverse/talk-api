@@ -7,31 +7,53 @@ class ApplicationPolicy
   end
   
   def index?
-    false
+    true
   end
   
   def show?
-    scope.where(:id => record.id).exists?
+    true
   end
   
   def create?
     false
   end
   
-  def new?
-    create?
-  end
-  
   def update?
     false
   end
   
-  def edit?
-    update?
-  end
-  
   def destroy?
     false
+  end
+  
+  def logged_in?
+    !!user
+  end
+  
+  def owner?
+    logged_in? && user.id == record.user_id
+  end
+  
+  def moderator?
+    logged_in? && 'moderator'.in?(user_roles)
+  end
+  
+  def admin?
+    logged_in? && 'admin'.in?(user_roles)
+  end
+  
+  def user_roles
+    (section_roles + zooniverse_roles).uniq
+  end
+  
+  def section_roles
+    return [] unless logged_in? && record.respond_to?(:section)
+    user.roles.fetch record.section, []
+  end
+  
+  def zooniverse_roles
+    return [] unless logged_in?
+    user.roles.fetch 'zooniverse', []
   end
   
   def scope
