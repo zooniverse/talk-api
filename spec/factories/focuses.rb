@@ -8,7 +8,7 @@ FactoryGirl.define do
     end
     
     factory :collection, class: Collection do
-      
+      user
     end
   end
 end

@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include Moderatable
   
+  has_many :collections
   has_many :user_conversations
   has_many :conversations, through: :user_conversations
   
