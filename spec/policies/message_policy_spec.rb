@@ -34,11 +34,10 @@ RSpec.describe MessagePolicy, type: :policy do
   
   context 'with scope' do
     let!(:other_records){ create_list :message, 2 }
-    let(:message){ create :message }
-    let(:record){ create :message, conversation: message.conversation }
-    let(:user){ record.user }
+    let(:user){ create :user }
+    let(:records){ create_list :message, 2, user: user }
     let(:subject){ MessagePolicy::Scope.new(user, Message).resolve }
     
-    it{ is_expected.to match_array [record, message] }
+    it{ is_expected.to match_array records }
   end
 end
