@@ -5,12 +5,8 @@ RSpec.shared_examples_for 'a created message' do
     expect(message).to be_a Message
   end
   
-  it 'should assign the sender' do
-    expect(message.sender).to eql sender
-  end
-  
-  it 'should assign the recipient' do
-    expect(message.recipient).to eql recipient
+  it 'should assign the user' do
+    expect(message.user).to eql user
   end
   
   it 'should assign the conversation' do

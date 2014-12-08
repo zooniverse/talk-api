@@ -7,14 +7,9 @@ RSpec.describe Message, type: :model do
       expect(without_body).to fail_validation body: "can't be blank"
     end
     
-    it 'should require a sender' do
-      without_sender = build :message, sender: nil, body: 'blah'
-      expect(without_sender).to fail_validation sender: "can't be blank"
-    end
-    
-    it 'should require a sender' do
-      without_recipient = build :message, recipient: nil, body: 'blah'
-      expect(without_recipient).to fail_validation recipient: "can't be blank"
+    it 'should require a user' do
+      without_user = build :message, user: nil, body: 'blah'
+      expect(without_user).to fail_validation user: "can't be blank"
     end
     
     it 'should require a conversation' do
@@ -26,19 +21,19 @@ RSpec.describe Message, type: :model do
   context 'creating' do
     include_context 'existing conversation'
     
-    it 'should set the recipient conversation as unread' do
+    it 'should set the recipient conversations as unread' do
       expect {
-        create :message, conversation: conversation, sender: sender, recipient: recipient
+        create :message, conversation: conversation, user: user
       }.to change {
-        recipient_conversation.reload.is_unread
-      }.from(false).to true
+        recipient_conversations.collect{ |c| c.reload.is_unread }.uniq
+      }.from([false]).to [true]
     end
     
-    it 'should not set the sender conversation as unread' do
+    it 'should not set the user conversation as unread' do
       expect {
-        create :message, conversation: conversation, sender: sender, recipient: recipient
+        create :message, conversation: conversation, user: user
       }.to_not change {
-        sender_conversation.reload.is_unread
+        user_conversation.reload.is_unread
       }
     end
   end

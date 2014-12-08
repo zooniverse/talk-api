@@ -1,8 +1,13 @@
 FactoryGirl.define do
   factory :message do
-    association :sender, factory: :user
-    association :recipient, factory: :user
+    user
     conversation
-    body{ "Message from #{ sender.name } to #{ recipient.name }" }
+    body{ "Message from #{ user.name }" }
+    
+    before :create do |message, evaluator|
+      UserConversation.first_or_create(conversation_id: message.conversation_id, user_id: message.user_id) do |user_conversation|
+        user_conversation.is_unread = false
+      end
+    end
   end
 end

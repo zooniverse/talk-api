@@ -4,19 +4,22 @@ FactoryGirl.define do
     
     factory :conversation_with_messages do
       transient do
-        sender nil
-        recipient nil
+        user nil
+        recipients nil
         message_count 2
       end
       
       after :create do |conversation, evaluator|
-        sender = evaluator.sender || create(:user)
-        recipient = evaluator.recipient || create(:user)
-        conversation.user_conversations.create user: sender, is_unread: false
-        conversation.user_conversations.create user: recipient, is_unread: true
+        user = evaluator.user || create(:user)
+        recipients = evaluator.recipients || create_list(:user, 1)
+        conversation.user_conversations.create user: user, is_unread: false
+        
+        recipients.each do |recipient|
+          conversation.user_conversations.create user: recipient, is_unread: true
+        end
+        
         create_list :message, evaluator.message_count,
-          sender: sender,
-          recipient: recipient,
+          user: user,
           conversation: conversation
       end
       

@@ -1,6 +1,6 @@
 class ConversationService
   attr_reader :params
-  delegate :body, :title, :sender_id, :recipient_id, :conversation_id, to: :params
+  delegate :body, :title, :user_id, :recipient_ids, :conversation_id, to: :params
   
   def initialize(params)
     @params = OpenStruct.new params
@@ -9,9 +9,11 @@ class ConversationService
   def create_conversation
     Conversation.transaction do
       Conversation.new(title: title).tap do |conversation|
-        conversation.user_conversations.build user_id: sender_id, is_unread: false
-        conversation.user_conversations.build user_id: recipient_id
-        conversation.messages.build sender_id: sender_id, recipient_id: recipient_id, body: body
+        conversation.user_conversations.build user_id: user_id, is_unread: false
+        recipient_ids.each do |recipient_id|
+          conversation.user_conversations.build user_id: recipient_id, is_unread: true
+        end
+        conversation.messages.build user_id: user_id, body: body
         conversation.save
       end
     end
@@ -19,8 +21,7 @@ class ConversationService
   
   def create_message
     Message.create({
-      sender_id: sender_id,
-      recipient_id: recipient_id,
+      user_id: user_id,
       conversation_id: conversation_id,
       body: body
     })

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe ConversationService, type: :service do
-  let(:sender){ create(:user) }
-  let(:recipient){ create(:user) }
+  let(:user){ create(:user) }
+  let(:recipients){ create_list(:user, 2) }
   let(:params){ }
   let(:service){ ConversationService.new params }
   
@@ -12,8 +12,8 @@ RSpec.describe ConversationService, type: :service do
       {
         body: 'A message',
         title: 'A title',
-        sender_id: sender.id,
-        recipient_id: recipient.id
+        user_id: user.id,
+        recipient_ids: recipients.collect(&:id)
       }
     end
     
@@ -26,23 +26,27 @@ RSpec.describe ConversationService, type: :service do
     end
     
     context 'with user conversations' do
-      let(:sender_conversation){ conversation.user_conversations.where(user_id: sender.id).first }
-      let(:recipient_conversation){ conversation.user_conversations.where(user_id: recipient.id).first }
+      let(:user_conversation){ conversation.user_conversations.where(user_id: user.id).first }
+      let(:recipient_conversations){ conversation.user_conversations.where.not(user_id: user.id).all }
       
-      it 'should create the sender conversation' do
-        expect(sender_conversation).to be_a UserConversation
+      it 'should create the user conversation' do
+        expect(user_conversation).to be_a UserConversation
       end
       
-      it 'should mark the sender conversation as read' do
-        expect(sender_conversation.is_unread).to be false
+      it 'should mark the user conversation as read' do
+        expect(user_conversation.is_unread).to be false
       end
       
-      it 'should create the recipient conversation' do
-        expect(recipient_conversation).to be_a UserConversation
+      it 'should create the recipient conversations' do
+        recipient_conversations.each do |recipient_conversation|
+          expect(recipient_conversation).to be_a UserConversation
+        end
       end
       
-      it 'should mark the recipient conversation as unread' do
-        expect(recipient_conversation.is_unread).to be true
+      it 'should mark the recipient conversations as unread' do
+        recipient_conversations.each do |recipient_conversation|
+          expect(recipient_conversation.is_unread).to be true
+        end
       end
     end
     
@@ -57,8 +61,7 @@ RSpec.describe ConversationService, type: :service do
         conversation = ConversationService.new({
           body: 'A message',
           title: nil,
-          sender_id: sender.id,
-          recipient_id: recipient.id
+          recipient_ids: recipients.collect(&:id)
         }).create_conversation
         expect(conversation).to be_new_record
         expect(conversation).to_not be_valid
@@ -68,7 +71,7 @@ RSpec.describe ConversationService, type: :service do
          conversation = ConversationService.new({
            body: 'A message',
            title: 'A title',
-           sender_id: sender.id
+           recipient_ids: recipients.collect(&:id)
          }).create_conversation
          expect(conversation).to be_new_record
          expect(conversation).to_not be_valid
@@ -78,8 +81,7 @@ RSpec.describe ConversationService, type: :service do
          conversation = ConversationService.new({
            body: nil,
            title: 'A title',
-           sender_id: sender.id,
-           recipient_id: recipient.id
+           recipient_ids: recipients.collect(&:id)
          }).create_conversation
          expect(conversation).to be_new_record
          expect(conversation).to_not be_valid
@@ -92,8 +94,8 @@ RSpec.describe ConversationService, type: :service do
     let(:params) do
       {
         body: 'A message',
-        sender_id: sender.id,
-        recipient_id: recipient.id,
+        user_id: user.id,
+        recipient_ids: recipients.collect(&:id),
         conversation_id: conversation.id
       }
     end
