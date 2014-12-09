@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.0.rc1'
+gem 'rails', '~> 4.2.0.rc2'
 gem 'pg'
 gem 'restpack_serializer', '~> 0.5.6'
 gem 'pundit', '~> 0.3'
