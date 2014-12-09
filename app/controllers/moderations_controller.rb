@@ -1,0 +1,2 @@
+class ModerationsController < ApplicationController
+end

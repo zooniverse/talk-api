@@ -1,0 +1,2 @@
+class FocusesController < ApplicationController
+end
