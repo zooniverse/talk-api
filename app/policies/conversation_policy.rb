@@ -1,6 +1,6 @@
 class ConversationPolicy < ApplicationPolicy
   def index?
-    participant?
+    logged_in?
   end
   
   def show?

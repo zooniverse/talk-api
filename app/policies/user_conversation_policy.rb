@@ -1,6 +1,6 @@
 class UserConversationPolicy < ApplicationPolicy
   def index?
-    owner?
+    logged_in?
   end
   
   def show?

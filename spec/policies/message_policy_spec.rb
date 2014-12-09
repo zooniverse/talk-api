@@ -11,7 +11,8 @@ RSpec.describe MessagePolicy, type: :policy do
   
   context 'with a user' do
     let(:user){ create :user }
-    it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
+    it_behaves_like 'a policy permitting', :index
+    it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
   end
   
   context 'with a participant' do
@@ -22,14 +23,14 @@ RSpec.describe MessagePolicy, type: :policy do
   
   context 'with a moderator' do
     let(:user){ create :user, roles: { zooniverse: ['moderator'] } }
-    it_behaves_like 'a policy permitting', :show
-    it_behaves_like 'a policy forbidding', :index, :create, :update, :destroy
+    it_behaves_like 'a policy permitting', :index, :show
+    it_behaves_like 'a policy forbidding', :create, :update, :destroy
   end
   
   context 'with an admin' do
     let(:user){ create :user, roles: { zooniverse: ['admin'] } }
-    it_behaves_like 'a policy permitting', :show
-    it_behaves_like 'a policy forbidding', :index, :create, :update, :destroy
+    it_behaves_like 'a policy permitting', :index, :show
+    it_behaves_like 'a policy forbidding', :create, :update, :destroy
   end
   
   context 'with scope' do
