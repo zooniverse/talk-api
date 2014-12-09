@@ -35,6 +35,15 @@ class ApplicationPolicy
       logged_in? && user.id == record.user_id
     end
     
+    # TO-DO: refactor to use an ALL query
+    def participant?
+      return false unless logged_in?
+      Array.wrap(record).each do |record|
+        return false unless record.users.exists?(id: user.id)
+      end
+      true
+    end
+    
     def moderator?
       logged_in? && 'moderator'.in?(user_roles)
     end

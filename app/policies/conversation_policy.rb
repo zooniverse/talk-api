@@ -19,10 +19,6 @@ class ConversationPolicy < ApplicationPolicy
     false
   end
   
-  def participant?
-    logged_in? && record.users.exists?(id: user.id)
-  end
-  
   class Scope < Scope
     def resolve
       scope.joins(:user_conversations).where({
