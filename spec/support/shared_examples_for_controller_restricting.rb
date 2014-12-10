@@ -1,33 +1,11 @@
 require 'spec_helper'
 
 RSpec.shared_examples_for 'a restricted action' do
-  let(:resource_name){ resource.name.tableize.to_sym }
-  
-  def send_request
-    send verb, action, params
-  end
-  
-  it 'should not authorize the action' do
-    expect(subject).to receive(:authorize).with(authorizable).and_call_original
-    send_request
-  end
-  
-  context 'with a response' do
-    before(:each){ send_request }
+  it_behaves_like 'a controller action' do
+    let(:resource_name){ resource.name.tableize.to_sym }
     
-    it 'should set the correct status' do
-      expect(response.status).to eql status
-    end
-    
-    it 'should be json' do
-      expect(response.content_type).to eql 'application/json'
-    end
-    
-    it 'should be an object' do
-      expect(response.json).to be_a Hash
-    end
-    
-    it 'should respond' do
+    it 'should respond appropriately' do
+      send_request
       case expected_response
       when :error
         expect(response.json).to have_key :error
