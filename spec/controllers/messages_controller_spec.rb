@@ -9,6 +9,6 @@ RSpec.describe MessagesController, type: :controller do
   
   context 'with an authorized user' do
     before(:each){ subject.current_user = record.user }
-    it_behaves_like 'a controller rendering', Message
+    it_behaves_like 'a controller rendering', Message, :index, :show
   end
 end

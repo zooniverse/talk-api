@@ -11,7 +11,7 @@ RSpec.describe ConversationsController, type: :controller do
     let(:user){ create :user }
     before(:each){ subject.current_user = user }
     
-    it_behaves_like 'a controller rendering', Conversation do
+    it_behaves_like 'a controller rendering', Conversation, :index, :show do
       let!(:record){ create :conversation_with_messages, user: user }
     end
   end

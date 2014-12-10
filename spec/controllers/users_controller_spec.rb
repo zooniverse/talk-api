@@ -9,6 +9,6 @@ RSpec.describe UsersController, type: :controller do
   
   context 'with an authorized user' do
     before(:each){ subject.current_user = create :user }
-    it_behaves_like 'a controller rendering', User
+    it_behaves_like 'a controller rendering', User, :index, :show
   end
 end

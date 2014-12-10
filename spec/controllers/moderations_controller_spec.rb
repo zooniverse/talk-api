@@ -10,6 +10,6 @@ RSpec.describe ModerationsController, type: :controller do
   
   context 'with an authorized user' do
     before(:each){ subject.current_user = create :user, roles: { zooniverse: ['moderator'] } }
-    it_behaves_like 'a controller rendering', Moderation
+    it_behaves_like 'a controller rendering', Moderation, :index, :show
   end
 end
