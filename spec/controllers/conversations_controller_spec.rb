@@ -5,7 +5,12 @@ RSpec.describe ConversationsController, type: :controller do
   it_behaves_like 'a controller rescuing'
   
   context 'without an authorized user' do
-    it 'should be spec\'d'
+    let(:user){ create :user }
+    before(:each){ subject.current_user = user }
+    
+    it_behaves_like 'a controller restricting', Conversation,
+      index: { status: 200, response: :empty },
+      show: { status: 401, response: :error }
   end
   
   context 'with an authorized user' do

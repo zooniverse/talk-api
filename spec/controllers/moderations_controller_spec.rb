@@ -6,7 +6,9 @@ RSpec.describe ModerationsController, type: :controller do
   
   context 'without an authorized user' do
     before(:each){ subject.current_user = create :user }
-    it 'should be spec\'d'
+    it_behaves_like 'a controller restricting', Moderation,
+      index: { status: 401, response: :error },
+      show: { status: 401, response: :error }
   end
   
   context 'with an authorized user' do
