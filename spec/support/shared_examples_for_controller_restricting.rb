@@ -38,8 +38,7 @@ RSpec.shared_examples_for 'a restricted action' do
   end
 end
 
-RSpec.shared_examples_for 'a controller restricting' do |resource, actions = { }|
-  let(:resource){ resource }
+RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
   let(:record){ create resource.name.underscore.to_sym }
   
   if actions[:index]

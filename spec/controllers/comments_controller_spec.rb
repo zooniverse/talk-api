@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe CommentsController, type: :controller do
-  it_behaves_like 'a controller', Comment
+  let(:resource){ Comment }
+  it_behaves_like 'a controller'
   it_behaves_like 'a controller rescuing'
-  it_behaves_like 'a controller rendering', Comment, :index, :show
+  it_behaves_like 'a controller rendering', :index, :show
 end

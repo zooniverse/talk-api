@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.shared_examples_for 'a controller rendering' do |resource, *actions|
+RSpec.shared_examples_for 'a controller rendering' do |*actions|
   let(:record){ create resource.name.underscore.to_sym }
   
   if :index.in? actions

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.shared_examples_for 'a controller' do |resource|
+RSpec.shared_examples_for 'a controller' do
   context 'with reflection helpers' do
     it 'should find the model class name' do
       expect(subject.model_class_name).to eql resource.name
