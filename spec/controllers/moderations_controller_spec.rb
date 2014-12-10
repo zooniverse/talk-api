@@ -9,11 +9,12 @@ RSpec.describe ModerationsController, type: :controller do
     before(:each){ subject.current_user = create :user }
     it_behaves_like 'a controller restricting',
       index: { status: 401, response: :error },
-      show: { status: 401, response: :error }
+      show: { status: 401, response: :error },
+      destroy: { status: 401, response: :error }
   end
   
   context 'with an authorized user' do
     before(:each){ subject.current_user = create :user, roles: { zooniverse: ['moderator'] } }
-    it_behaves_like 'a controller rendering', :index, :show
+    it_behaves_like 'a controller rendering', :index, :show, :destroy
   end
 end

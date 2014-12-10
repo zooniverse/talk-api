@@ -40,4 +40,16 @@ RSpec.shared_examples_for 'a controller rendering' do |*actions|
       end
     end
   end
+  
+  if :destroy.in? actions
+    describe '#destroy' do
+      it_behaves_like 'a rendered action' do
+        let(:verb){ :delete }
+        let(:action){ :destroy }
+        let(:params){ { id: record.id } }
+        let(:authorizable){ record }
+        let(:status){ 204 }
+      end
+    end
+  end
 end

@@ -44,4 +44,17 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
       end
     end
   end
+  
+  if actions[:destroy]
+    describe '#destroy' do
+      it_behaves_like 'a restricted action' do
+        let(:verb){ :delete }
+        let(:action){ :destroy }
+        let(:params){ { id: record.id } }
+        let(:authorizable){ record }
+        let(:status){ actions[action][:status] }
+        let(:expected_response){ actions[action][:response] }
+      end
+    end
+  end
 end

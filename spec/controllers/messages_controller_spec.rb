@@ -4,6 +4,8 @@ RSpec.describe MessagesController, type: :controller do
   let(:resource){ Message }
   it_behaves_like 'a controller'
   it_behaves_like 'a controller rescuing'
+  it_behaves_like 'a controller restricting',
+    destroy: { status: 401, response: :error }
   
   context 'without an authorized user' do
     let(:user){ create :user }

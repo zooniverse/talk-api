@@ -21,7 +21,10 @@ module ActionRendering
   end
   
   def destroy
-    raise ActionController::NotImplemented.new 'index, show'
+    instance = model_class.find params[:id]
+    authorize instance
+    instance.destroy!
+    render json: { }, status: :no_content
   end
   
   def serializer_class
