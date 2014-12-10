@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe MessagesController, type: :controller do
+  it_behaves_like 'a controller', Message
   it_behaves_like 'a controller rescuing'
   
   context 'without an authorized user' do

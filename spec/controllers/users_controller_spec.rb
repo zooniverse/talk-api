@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe UsersController, type: :controller do
+  it_behaves_like 'a controller', User
   it_behaves_like 'a controller rescuing'
   
   context 'without an authorized user' do

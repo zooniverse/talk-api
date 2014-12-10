@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe ModerationsController, type: :controller do
+  it_behaves_like 'a controller', Moderation
   it_behaves_like 'a controller rescuing'
   
   context 'without an authorized user' do
