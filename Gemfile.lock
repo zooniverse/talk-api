@@ -36,6 +36,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    addressable (2.3.6)
     arel (6.0.0)
     builder (3.2.2)
     celluloid (0.16.0)
@@ -67,6 +68,11 @@ GEM
     hitimes (1.2.2)
     i18n (0.7.0.beta1)
     json (1.8.1)
+    json-schema (2.5.0)
+      addressable (~> 2.3)
+    json-schema_builder (0.0.3)
+      activesupport (~> 4.0, = 4.2.0.rc2)
+      json-schema (~> 2.5)
     kaminari (0.16.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -180,6 +186,8 @@ PLATFORMS
 DEPENDENCIES
   factory_girl_rails
   guard-rspec
+  json-schema (~> 2.5)
+  json-schema_builder (~> 0.0.3)
   pg
   pry
   pundit (~> 0.3)
