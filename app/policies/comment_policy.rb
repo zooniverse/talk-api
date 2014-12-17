@@ -19,6 +19,14 @@ class CommentPolicy < ApplicationPolicy
     owner?
   end
   
+  def move?
+    owner? || moderator? || admin?
+  end
+  
+  def upvote?
+    logged_in? && !owner?
+  end
+  
   class Scope < Scope
     def resolve
       scope
