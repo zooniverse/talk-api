@@ -1,11 +1,17 @@
 class ConversationSchema
   include JSON::SchemaBuilder
   
-  def create
-    
-  end
+  root :conversations
   
-  def update
-    
+  def create
+    root do
+      string  :title,   required: true
+      integer :user_id, required: true
+      string  :body,    required: true
+      
+      array :recipient_ids, required: true, unique_items: true, min_items: 1 do
+        items type: :integer
+      end
+    end
   end
 end
