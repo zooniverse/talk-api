@@ -6,6 +6,7 @@ class CommentSchema
   
   def create
     root do
+      integer :user_id,       required: true
       string  :category
       string  :body,          required: true
       integer :focus_id
