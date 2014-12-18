@@ -1,29 +1,29 @@
 class DiscussionSchema
   include JSON::SchemaBuilder
-  attr_accessor :policy
   root :discussions
   
   def create
-    schema
-  end
-  
-  def update
-    schema
-  end
-  
-  def schema
     root do
-      string :title, required: true, min_length: 3, max_length: 140
+      string  :title,    required: true, min_length: 3, max_length: 140
+      integer :board_id, required: true
       
-      if privileged?
-        integer :board_id, required: true
-        boolean :locked
-        boolean :sticky
+      array :comments, required: true, min_items: 1 do
+        items type: :object do
+          integer :user_id, required: true
+          string  :category
+          string  :body,    required: true
+          integer :focus_id
+        end
       end
     end
   end
   
-  def privileged?
-    policy.moderator? || policy.admin?
+  def update
+    root do
+      string :title, min_length: 3, max_length: 140
+      integer :board_id
+      boolean :locked
+      boolean :sticky
+    end
   end
 end
