@@ -1,5 +1,76 @@
 require 'spec_helper'
 
 RSpec.describe ModerationSchema, type: :schema do
-  it 'should be spec\'d'
+  shared_examples_for 'moderation schema reports' do
+    with :reports do
+      its(:type){ is_expected.to eql 'array' }
+      its(:minItems){ is_expected.to eql 1 }
+      
+      with :items do
+        its(:type){ is_expected.to eql 'object' }
+        its(:required){ is_expected.to eql ['user_id', 'message'] }
+        
+        with :properties do
+          its(:user_id){ is_expected.to eql type: 'integer' }
+          its(:message){ is_expected.to eql type: 'string' }
+        end
+      end
+    end
+  end
+  
+  shared_examples_for 'moderation schema state' do
+    with :state do
+      its(:type){ is_expected.to eql 'string' }
+      its(:enum){ is_expected.to eql Moderation.states.keys }
+      its(:default){ is_expected.to eql 'opened' }
+    end
+  end
+  
+  describe '#create' do
+    let(:schema_method){ :create }
+    its(:type){ is_expected.to eql 'object' }
+    its(:required){ is_expected.to eql ['moderations'] }
+    
+    with 'properties .moderations' do
+      its(:type){ is_expected.to eql 'object' }
+      its(:required){ is_expected.to eql ['target_id', 'target_type'] }
+      
+      with :properties do
+        include_context 'moderation schema reports'
+        its(:section){ is_expected.to eql type: 'string' }
+        its(:target_id){ is_expected.to eql type: 'integer' }
+        its(:target_type){ is_expected.to eql type: 'string' }
+      end
+    end
+  end
+  
+  describe '#update' do
+    let(:schema_method){ :update }
+    its(:type){ is_expected.to eql 'object' }
+    its(:required){ is_expected.to eql ['moderations'] }
+    
+    with 'properties .moderations' do
+      its(:type){ is_expected.to eql 'object' }
+      
+      with :properties do
+        include_context 'moderation schema reports'
+        
+        with :actions do
+          its(:type){ is_expected.to eql 'array' }
+          its(:minItems){ is_expected.to eql 1 }
+          
+          with :items do
+            its(:type){ is_expected.to eql 'object' }
+            its(:required){ is_expected.to eql ['user_id', 'message'] }
+            
+            with :properties do
+              include_context 'moderation schema state'
+              its(:user_id){ is_expected.to eql type: 'integer' }
+              its(:message){ is_expected.to eql type: 'string' }
+            end
+          end
+        end
+      end
+    end
+  end
 end
