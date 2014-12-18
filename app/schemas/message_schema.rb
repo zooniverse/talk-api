@@ -1,11 +1,13 @@
 class MessageSchema
   include JSON::SchemaBuilder
   
-  def create
-    
-  end
+  root :messages
   
-  def update
-    
+  def create
+    root do
+      integer :user_id, required: true
+      integer :conversation_id, required: true
+      string :body, required: true
+    end
   end
 end
