@@ -1,11 +1,14 @@
 class UserSchema
   include JSON::SchemaBuilder
   
-  def create
-    
-  end
+  root :users
   
   def update
-    
+    root do
+      object :preferences do
+        # TO-DO: Define what preferences are acceptable
+        additional_properties true
+      end
+    end
   end
 end
