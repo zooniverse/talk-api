@@ -8,7 +8,7 @@ module ActionRendering
   end
   
   def show
-    authorize model_class.where(id: params[:id])
+    authorize model_class.where(id: resource_ids)
     render json: serializer_class.resource(params)
   end
   
@@ -37,5 +37,13 @@ module ActionRendering
   
   def model_class_name
     @_model_class_name ||= self.class.name.sub(/Controller$/, '').singularize
+  end
+  
+  def resource_ids
+    if params[:id].is_a? String
+      params[:id].split(',').compact.collect &:to_i
+    else
+      params[:id]
+    end
   end
 end
