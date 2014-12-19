@@ -4,6 +4,7 @@ class DiscussionSchema
   
   def create
     root do
+      additional_properties false
       string  :title,    required: true, min_length: 3, max_length: 140
       integer :board_id, required: true
       
@@ -20,6 +21,7 @@ class DiscussionSchema
   
   def update
     root do
+      additional_properties false
       string :title, min_length: 3, max_length: 140
       integer :board_id
       boolean :locked

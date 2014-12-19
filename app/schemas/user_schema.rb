@@ -5,6 +5,7 @@ class UserSchema
   
   def update
     root do
+      additional_properties false
       object :preferences do
         # TO-DO: Define what preferences are acceptable
         additional_properties true

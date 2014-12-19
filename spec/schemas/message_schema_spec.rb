@@ -9,6 +9,7 @@ RSpec.describe MessageSchema, type: :schema do
     with 'properties .messages' do
       its(:type){ is_expected.to eql 'object' }
       its(:required){ is_expected.to eql %w(user_id conversation_id body) }
+      its(:additionalProperties){ is_expected.to be false }
       
       with :properties do
         its(:user_id){ is_expected.to eql type: 'integer' }

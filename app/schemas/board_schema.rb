@@ -6,6 +6,7 @@ class BoardSchema
   
   def create
     root do
+      additional_properties false
       string :title,       required: true
       string :description, required: true
       string :section
@@ -14,6 +15,7 @@ class BoardSchema
   
   def update
     root do
+      additional_properties false
       string :title,       required: true
       string :description, required: true
     end

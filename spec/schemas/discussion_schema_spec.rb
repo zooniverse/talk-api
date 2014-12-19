@@ -7,6 +7,7 @@ RSpec.describe DiscussionSchema, type: :schema do
     
     with 'properties .discussions' do
       its(:type){ is_expected.to eql 'object' }
+      its(:additionalProperties){ is_expected.to be false }
       
       with :properties do
         with :title do

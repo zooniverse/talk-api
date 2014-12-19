@@ -8,6 +8,7 @@ RSpec.describe BoardSchema, type: :schema do
     with 'properties .boards' do
       its(:type){ is_expected.to eql 'object' }
       its(:required){ is_expected.to eql %w(title description) }
+      its(:additionalProperties){ is_expected.to be false }
       
       with :properties do
         its(:title){ is_expected.to eql type: 'string' }

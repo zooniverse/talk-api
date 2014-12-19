@@ -8,6 +8,7 @@ RSpec.describe CommentSchema, type: :schema do
     with :properties do
       with :comments do
         its(:type){ is_expected.to eql 'object' }
+        its(:additionalProperties){ is_expected.to be false }
         
         with :properties do
           its(:category){ is_expected.to eql type: 'string' }

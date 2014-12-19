@@ -5,6 +5,7 @@ class ConversationSchema
   
   def create
     root do
+      additional_properties false
       string  :title,   required: true
       integer :user_id, required: true
       string  :body,    required: true

@@ -5,6 +5,7 @@ class ModerationSchema
   
   def create
     root do |root_object|
+      additional_properties false
       string  :section
       integer :target_id,   required: true
       string  :target_type, required: true
@@ -14,6 +15,7 @@ class ModerationSchema
   
   def update
     root do |root_object|
+      additional_properties false
       reports root_object
       actions root_object
     end

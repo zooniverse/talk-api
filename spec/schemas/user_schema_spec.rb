@@ -8,6 +8,7 @@ RSpec.describe UserSchema, type: :schema do
     
     with 'properties .users' do
       its(:type){ is_expected.to eql 'object' }
+      its(:additionalProperties){ is_expected.to be false }
       
       with 'properties .preferences' do
         its(:type){ is_expected.to eql 'object' }

@@ -6,6 +6,7 @@ class CommentSchema
   
   def create
     root do
+      additional_properties false
       integer :user_id,       required: true
       string  :category
       string  :body,          required: true
@@ -16,6 +17,7 @@ class CommentSchema
   
   def update
     root do
+      additional_properties false
       string  :category
       string  :body,          required: true
       integer :discussion_id, required: true if policy.move?
