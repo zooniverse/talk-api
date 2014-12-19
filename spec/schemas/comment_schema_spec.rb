@@ -42,8 +42,6 @@ RSpec.describe CommentSchema, type: :schema do
       it_behaves_like 'a comment schema'
       
       with 'properties .comments' do
-        its(:required){ is_expected.to eql %w(body discussion_id) }
-        
         with 'properties' do
           its(:discussion_id){ is_expected.to eql type: 'integer' }
         end
@@ -58,8 +56,6 @@ RSpec.describe CommentSchema, type: :schema do
       it_behaves_like 'a comment schema'
       
       with 'properties .comments' do
-        its(:required){ is_expected.to eql %w(body) }
-        
         with 'properties' do
           its(:discussion_id){ is_expected.to be nil }
         end

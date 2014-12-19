@@ -19,8 +19,8 @@ class CommentSchema
     root do
       additional_properties false
       string  :category
-      string  :body,          required: true
-      integer :discussion_id, required: true if policy.move?
+      string  :body
+      integer :discussion_id if policy.move?
       integer :focus_id
     end
   end
