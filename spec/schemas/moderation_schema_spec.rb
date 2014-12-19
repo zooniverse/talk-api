@@ -33,7 +33,7 @@ RSpec.describe ModerationSchema, type: :schema do
     
     with 'properties .moderations' do
       its(:type){ is_expected.to eql 'object' }
-      its(:required){ is_expected.to eql ['target_id', 'target_type'] }
+      its(:required){ is_expected.to eql ['section', 'target_id', 'target_type'] }
       its(:additionalProperties){ is_expected.to be false }
       
       with :properties do
