@@ -2,11 +2,13 @@ class Discussion < ActiveRecord::Base
   include Moderatable
   
   belongs_to :user, required: true
-  belongs_to :board, counter_cache: true
+  belongs_to :board, required: true, counter_cache: true
   has_many :comments
   
   validates :title, presence: true, length: 3..140
+  validates :section, presence: true
   
+  before_save :set_section
   before_create :denormalize_attributes
   before_destroy :clear_deleted_comments
   
@@ -21,6 +23,10 @@ class Discussion < ActiveRecord::Base
   end
   
   protected
+  
+  def set_section
+    self.section = board.section
+  end
   
   def denormalize_attributes
     self.user_name = user.name

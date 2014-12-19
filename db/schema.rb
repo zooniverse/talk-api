@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208191531) do
+ActiveRecord::Schema.define(version: 20141219164858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20141208191531) do
   create_table "boards", force: true do |t|
     t.string   "title",                          null: false
     t.string   "description",                    null: false
-    t.string   "section"
+    t.string   "section",                        null: false
     t.integer  "users_count",       default: 0
     t.integer  "comments_count",    default: 0
     t.integer  "discussions_count", default: 0
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20141208191531) do
     t.jsonb    "tags",          default: {}
     t.integer  "focus_id"
     t.string   "focus_type"
-    t.string   "section"
+    t.string   "section",                       null: false
     t.integer  "discussion_id"
     t.integer  "user_id",                       null: false
     t.string   "user_name",                     null: false
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20141208191531) do
 
   create_table "discussions", force: true do |t|
     t.string   "title",                          null: false
-    t.string   "section"
+    t.string   "section",                        null: false
     t.integer  "board_id"
     t.integer  "user_id",                        null: false
     t.string   "user_name",                      null: false
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20141208191531) do
 
   create_table "focuses", force: true do |t|
     t.string   "type"
-    t.string   "section"
+    t.string   "section",                     null: false
     t.string   "name",                        null: false
     t.string   "description"
     t.integer  "comments_count", default: 0
@@ -96,13 +96,13 @@ ActiveRecord::Schema.define(version: 20141208191531) do
     t.datetime "actioned_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "section"
+    t.string   "section",                  null: false
   end
 
   create_table "tags", force: true do |t|
     t.string   "name",                   null: false
     t.integer  "uses",       default: 0
-    t.string   "section"
+    t.string   "section",                null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

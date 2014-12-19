@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :discussion do
     title 'A discussion'
+    section 'test'
+    board
     user
     
     factory :discussion_with_comments do
@@ -14,10 +16,6 @@ FactoryGirl.define do
         evaluator.comment_count.times do |i|
           create :comment, discussion: discussion, user: commenting_users[i % evaluator.user_count]
         end
-      end
-      
-      factory :board_discussion_with_comments do
-        board
       end
     end
   end

@@ -1,6 +1,8 @@
 class Moderation < ActiveRecord::Base
   belongs_to :target, polymorphic: true, required: true
   
+  validates :section, presence: true
+  
   before_update :transition_state
   
   enum state: {

@@ -8,7 +8,9 @@ class Comment < ActiveRecord::Base
   delegate :board, to: :discussion
   
   validates :body, presence: true
+  validates :section, presence: true
   
+  before_save :set_section
   before_create :denormalize_attributes
   after_create :update_counters
   after_destroy :update_counters
@@ -18,6 +20,10 @@ class Comment < ActiveRecord::Base
   moderatable_with :report, by: [:all]
   
   protected
+  
+  def set_section
+    self.section = discussion.section
+  end
   
   def denormalize_attributes
     self.user_name = user.name

@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :board do
     title 'A board'
     description 'Some board'
+    section 'test'
     
     factory :board_with_discussions do
       transient do

@@ -77,9 +77,9 @@ RSpec.describe Comment, type: :model do
     
     context 'updating board counts' do
       let(:board) do
-        discussion1 = create :board_discussion_with_comments, comment_count: 3, user_count: 2
+        discussion1 = create :discussion_with_comments, comment_count: 3, user_count: 2
         board = discussion1.board
-        discussion2 = create :board_discussion_with_comments, board: board, comment_count: 3, user_count: 2
+        discussion2 = create :discussion_with_comments, board: board, comment_count: 3, user_count: 2
         board
       end
       

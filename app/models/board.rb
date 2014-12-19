@@ -5,6 +5,7 @@ class Board < ActiveRecord::Base
   
   validates :title, presence: true
   validates :description, presence: true
+  validates :section, presence: true
   
   def count_users_and_comments!
     self.comments_count = comments.count
