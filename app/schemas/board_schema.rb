@@ -9,15 +9,15 @@ class BoardSchema
       additional_properties false
       string :title,       required: true
       string :description, required: true
-      string :section
+      string :section,     required: true
     end
   end
   
   def update
     root do
       additional_properties false
-      string :title,       required: true
-      string :description, required: true
+      string :title
+      string :description
     end
   end
 end
