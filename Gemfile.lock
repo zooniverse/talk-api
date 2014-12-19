@@ -100,6 +100,7 @@ GEM
     pundit (0.3.0)
       activesupport (>= 3.0.0)
     rack (1.6.0.beta2)
+    rack-cors (0.2.9)
     rack-test (0.6.2)
       rack (>= 1.0)
     rails (4.2.0.rc2)
@@ -194,6 +195,7 @@ DEPENDENCIES
   pg
   pry
   pundit (~> 0.3)
+  rack-cors (~> 0.2.9)
   rails (~> 4.2.0.rc2)
   rb-fsevent
   restpack_serializer (~> 0.5.6)
