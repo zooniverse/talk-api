@@ -6,6 +6,11 @@ RSpec.describe Moderation, type: :model do
       without_target = build :moderation, target: nil
       expect(without_target).to fail_validation target: "can't be blank"
     end
+    
+    it 'should require a section' do
+      without_section = build :focus, section: nil
+      expect(without_section).to fail_validation section: "can't be blank"
+    end
   end
   
   context 'initializing' do

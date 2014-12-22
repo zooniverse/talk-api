@@ -10,7 +10,7 @@ class Comment < ActiveRecord::Base
   validates :body, presence: true
   validates :section, presence: true
   
-  before_save :set_section
+  before_validation :set_section
   before_create :denormalize_attributes
   after_create :update_counters
   after_destroy :update_counters

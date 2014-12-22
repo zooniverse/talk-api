@@ -21,9 +21,24 @@ RSpec.describe Discussion, type: :model do
       without_user = build :discussion, user_id: nil
       expect(without_user).to fail_validation user: "can't be blank"
     end
+    
+    it 'should require a section' do
+      without_section = build :discussion, section: nil
+      allow(without_section).to receive :set_section
+      expect(without_section).to fail_validation section: "can't be blank"
+    end
   end
   
   context 'creating' do
+    it 'should set the section' do
+      discussion = build :discussion, section: nil
+      expect{
+        discussion.validate
+      }.to change{
+        discussion.section
+      }.to discussion.board.section
+    end
+    
     it 'should denormalize the user name' do
       discussion = create :discussion
       expect(discussion.user_name).to eq discussion.user.name

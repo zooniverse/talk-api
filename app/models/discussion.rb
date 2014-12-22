@@ -8,7 +8,7 @@ class Discussion < ActiveRecord::Base
   validates :title, presence: true, length: 3..140
   validates :section, presence: true
   
-  before_save :set_section
+  before_validation :set_section
   before_create :denormalize_attributes
   before_destroy :clear_deleted_comments
   

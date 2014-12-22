@@ -13,6 +13,12 @@ RSpec.describe Comment, type: :model do
       without_user = build :comment, user_id: nil
       expect(without_user).to fail_validation user: "can't be blank"
     end
+    
+    it 'should require a section' do
+      without_section = build :comment, section: nil
+      allow(without_section).to receive :set_section
+      expect(without_section).to fail_validation section: "can't be blank"
+    end
   end
   
   context 'creating' do
@@ -20,6 +26,15 @@ RSpec.describe Comment, type: :model do
       comment = create :comment
       expect(comment.tags).to eq({ })
       expect(comment.is_deleted).to be false
+    end
+    
+    it 'should set the section' do
+      comment = build :comment, section: nil
+      expect{
+        comment.validate
+      }.to change{
+        comment.section
+      }.to comment.discussion.section
     end
     
     it 'should denormalize the user name' do
