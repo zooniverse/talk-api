@@ -37,9 +37,9 @@ RSpec.describe Comment, type: :model do
       }.to comment.discussion.section
     end
     
-    it 'should denormalize the user name' do
+    it 'should denormalize the user login' do
       comment = create :comment
-      expect(comment.user_name).to eq comment.user.name
+      expect(comment.user_login).to eq comment.user.login
     end
     
     it 'should denormalize the focus type for focus subclasses' do

@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :message do
     user
     conversation
-    body{ "Message from #{ user.name }" }
+    body{ "Message from #{ user.login }" }
     
     before :create do |message, evaluator|
       UserConversation.find_or_create_by(conversation_id: message.conversation_id, user_id: message.user_id) do |user_conversation|

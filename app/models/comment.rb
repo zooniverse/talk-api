@@ -26,7 +26,7 @@ class Comment < ActiveRecord::Base
   end
   
   def denormalize_attributes
-    self.user_name = user.name
+    self.user_login = user.login
     self.focus_type ||= focus.type if focus
   end
   

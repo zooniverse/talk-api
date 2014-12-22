@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141219164858) do
+ActiveRecord::Schema.define(version: 20141222205039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "boards", force: true do |t|
+  create_table "boards", force: :cascade do |t|
     t.string   "title",                          null: false
     t.string   "description",                    null: false
     t.string   "section",                        null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.datetime "updated_at"
   end
 
-  create_table "comments", force: true do |t|
+  create_table "comments", force: :cascade do |t|
     t.string   "category"
     t.text     "body",                          null: false
     t.jsonb    "tags",          default: {}
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.string   "section",                       null: false
     t.integer  "discussion_id"
     t.integer  "user_id",                       null: false
-    t.string   "user_name",                     null: false
+    t.string   "user_login",                    null: false
     t.boolean  "is_deleted",    default: false
     t.json     "versions",      default: []
     t.jsonb    "upvotes",       default: {}
@@ -45,18 +45,18 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.datetime "updated_at"
   end
 
-  create_table "conversations", force: true do |t|
+  create_table "conversations", force: :cascade do |t|
     t.string   "title",      null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "discussions", force: true do |t|
+  create_table "discussions", force: :cascade do |t|
     t.string   "title",                          null: false
     t.string   "section",                        null: false
     t.integer  "board_id"
     t.integer  "user_id",                        null: false
-    t.string   "user_name",                      null: false
+    t.string   "user_login",                     null: false
     t.boolean  "sticky",         default: false
     t.boolean  "locked",         default: false
     t.integer  "users_count",    default: 0
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.datetime "updated_at"
   end
 
-  create_table "focuses", force: true do |t|
+  create_table "focuses", force: :cascade do |t|
     t.string   "type"
     t.string   "section",                     null: false
     t.string   "name",                        null: false
@@ -76,10 +76,10 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.string   "user_name"
+    t.string   "user_login"
   end
 
-  create_table "messages", force: true do |t|
+  create_table "messages", force: :cascade do |t|
     t.integer  "conversation_id", null: false
     t.string   "body",            null: false
     t.datetime "created_at"
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.integer  "user_id",         null: false
   end
 
-  create_table "moderations", force: true do |t|
+  create_table "moderations", force: :cascade do |t|
     t.integer  "target_id",                null: false
     t.string   "target_type",              null: false
     t.integer  "state",       default: 0
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.string   "section",                  null: false
   end
 
-  create_table "tags", force: true do |t|
+  create_table "tags", force: :cascade do |t|
     t.string   "name",                   null: false
     t.integer  "uses",       default: 0
     t.string   "section",                null: false
@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.datetime "updated_at"
   end
 
-  create_table "user_conversations", force: true do |t|
+  create_table "user_conversations", force: :cascade do |t|
     t.integer  "user_id",                        null: false
     t.integer  "conversation_id",                null: false
     t.boolean  "is_unread",       default: true
@@ -115,8 +115,8 @@ ActiveRecord::Schema.define(version: 20141219164858) do
     t.datetime "updated_at"
   end
 
-  create_table "users", force: true do |t|
-    t.string   "name",                      null: false
+  create_table "users", force: :cascade do |t|
+    t.string   "login",                     null: false
     t.string   "display_name"
     t.jsonb    "roles",        default: {}
     t.json     "preferences",  default: {}
