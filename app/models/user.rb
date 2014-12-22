@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include ApiResource
   include Moderatable
   
   has_many :collections
@@ -8,4 +9,8 @@ class User < ActiveRecord::Base
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
   moderatable_with :watch, by: [:moderator, :admin]
+  
+  panoptes_attribute :id
+  panoptes_attribute :login
+  panoptes_attribute :display_name, updateable: true
 end
