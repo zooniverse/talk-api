@@ -3,6 +3,7 @@ require 'spec_helper'
 RSpec.describe UsersController, type: :controller do
   let(:resource){ User }
   it_behaves_like 'a controller'
+  it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller restricting',
     destroy: { status: 401, response: :error }

@@ -3,6 +3,7 @@ require 'spec_helper'
 RSpec.describe ConversationsController, type: :controller do
   let(:resource){ Conversation }
   it_behaves_like 'a controller'
+  it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'
   
   context 'without an authorized user' do
