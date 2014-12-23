@@ -12,5 +12,6 @@ class User < ActiveRecord::Base
   
   panoptes_attribute :id
   panoptes_attribute :login
+  panoptes_attribute :email
   panoptes_attribute :display_name, updateable: true
 end
