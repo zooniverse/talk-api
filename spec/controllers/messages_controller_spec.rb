@@ -10,7 +10,7 @@ RSpec.describe MessagesController, type: :controller do
   
   context 'without an authorized user' do
     let(:user){ create :user }
-    before(:each){ subject.current_user = user }
+    before(:each){ allow(subject).to receive(:current_user).and_return user }
     
     it_behaves_like 'a controller restricting',
       index: { status: 200, response: :empty },
@@ -18,7 +18,7 @@ RSpec.describe MessagesController, type: :controller do
   end
   
   context 'with an authorized user' do
-    before(:each){ subject.current_user = record.user }
+    before(:each){ allow(subject).to receive(:current_user).and_return record.user }
     it_behaves_like 'a controller rendering', :index, :show
   end
 end

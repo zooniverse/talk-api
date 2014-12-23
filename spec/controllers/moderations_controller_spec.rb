@@ -7,7 +7,7 @@ RSpec.describe ModerationsController, type: :controller do
   it_behaves_like 'a controller rescuing'
   
   context 'without an authorized user' do
-    before(:each){ subject.current_user = create :user }
+    before(:each){ allow(subject).to receive(:current_user).and_return create(:user) }
     it_behaves_like 'a controller restricting',
       index: { status: 401, response: :error },
       show: { status: 401, response: :error },
@@ -15,7 +15,8 @@ RSpec.describe ModerationsController, type: :controller do
   end
   
   context 'with an authorized user' do
-    before(:each){ subject.current_user = create :user, roles: { zooniverse: ['moderator'] } }
+    let(:user){ create :user, roles: { zooniverse: ['moderator'] } }
+    before(:each){ allow(subject).to receive(:current_user).and_return user }
     it_behaves_like 'a controller rendering', :index, :show, :destroy
   end
 end

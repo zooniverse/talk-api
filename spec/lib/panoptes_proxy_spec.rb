@@ -1,8 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe PanoptesProxy, type: :lib do
-  before(:each){ ENV['PANOPTES_HOST'] = 'http://panoptes.localhost' }
+  before(:each){ reset_host }
+  after(:each){ reset_host }
   let(:proxy){ PanoptesProxy.new 'bearer_token' }
+  
+  def reset_host
+    ENV['PANOPTES_HOST'] = 'http://panoptes.localhost'
+    clear_host
+  end
   
   def clear_host
     ENV.delete 'PANOPTES_HOST'
@@ -65,7 +71,7 @@ RSpec.describe PanoptesProxy, type: :lib do
     describe 'connection' do
       subject{ proxy.connection }
       it{ is_expected.to be_a Faraday::Connection }
-      its(:url_prefix){ is_expected.to eql URI '/some_host/api' }
+      its(:url_prefix){ is_expected.to eql URI 'http://panoptes.localhost/api' }
     end
   end
   

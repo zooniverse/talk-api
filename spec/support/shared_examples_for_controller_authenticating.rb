@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.shared_examples_for 'a controller authenticating' do
+RSpec.shared_examples_for 'a controller authenticating' do |controller_action = :index|
   context 'without a user' do
-    before(:each){ get :root }
+    before(:each){ get controller_action }
     its(:bearer_token){ is_expected.to be nil }
     its(:current_user){ is_expected.to be nil }
     its(:panoptes){ is_expected.to be_a PanoptesProxy }
@@ -15,7 +15,7 @@ RSpec.shared_examples_for 'a controller authenticating' do
     before :each do
       @request.headers['Authorization'] = "Bearer #{ bearer_token }"
       stub_successful_me_request
-      get :root
+      get controller_action
     end
     
     its(:bearer_token){ is_expected.to eql bearer_token }

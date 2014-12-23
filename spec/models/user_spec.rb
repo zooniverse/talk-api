@@ -7,6 +7,7 @@ RSpec.describe User, type: :model do
       {
         'id' => '100',
         'login' => 'somebody',
+        'email' => 'somebody@example.com',
         'display_name' => 'different'
       }
     end
