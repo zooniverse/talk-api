@@ -13,7 +13,8 @@ module ActionRendering
   end
   
   def create
-    raise ActionController::NotImplemented.new 'index, show'
+    service.create
+    render json: serializer_class.resource(service.resource)
   end
   
   def update
@@ -25,25 +26,5 @@ module ActionRendering
     authorize instance
     instance.destroy!
     render json: { }, status: :no_content
-  end
-  
-  def serializer_class
-    @_serializer_class ||= "#{ model_class_name }Serializer".constantize
-  end
-  
-  def model_class
-    @_model_class ||= model_class_name.constantize
-  end
-  
-  def model_class_name
-    @_model_class_name ||= self.class.name.sub(/Controller$/, '').singularize
-  end
-  
-  def resource_ids
-    if params[:id].is_a? String
-      params[:id].split(',').compact.collect &:to_i
-    else
-      params[:id]
-    end
   end
 end

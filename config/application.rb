@@ -13,6 +13,7 @@ module Talk
     config.autoload_paths += [
       'lib',
       'app/services',
+      'app/services/concerns',
       'app/serializers/concerns',
       'app/serializers'
     ].collect{ |path| Rails.root.join path }

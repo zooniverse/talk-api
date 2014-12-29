@@ -10,6 +10,8 @@ module ActionRescuing
     rescue_from Pundit::PolicyScopingNotPerformedError, with: :not_implemented
     rescue_from Pundit::NotDefinedError, with: :not_implemented
     rescue_from Pundit::NotAuthorizedError, with: :unauthorized
+    
+    rescue_from JSON::Schema::ValidationError, with: :unprocessable
   end
   
   def unauthorized(exception)
