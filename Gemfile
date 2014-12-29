@@ -18,8 +18,11 @@ group :test, :development do
   gem 'rspec-its'
   gem 'spring-commands-rspec'
   gem 'factory_girl_rails'
-  gem 'webmock'
   gem 'guard-rspec'
   gem 'rb-fsevent' if `uname` =~ /Darwin/
   gem 'pry'
+end
+
+group :test do
+  gem 'webmock'
 end
