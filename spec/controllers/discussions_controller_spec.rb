@@ -6,6 +6,19 @@ RSpec.describe DiscussionsController, type: :controller do
   it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller rendering', :index, :show
+  it_behaves_like 'a controller creating' do
+    let(:request_params) do
+      {
+        discussions: {
+          title: 'works',
+          board_id: create(:board).id,
+          comments: [{
+            body: 'works'
+          }]
+        }
+      }
+    end
+  end
   
   context 'without an authorized user' do
     let(:user){ create :user }
