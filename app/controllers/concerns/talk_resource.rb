@@ -11,7 +11,7 @@ module TalkResource
   end
   
   def service
-    @_service ||= service_class.new({
+    @service ||= service_class.new({
       params: params,
       action: params[:action],
       current_user: current_user,
