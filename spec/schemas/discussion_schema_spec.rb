@@ -26,7 +26,7 @@ RSpec.describe DiscussionSchema, type: :schema do
     include_context 'discussion schema'
     
     with 'properties .discussions' do
-      its(:required){ is_expected.to eql %w(title board_id comments) }
+      its(:required){ is_expected.to eql %w(title board_id user_id comments) }
       
       with 'properties .comments' do
         its(:type){ is_expected.to eql 'array' }

@@ -7,6 +7,7 @@ class DiscussionSchema
       additional_properties false
       string  :title,    required: true, min_length: 3, max_length: 140
       integer :board_id, required: true
+      integer :user_id,  required: true
       
       array :comments, required: true, min_items: 1 do
         items type: :object do
