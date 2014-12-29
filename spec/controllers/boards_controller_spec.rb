@@ -6,6 +6,18 @@ RSpec.describe BoardsController, type: :controller do
   it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller rendering', :index, :show
+  it_behaves_like 'a controller creating' do
+    let(:current_user){ create :user, roles: { test: ['admin'] } }
+    let(:request_params) do
+      {
+        boards: {
+          title: 'works',
+          description: 'works',
+          section: 'test'
+        }
+      }
+    end
+  end
   
   context 'without an authorized user' do
     let(:user){ create :user }

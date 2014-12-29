@@ -1,0 +1,2 @@
+class BoardService < ApplicationService
+end
