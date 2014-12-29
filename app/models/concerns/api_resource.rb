@@ -2,9 +2,8 @@ module ApiResource
   extend ActiveSupport::Concern
   
   included do
-    cattr_accessor(:panoptes_attributes) do
-      HashWithIndifferentAccess.new
-    end
+    class_attribute :panoptes_attributes
+    self.panoptes_attributes = HashWithIndifferentAccess.new
   end
   
   module ClassMethods
