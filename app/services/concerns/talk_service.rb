@@ -11,14 +11,7 @@ module TalkService
     attr_accessor :resource
   end
   
-  module ClassMethods
-    def inherited(base)
-      base.model_class = base.name.sub(/Service$/, '').singularize.constantize
-      base.schema_class = "#{ base.model_class.name }Schema".constantize
-    end
-  end
-  
-  def initialize(params: params, action: actions, current_user: current_user, model_class: nil, schema_class: nil)
+  def initialize(params: params, action: action, current_user: current_user, model_class: nil, schema_class: nil)
     @params = params
     @action = action.to_sym
     @current_user = current_user
