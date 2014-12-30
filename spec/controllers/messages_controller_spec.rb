@@ -6,6 +6,7 @@ RSpec.describe MessagesController, type: :controller do
   it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller restricting',
+    create: { status: 401, response: :error },
     destroy: { status: 401, response: :error }
   
   context 'without an authorized user' do
@@ -24,7 +25,8 @@ RSpec.describe MessagesController, type: :controller do
     
     it_behaves_like 'a controller rendering', :index, :show
     it_behaves_like 'a controller creating' do
-      let!(:conversation){ create :conversation_with_messages, user: record.user }
+      let(:current_user){ record.user }
+      let!(:conversation){ create :conversation_with_messages, user: current_user }
       let(:request_params) do
         {
           messages: {

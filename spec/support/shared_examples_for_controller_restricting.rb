@@ -17,7 +17,7 @@ RSpec.shared_examples_for 'a restricted action' do
 end
 
 RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
-  let(:record){ create resource.name.underscore.to_sym }
+  let(:record){ create resource }
   
   if actions[:index]
     describe '#index' do
@@ -39,6 +39,19 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
         let(:action){ :show }
         let(:params){ { id: record.id } }
         let(:authorizable){ resource.where(id: record.id) }
+        let(:status){ actions[action][:status] }
+        let(:expected_response){ actions[action][:response] }
+      end
+    end
+  end
+  
+  if actions[:create]
+    describe '#create' do
+      it_behaves_like 'a restricted action' do
+        let(:verb){ :post }
+        let(:action){ :create }
+        let(:params){ { } }
+        let(:authorizable){ }
         let(:status){ actions[action][:status] }
         let(:expected_response){ actions[action][:response] }
       end

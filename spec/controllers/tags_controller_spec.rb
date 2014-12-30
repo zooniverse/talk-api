@@ -7,5 +7,6 @@ RSpec.describe TagsController, type: :controller do
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller rendering', :index, :show
   it_behaves_like 'a controller restricting',
+    create: { status: 401, response: :error },
     destroy: { status: 401, response: :error }
 end

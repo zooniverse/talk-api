@@ -21,6 +21,7 @@ RSpec.describe BoardsController, type: :controller do
     before(:each){ allow(subject).to receive(:current_user).and_return user }
     it_behaves_like 'a controller rendering', :destroy
     it_behaves_like 'a controller creating' do
+      let(:current_user){ user }
       let(:request_params) do
         {
           boards: {

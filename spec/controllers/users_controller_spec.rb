@@ -6,6 +6,7 @@ RSpec.describe UsersController, type: :controller do
   it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller restricting',
+    create: { status: 401, response: :error },
     destroy: { status: 401, response: :error }
   
   context 'without an authorized user' do

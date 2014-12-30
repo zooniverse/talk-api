@@ -4,8 +4,10 @@ RSpec.shared_examples_for 'a controller action' do
   let(:send_request){ send verb, action, params.merge(format: :json) }
   
   it 'should authorize the action' do
-    expect(subject).to receive(:authorize).with(authorizable).and_call_original
-    send_request
+    if authorizable
+      expect(subject).to receive(:authorize).with(authorizable).and_call_original
+      send_request
+    end
   end
   
   context 'with a response' do

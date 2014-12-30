@@ -5,7 +5,7 @@ RSpec.shared_examples_for 'a rendered action' do
 end
 
 RSpec.shared_examples_for 'a controller rendering' do |*actions|
-  let(:record){ create resource.name.underscore.to_sym }
+  let(:record){ create resource }
   
   if :index.in? actions
     describe '#index' do

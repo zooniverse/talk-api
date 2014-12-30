@@ -28,6 +28,9 @@ RSpec.shared_examples_for 'a controller rescuing' do
     ActionController::UnpermittedParameters.new(['foo']), with: 422
   
   it_behaves_like 'ActionRescuing',
+    TalkService::ParameterError.new, with: 422
+  
+  it_behaves_like 'ActionRescuing',
     ActionController::RoutingError.new('foo'), with: 404
   
   it_behaves_like 'ActionRescuing',

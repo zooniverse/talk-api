@@ -5,8 +5,10 @@ class ModerationService < ApplicationService
   end
   
   def set_reporting_user
-    unrooted_params[:reports].each do |report|
-      report[:user_id] = current_user.id
+    set_user do
+      unrooted_params[:reports].each do |report|
+        report[:user_id] = current_user.id
+      end
     end
   end
 end

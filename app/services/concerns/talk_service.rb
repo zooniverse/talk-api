@@ -1,6 +1,8 @@
 module TalkService
   extend ActiveSupport::Concern
   
+  class ParameterError < StandardError; end
+  
   included do
     class_attribute :model_class
     class_attribute :schema_class
@@ -38,6 +40,7 @@ module TalkService
   def authorize
     build unless resource
     @authorized = policy.send "#{ action }?"
+    unauthorized! unless authorized?
   end
   
   def validate
@@ -58,7 +61,16 @@ module TalkService
   end
   
   def set_user
-    unrooted_params[:user_id] = current_user.id if current_user
+    unauthorized! unless current_user
+    begin
+      if block_given?
+        yield
+      else
+        unrooted_params[:user_id] = current_user.id if current_user
+      end
+    rescue
+      raise TalkService::ParameterError.new
+    end
   end
   
   def permitted_params
@@ -70,6 +82,12 @@ module TalkService
   end
   
   def unrooted_params
-    permitted_params[model_class.table_name]
+    permitted_params[model_class.table_name] || ActionController::Parameters.new
+  end
+  
+  protected
+  
+  def unauthorized!
+    raise Pundit::NotAuthorizedError.new "not allowed to #{ action } this #{ resource.class }"
   end
 end
