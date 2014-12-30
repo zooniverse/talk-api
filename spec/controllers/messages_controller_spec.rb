@@ -14,11 +14,25 @@ RSpec.describe MessagesController, type: :controller do
     
     it_behaves_like 'a controller restricting',
       index: { status: 200, response: :empty },
-      show: { status: 401, response: :error }
+      show: { status: 401, response: :error },
+      create: { status: 401, response: :error }
   end
   
   context 'with an authorized user' do
+    let(:record){ create :message }
     before(:each){ allow(subject).to receive(:current_user).and_return record.user }
+    
     it_behaves_like 'a controller rendering', :index, :show
+    it_behaves_like 'a controller creating' do
+      let!(:conversation){ create :conversation_with_messages, user: record.user }
+      let(:request_params) do
+        {
+          messages: {
+            body: 'works',
+            conversation_id: conversation.id
+          }
+        }
+      end
+    end
   end
 end
