@@ -13,6 +13,7 @@ RSpec.describe ConversationsController, type: :controller do
     it_behaves_like 'a controller restricting',
       index: { status: 200, response: :empty },
       show: { status: 401, response: :error },
+      create: { status: 401, response: :error },
       destroy: { status: 401, response: :error }
   end
   
@@ -22,6 +23,21 @@ RSpec.describe ConversationsController, type: :controller do
     
     it_behaves_like 'a controller rendering', :index, :show do
       let!(:record){ create :conversation_with_messages, user: user }
+    end
+    
+    it_behaves_like 'a controller creating' do
+      let(:recipients){ create_list :user, 2 }
+      let(:recipient_ids){ recipients.collect &:id }
+      
+      let(:request_params) do
+        {
+          conversations: {
+            title: 'works',
+            body: 'a message',
+            recipient_ids: recipient_ids
+          }
+        }
+      end
     end
     
     it_behaves_like 'a controller restricting',
