@@ -42,6 +42,7 @@ module TalkService
   end
   
   def policy
+    build unless resource
     Pundit.policy! current_user, resource
   end
   
@@ -53,13 +54,13 @@ module TalkService
     !!@authorized
   end
   
-  def set_user
+  def set_user(&block)
     unauthorized! unless current_user
     begin
       if block_given?
-        yield
+        instance_eval &block
       else
-        unrooted_params[:user_id] = current_user.id if current_user
+        unrooted_params[:user_id] = current_user.id
       end
     rescue
       raise TalkService::ParameterError.new
@@ -81,6 +82,6 @@ module TalkService
   protected
   
   def unauthorized!
-    raise Pundit::NotAuthorizedError.new "not allowed to #{ action } this #{ resource.class }"
+    raise Pundit::NotAuthorizedError.new "not allowed to #{ action } this #{ model_class }"
   end
 end

@@ -1,7 +1,7 @@
 class ModerationService < ApplicationService
-  def initialize(*args)
-    super
+  def build
     set_reporting_user if action == :create
+    super
   end
   
   def set_reporting_user

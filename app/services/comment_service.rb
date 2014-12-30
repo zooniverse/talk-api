@@ -1,6 +1,6 @@
 class CommentService < ApplicationService
-  def initialize(*args)
-    super
+  def build
     set_user if action == :create
+    super
   end
 end

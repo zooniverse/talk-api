@@ -1,10 +1,6 @@
 class ConversationService < ApplicationService
-  def initialize(*args)
-    super
-    set_user if action == :create
-  end
-  
   def build
+    set_user if action == :create
     @resource = model_class.new(conversation_params).tap do |conversation|
       conversation.user_conversations.build user_id: current_user.id, is_unread: false
       
