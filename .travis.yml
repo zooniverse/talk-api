@@ -9,6 +9,7 @@ before_install:
  - sudo apt-get purge postgresql-9.1 postgresql-9.2 postgresql-9.3
  - sudo apt-get install postgresql-client-common postgresql-9.4
  - sudo service postgresql start
+ - sudo -u postgres createuser --no-password --superuser postgres
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - mv config/database.yml.travis config/database.yml
