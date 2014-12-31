@@ -224,7 +224,6 @@ DEPENDENCIES
   pundit (~> 0.3)
   rack-cors (~> 0.2.9)
   rails (~> 4.2.0)
-  rb-fsevent
   restpack_serializer (~> 0.5.6)
   rspec-its
   rspec-rails
