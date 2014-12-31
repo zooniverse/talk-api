@@ -2,17 +2,7 @@ ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
 require 'codeclimate-test-reporter'
-SimpleCov.configure do
-  add_filter '/spec'
-  add_filter '/config/initializers'
-end
-
-SimpleCov.start do
-  formatter SimpleCov::Formatter::MultiFormatter[
-    SimpleCov::Formatter::HTMLFormatter,
-    CodeClimate::TestReporter::Formatter
-  ]
-end
+CodeClimate::TestReporter.start
 
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
