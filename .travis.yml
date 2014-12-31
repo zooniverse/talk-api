@@ -3,3 +3,6 @@ cache: bundler
 sudo: false
 rvm:
 - 2.1.5
+addons:
+  repo_token:
+    secure: a3KplVoRsWOnQwwTtvsfH0eufR6v8Pro75t5SOf8l7kCp3YkjaU6sfsVsZ9LoFBSlcQEw4M7G/5l7af+Sm8A9Y/OLcze3lunIIZd5TRQM4uvJINwBLxgZo7TTg9/eyzMoxXdLrTfuTd3OweGYAPCFZSfMNDVdjl9wi/7RH420Gg=

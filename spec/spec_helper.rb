@@ -1,4 +1,19 @@
 ENV['RAILS_ENV'] ||= 'test'
+
+require 'simplecov'
+require 'codeclimate-test-reporter'
+SimpleCov.configure do
+  add_filter '/spec'
+  add_filter '/config/initializers'
+end
+
+SimpleCov.start do
+  formatter SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    CodeClimate::TestReporter::Formatter
+  ]
+end
+
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
@@ -10,6 +25,9 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include JSON::SchemaBuilder::RSpecHelper, type: :schema
+  
+  config.before(:suite){ WebMock.disable_net_connect! }
+  config.after(:suite){ WebMock.allow_net_connect! }
   
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
