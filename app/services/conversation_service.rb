@@ -2,18 +2,25 @@ class ConversationService < ApplicationService
   def build
     set_user if action == :create
     @resource = model_class.new(conversation_params).tap do |conversation|
-      conversation.user_conversations.build user_id: current_user.id, is_unread: false
-      
-      recipient_ids.each do |recipient_id|
-        conversation.user_conversations.build user_id: recipient_id, is_unread: true
-      end
-      
-      conversation.messages << MessageService.new({
-        params: message_params,
-        action: :create,
-        current_user: current_user
-      }).build
+      build_user_conversations_for conversation
+      conversation.messages << build_message
     end
+  end
+  
+  def build_user_conversations_for(conversation)
+    conversation.user_conversations.build user_id: current_user.id, is_unread: false
+    
+    recipient_ids.each do |recipient_id|
+      conversation.user_conversations.build user_id: recipient_id, is_unread: true
+    end
+  end
+  
+  def build_message
+    MessageService.new({
+      params: message_params,
+      action: :create,
+      current_user: current_user
+    }).build
   end
   
   def conversation_params
