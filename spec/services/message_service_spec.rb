@@ -12,5 +12,11 @@ RSpec.describe MessageService, type: :service do
         }
       }
     end
+    
+    context 'creating the message' do
+      before(:each){ service.create }
+      subject{ service.resource }
+      its(:user){ is_expected.to eql current_user }
+    end
   end
 end
