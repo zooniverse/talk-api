@@ -1,6 +1,5 @@
 class BoardSchema
   include JSON::SchemaBuilder
-  configure{ |opts| opts.strict = true }
   
   root :boards
   

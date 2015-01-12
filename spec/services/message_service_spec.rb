@@ -13,6 +13,7 @@ RSpec.describe MessageService, type: :service do
       }
     end
     
+    it_behaves_like 'a service creating', Message
     context 'creating the message' do
       before(:each){ service.create }
       subject{ service.resource }

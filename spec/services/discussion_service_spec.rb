@@ -16,6 +16,8 @@ RSpec.describe DiscussionService, type: :service do
       }
     end
     
+    it_behaves_like 'a service creating', Discussion
+    
     context 'creating the discussion' do
       before(:each){ service.create }
       subject{ service.resource }
@@ -31,7 +33,7 @@ RSpec.describe DiscussionService, type: :service do
       end
     end
     
-    it_behaves_like 'a service updating' do
+    it_behaves_like 'a service updating', Discussion do
       let(:update_params) do
         {
           id: record.id,

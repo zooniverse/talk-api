@@ -120,6 +120,42 @@ RSpec.shared_examples_for 'a service' do |resource|
     end
   end
   
+  describe '#authorize' do
+    it 'should authorize the action' do
+      policy = double
+      expect(policy).to receive("#{ options[:action] }?").and_return true
+      expect(service).to receive(:policy).and_return policy
+      service.authorize
+    end
+    
+    it 'should raise an error if unauthorized' do
+      expect(service).to receive(:policy)
+        .and_return double "#{ options[:action] }?" => false
+      expect{
+        service.authorize
+      }.to raise_error Pundit::NotAuthorizedError
+    end
+    
+    it 'should be authorized' do
+      expect(service).to receive(:policy)
+        .and_return double "#{ options[:action] }?" => true
+      expect{
+        service.authorize
+      }.to change {
+        service.authorized?
+      }.from(false).to true
+    end
+  end
+end
+
+RSpec.shared_examples_for 'a service creating' do |resource|
+  describe '#authorize' do
+    it 'should build the resource' do
+      expect(service).to receive(:build).once.and_call_original
+      2.times{ service.authorize }
+    end
+  end
+  
   describe '#validate' do
     it 'should build the schema' do
       expect(service.schema_class).to receive(:new)
@@ -151,38 +187,6 @@ RSpec.shared_examples_for 'a service' do |resource|
     end
   end
   
-  describe '#authorize' do
-    it 'should build the resource' do
-      expect(service).to receive(:build).once.and_call_original
-      2.times{ service.authorize }
-    end
-    
-    it 'should authorize the action' do
-      policy = double
-      expect(policy).to receive("#{ options[:action] }?").and_return true
-      expect(service).to receive(:policy).and_return policy
-      service.authorize
-    end
-    
-    it 'should raise an error if unauthorized' do
-      expect(service).to receive(:policy)
-        .and_return double "#{ options[:action] }?" => false
-      expect{
-        service.authorize
-      }.to raise_error Pundit::NotAuthorizedError
-    end
-    
-    it 'should be authorized' do
-      expect(service).to receive(:policy)
-        .and_return double "#{ options[:action] }?" => true
-      expect{
-        service.authorize
-      }.to change {
-        service.authorized?
-      }.from(false).to true
-    end
-  end
-  
   describe '#create' do
     it 'should build the resource' do
       expect(service).to receive(:build).once.and_call_original
@@ -207,11 +211,40 @@ RSpec.shared_examples_for 'a service' do |resource|
   end
 end
 
-RSpec.shared_examples_for 'a service updating' do
+RSpec.shared_examples_for 'a service updating' do |resource|
   let(:creation_service){ described_class.new **create_options }
-  let(:record){ creation_service.create; creation_service.resource }
+  let(:record){ create resource }
   let(:params){ update_params }
   let(:options){ update_options }
+  
+  describe '#validate' do
+    before(:each){ service.find_resource }
+    
+    it 'should use the schema action' do
+      expect_any_instance_of(service.schema_class)
+        .to receive(:update).and_return double :validate! => true
+      service.validate
+    end
+    
+    it 'should validate the schema' do
+      schema = double update: double
+      expect(service.schema_class).to receive(:new).and_return schema
+      expect(schema.update).to receive(:validate!)
+        .with(service.rooted_params)
+      service.validate
+    end
+    
+    it 'should be validated' do
+      expect_any_instance_of(service.schema_class)
+        .to receive(:update).and_return double :validate! => true
+      
+      expect {
+        service.validate
+      }.to change {
+        service.validated?
+      }.from(false).to true
+    end
+  end
   
   describe '#find_resource' do
     it 'should find the resource' do

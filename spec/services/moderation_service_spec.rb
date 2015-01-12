@@ -16,6 +16,8 @@ RSpec.describe ModerationService, type: :service do
       }
     end
     
+    it_behaves_like 'a service creating', Moderation
+    
     context 'creating a moderation' do
       before(:each){ service.create }
       subject!{ service.resource }
@@ -50,7 +52,7 @@ RSpec.describe ModerationService, type: :service do
     context 'when actioning a moderation' do
       let(:current_user){ create :user, roles: { test: ['moderator'] } }
       
-      it_behaves_like 'a service updating' do
+      it_behaves_like 'a service updating', Moderation do
         let(:update_params) do
           {
             id: record.id,

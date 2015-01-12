@@ -17,7 +17,9 @@ RSpec.describe CommentService, type: :service do
       its(:user){ is_expected.to eql current_user }
     end
     
-    it_behaves_like 'a service updating' do
+    it_behaves_like 'a service creating', 'Comment'
+    it_behaves_like 'a service updating', Comment do
+      let(:record){ create :comment, user: current_user }
       let(:update_params) do
         {
           id: record.id,
