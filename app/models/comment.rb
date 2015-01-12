@@ -11,6 +11,7 @@ class Comment < ActiveRecord::Base
   validates :section, presence: true
   
   before_validation :set_section
+  before_save :parse_tags
   before_create :denormalize_attributes
   after_create :update_counters
   after_update :update_discussion_counters
@@ -19,6 +20,12 @@ class Comment < ActiveRecord::Base
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
+  
+  MATCH_TAGS = /(?:^|[^\w])#([-\w\d]{3,40})/im
+  
+  def parse_tags
+    self.tags = body.scan(MATCH_TAGS).flatten.map(&:downcase).uniq.sort
+  end
   
   protected
   

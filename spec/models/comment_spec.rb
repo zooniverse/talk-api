@@ -24,8 +24,13 @@ RSpec.describe Comment, type: :model do
   context 'creating' do
     it 'should set default attributes' do
       comment = create :comment
-      expect(comment.tags).to eq({ })
+      expect(comment.tags).to eq([])
       expect(comment.is_deleted).to be false
+    end
+    
+    it 'should parse the tags' do
+      comment = create :comment, body: '#tag1 #Tag blah #tag2'
+      expect(comment.tags).to eql %w(tag tag1 tag2)
     end
     
     it 'should set the section' do

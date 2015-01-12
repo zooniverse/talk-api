@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141223182401) do
+ActiveRecord::Schema.define(version: 20150112203354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20141223182401) do
   create_table "comments", force: :cascade do |t|
     t.string   "category"
     t.text     "body",                          null: false
-    t.jsonb    "tags",          default: {}
     t.integer  "focus_id"
     t.string   "focus_type"
     t.string   "section",                       null: false
@@ -43,6 +42,7 @@ ActiveRecord::Schema.define(version: 20141223182401) do
     t.jsonb    "upvotes",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "tags",          default: [],    null: false, array: true
   end
 
   create_table "conversations", force: :cascade do |t|
