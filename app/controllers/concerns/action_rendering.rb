@@ -18,7 +18,8 @@ module ActionRendering
   end
   
   def update
-    raise ActionController::NotImplemented.new 'index, show'
+    service.update
+    render json: serializer_class.resource(service.resource)
   end
   
   def destroy

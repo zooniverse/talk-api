@@ -58,6 +58,20 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
     end
   end
   
+  if actions[:update]
+    describe '#update' do
+      it_behaves_like 'a restricted action' do
+        let(:record){ create resource }
+        let(:verb){ :put }
+        let(:action){ :update }
+        let(:params){ { id: record.id } }
+        let(:authorizable){ }
+        let(:status){ actions[action][:status] }
+        let(:expected_response){ actions[action][:response] }
+      end
+    end
+  end
+  
   if actions[:destroy]
     describe '#destroy' do
       it_behaves_like 'a restricted action' do
