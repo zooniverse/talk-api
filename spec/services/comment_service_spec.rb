@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe CommentService, type: :service do
   it_behaves_like 'a service', Comment do
-    let(:params) do
+    let(:create_params) do
       {
         comments: {
           body: 'works',
@@ -15,6 +15,17 @@ RSpec.describe CommentService, type: :service do
       before(:each){ service.create }
       subject{ service.resource }
       its(:user){ is_expected.to eql current_user }
+    end
+    
+    it_behaves_like 'a service updating' do
+      let(:update_params) do
+        {
+          id: record.id,
+          comments: {
+            body: 'changed'
+          }
+        }
+      end
     end
   end
 end

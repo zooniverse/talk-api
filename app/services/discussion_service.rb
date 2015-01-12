@@ -1,6 +1,6 @@
 class DiscussionService < ApplicationService
   def build
-    set_user if action == :create
+    set_user
     @resource = model_class.new(discussion_params).tap do |discussion|
       discussion.comments << CommentService.new({
         params: comment_params,

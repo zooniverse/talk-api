@@ -4,7 +4,7 @@ RSpec.describe ConversationService, type: :service do
   it_behaves_like 'a service', Conversation do
     let(:recipients){ create_list :user, 2 }
     let(:recipient_ids){ recipients.collect &:id }
-    let(:params) do
+    let(:create_params) do
       {
         conversations: {
           title: 'works',

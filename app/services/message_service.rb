@@ -1,6 +1,6 @@
 class MessageService < ApplicationService
   def build
-    set_user if action == :create
+    set_user
     super
   end
 end

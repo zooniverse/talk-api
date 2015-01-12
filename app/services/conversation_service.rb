@@ -1,6 +1,6 @@
 class ConversationService < ApplicationService
   def build
-    set_user if action == :create
+    set_user
     @resource = model_class.new(conversation_params).tap do |conversation|
       build_user_conversations_for conversation
       conversation.messages << build_message

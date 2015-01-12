@@ -23,9 +23,25 @@ module TalkService
     @resource = model_class.new unrooted_params
   end
   
+  def find_resource
+    @resource = model_class.find params[:id]
+  end
+  
+  def update_resource
+    resource.assign_attributes unrooted_params
+  end
+  
   def create
     build unless resource
     authorize unless authorized?
+    validate unless validated?
+    resource.save!
+  end
+  
+  def update
+    find_resource unless resource
+    authorize unless authorized?
+    update_resource
     validate unless validated?
     resource.save!
   end

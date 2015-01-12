@@ -16,6 +16,8 @@ class Moderation < ActiveRecord::Base
   protected
   
   def transition_state
+    self.state = actions.last['state'] if actions_changed?
+    self.state = 'opened' if reports_changed?
     self.actioned_at = Time.now.utc if state_changed?
   end
 end
