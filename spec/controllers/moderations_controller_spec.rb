@@ -20,10 +20,11 @@ RSpec.describe ModerationsController, type: :controller do
   
   context 'with an authorized user' do
     let(:user){ create :user, roles: { zooniverse: ['moderator'] } }
+    let(:target){ create :comment }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
+    
     it_behaves_like 'a controller rendering', :index, :show, :destroy
     it_behaves_like 'a controller creating' do
-      let(:target){ create :comment }
       let(:request_params) do
         {
           moderations: {
@@ -32,6 +33,21 @@ RSpec.describe ModerationsController, type: :controller do
             target_type: 'Comment',
             reports: [{
               message: 'works'
+            }]
+          }
+        }
+      end
+    end
+    
+    it_behaves_like 'a controller updating' do
+      let(:current_user){ user }
+      let(:request_params) do
+        {
+          id: record.id,
+          moderations: {
+            actions: [{
+              message: 'closing',
+              state: 'closed'
             }]
           }
         }

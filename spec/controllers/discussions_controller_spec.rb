@@ -37,5 +37,17 @@ RSpec.describe DiscussionsController, type: :controller do
         }
       end
     end
+    
+    it_behaves_like 'a controller updating' do
+      let(:current_user){ user }
+      let(:request_params) do
+        {
+          id: record.id,
+          discussions: {
+            title: 'changed'
+          }
+        }
+      end
+    end
   end
 end
