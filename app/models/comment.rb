@@ -13,6 +13,7 @@ class Comment < ActiveRecord::Base
   before_validation :set_section
   before_create :denormalize_attributes
   after_create :update_counters
+  after_update :update_discussion_counters
   after_destroy :update_counters
   
   moderatable_with :destroy, by: [:moderator, :admin]
@@ -31,7 +32,12 @@ class Comment < ActiveRecord::Base
   end
   
   def update_counters
-    discussion.count_users!
-    board.count_users_and_comments! if board
+    discussion.update_counters!
+  end
+  
+  def update_discussion_counters
+    changes.fetch(:discussion_id, []).compact.each do |id|
+      Discussion.find_by_id(id).try :update_counters!
+    end
   end
 end

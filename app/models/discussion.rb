@@ -11,6 +11,7 @@ class Discussion < ActiveRecord::Base
   before_validation :set_section
   before_create :denormalize_attributes
   before_destroy :clear_deleted_comments
+  after_update :update_board_counters
   
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
@@ -20,6 +21,11 @@ class Discussion < ActiveRecord::Base
   def count_users!
     self.users_count = comments.select(:user_id).distinct.count
     save if changed?
+  end
+  
+  def update_counters!
+    count_users!
+    board.count_users_and_comments!
   end
   
   protected
@@ -38,6 +44,12 @@ class Discussion < ActiveRecord::Base
       false
     else
       comments.destroy_all
+    end
+  end
+  
+  def update_board_counters
+    changes.fetch(:board_id, []).compact.each do |id|
+      Board.find_by_id(id).try :count_users_and_comments!
     end
   end
 end

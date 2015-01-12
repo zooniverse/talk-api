@@ -107,4 +107,46 @@ RSpec.describe Comment, type: :model do
       end
     end
   end
+  
+  context 'updating' do
+    let!(:source){ create :discussion }
+    let!(:destination){ create :discussion }
+    let!(:comment){ create :comment, discussion: source }
+    
+    def move_comment
+      Comment.find(comment.id).update! discussion_id: destination.id
+    end
+    
+    it 'should update the source users_count' do
+      expect{ move_comment }.to change{ source.reload.users_count }.by -1
+    end
+    
+    it 'should update the source comments_count' do
+      expect{ move_comment }.to change{ source.reload.comments_count }.from(1).to 0
+    end
+    
+    it 'should update the source board comments_counts' do
+      expect{ move_comment }.to change{ source.board.reload.comments_count }.from(1).to 0
+    end
+    
+    it 'should update the source board users_counts' do
+      expect{ move_comment }.to change{ source.board.reload.users_count }.from(1).to 0
+    end
+    
+    it 'should update the destination users_count' do
+      expect{ move_comment }.to change{ destination.reload.users_count }.from(0).to 1
+    end
+    
+    it 'should update the destination comments_count' do
+      expect{ move_comment }.to change{ destination.reload.comments_count }.from(0).to 1
+    end
+    
+    it 'should update the destination board comments_counts' do
+      expect{ move_comment }.to change{ destination.board.reload.comments_count }.from(0).to 1
+    end
+    
+    it 'should update the destination board users_counts' do
+      expect{ move_comment }.to change{ destination.board.reload.users_count }.from(0).to 1
+    end
+  end
 end

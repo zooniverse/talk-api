@@ -54,6 +54,41 @@ RSpec.describe Discussion, type: :model do
     end
   end
   
+  context 'updating' do
+    let!(:source){ create :board }
+    let!(:destination){ create :board }
+    let!(:discussion){ create :discussion, board: source }
+    let!(:comment){ create :comment, discussion: discussion }
+    
+    def move_discussion
+      Discussion.find(discussion.id).update! board_id: destination.id
+    end
+    
+    it 'should update the source discussions_count' do
+      expect{ move_discussion }.to change{ source.reload.discussions_count }.from(1).to 0
+    end
+    
+    it 'should update the source comments_count' do
+      expect{ move_discussion }.to change{ source.reload.comments_count }.from(1).to 0
+    end
+    
+    it 'should update the source users_count' do
+      expect{ move_discussion }.to change{ source.reload.users_count }.from(1).to 0
+    end
+    
+    it 'should update the destination discussions_count' do
+      expect{ move_discussion }.to change{ destination.reload.discussions_count }.from(0).to 1
+    end
+    
+    it 'should update the destination comments_count' do
+      expect{ move_discussion }.to change{ destination.reload.comments_count }.from(0).to 1
+    end
+    
+    it 'should update the destination users_count' do
+      expect{ move_discussion }.to change{ destination.reload.users_count }.from(0).to 1
+    end
+  end
+  
   context 'destroying' do
     it 'should not be destroyable when comments exist' do
       discussion = create :discussion_with_comments, comment_count: 2
