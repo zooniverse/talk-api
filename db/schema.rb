@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115182521) do
+ActiveRecord::Schema.define(version: 20150115213705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(version: 20150115182521) do
     t.jsonb    "upvotes",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "tags",          default: [],    null: false, array: true
     t.json     "mentioning",    default: {},    null: false
+    t.json     "tagging",       default: {}
   end
 
   create_table "conversations", force: :cascade do |t|
@@ -73,7 +73,6 @@ ActiveRecord::Schema.define(version: 20150115182521) do
     t.string   "description"
     t.integer  "comments_count", default: 0
     t.json     "data",           default: {}
-    t.jsonb    "tags",           default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -110,11 +109,14 @@ ActiveRecord::Schema.define(version: 20150115182521) do
   end
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",                   null: false
-    t.integer  "uses",       default: 0
-    t.string   "section",                null: false
+    t.string   "name",          null: false
+    t.string   "section",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id",       null: false
+    t.integer  "comment_id",    null: false
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
   end
 
   create_table "user_conversations", force: :cascade do |t|

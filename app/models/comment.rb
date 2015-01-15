@@ -3,6 +3,8 @@ class Comment < ActiveRecord::Base
   include HashChanges
   
   has_many :mentions
+  has_many :tags
+  has_many :taggables, through: :tags
   
   belongs_to :user, required: true
   belongs_to :discussion, counter_cache: true, touch: true, required: true
@@ -24,14 +26,34 @@ class Comment < ActiveRecord::Base
   moderatable_with :report, by: [:all]
   
   concerning :Tagging do
-    MATCH_TAGS = /(?:^|[^\w])#([-\w\d]{3,40})/im
+    MATCH_TAGS = /
+      (?:^|[^\w])         # match the beginning of the word
+      (\#([-\w\d]{3,40})) # match tags
+    /imx
     
     included do
       before_save :parse_tags
+      before_update :parse_tags, :update_tags
     end
     
     def parse_tags
-      self.tags = body.scan(MATCH_TAGS).flatten.map(&:downcase).uniq.sort
+      self.tagging = { }
+      body.scan(MATCH_TAGS).each do |tag, name|
+        tagged tag, name.downcase
+      end
+    end
+    
+    def update_tags
+      removed_from(:tagging).each_pair do |tag, name|
+        Tag.where(comment_id: id, name: name).destroy_all
+      end
+    end
+    
+    protected
+    
+    def tagged(tag, name)
+      self.tagging[tag] = name.downcase
+      tags.build(name: name) if added_to(:tagging)[tag]
     end
   end
   
