@@ -14,4 +14,8 @@ class User < ActiveRecord::Base
   panoptes_attribute :login
   panoptes_attribute :email
   panoptes_attribute :display_name, updateable: true
+  
+  def mentioned_by(comment)
+    # TO-DO: notification
+  end
 end

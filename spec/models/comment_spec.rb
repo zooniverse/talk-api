@@ -113,7 +113,7 @@ RSpec.describe Comment, type: :model do
     end
   end
   
-  context 'updating' do
+  context 'when moving discussions' do
     let!(:source){ create :discussion }
     let!(:destination){ create :discussion }
     let!(:comment){ create :comment, discussion: source }
@@ -152,6 +152,69 @@ RSpec.describe Comment, type: :model do
     
     it 'should update the destination board users_counts' do
       expect{ move_comment }.to change{ destination.board.reload.users_count }.from(0).to 1
+    end
+  end
+  
+  describe '#parse_mentions' do
+    let(:subject){ create :subject }
+    let(:subject_mention){ "^S#{ subject.id }" }
+    
+    let(:collection){ create :collection }
+    let(:collection_mention){ "^C#{ collection.id }" }
+    
+    let(:user){ create :user }
+    let(:user_mention){ "@#{ user.login }" }
+    
+    let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.login }?" }
+    let(:comment){ create :comment, body: body }
+    
+    it 'should match subjects' do
+      expect(comment.mentioning).to include subject_mention => {
+        'id' => subject.id, 'type' => 'Subject'
+      }
+    end
+    
+    it 'should match collections' do
+      expect(comment.mentioning).to include collection_mention => {
+        'id' => collection.id, 'type' => 'Collection'
+      }
+    end
+    
+    it 'should match users' do
+      expect(comment.mentioning).to include user_mention => {
+        'id' => user.id, 'type' => 'User'
+      }
+    end
+    
+    it 'should create mentions for subjects' do
+      expect(comment.mentions.where(mentionable: subject).exists?).to be true
+    end
+    
+    it 'should create mentions for collections' do
+      expect(comment.mentions.where(mentionable: collection).exists?).to be true
+    end
+    
+    it 'should create mentions for users' do
+      expect(comment.mentions.where(mentionable: user).exists?).to be true
+    end
+  end
+  
+  describe '#update_mentions' do
+    let(:subject){ create :subject }
+    let(:subject_mention){ "^S#{ subject.id }" }
+    let(:collection){ create :collection }
+    let(:collection_mention){ "^C#{ collection.id }" }
+    let(:comment){ create :comment, body: "#{ subject_mention } #{ collection_mention }" }
+    
+    it 'should remove mentions on update' do
+      comment.update! body: subject_mention
+      expect(comment.mentions.where(mentionable: collection).exists?).to be false
+    end
+    
+    it 'should add mentions on update' do
+      subject2 = create :subject
+      comment.update! body: "#{ comment.body } ^S#{ subject2.id }"
+      expect(comment.mentions.where(mentionable: subject2).exists?).to be true
     end
   end
 end
