@@ -14,4 +14,4 @@ addons:
   postgresql: "9.3"
   code_climate:
     repo_token:
-      secure: a3KplVoRsWOnQwwTtvsfH0eufR6v8Pro75t5SOf8l7kCp3YkjaU6sfsVsZ9LoFBSlcQEw4M7G/5l7af+Sm8A9Y/OLcze3lunIIZd5TRQM4uvJINwBLxgZo7TTg9/eyzMoxXdLrTfuTd3OweGYAPCFZSfMNDVdjl9wi/7RH420Gg=
+      secure: Cc8J0Xm4PMLbZZvdI//NIaKwj9IY5j2RvbpYPrZW8BafbbxdlBZwZsMYnNOCOlSKhZSO87zxTQno3Yyv2ZnzsET1qj3XZ+6W5Q+INmxv9FSMZdbYyO+oRto8X/i0gjO+CerP642AKTOj9omaSxDKLoP/2dr6VKEQaxO4hFWNYgc=
