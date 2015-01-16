@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150115213705) do
+ActiveRecord::Schema.define(version: 20150116153904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "boards", force: :cascade do |t|
     t.string   "title",                          null: false
@@ -23,7 +24,7 @@ ActiveRecord::Schema.define(version: 20150115213705) do
     t.integer  "users_count",       default: 0
     t.integer  "comments_count",    default: 0
     t.integer  "discussions_count", default: 0
-    t.jsonb    "permissions",       default: {}
+    t.json     "permissions",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -39,11 +40,11 @@ ActiveRecord::Schema.define(version: 20150115213705) do
     t.string   "user_login",                    null: false
     t.boolean  "is_deleted",    default: false
     t.json     "versions",      default: []
-    t.jsonb    "upvotes",       default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json     "mentioning",    default: {},    null: false
     t.json     "tagging",       default: {}
+    t.hstore   "upvotes",       default: {}
   end
 
   create_table "conversations", force: :cascade do |t|
@@ -130,7 +131,7 @@ ActiveRecord::Schema.define(version: 20150115213705) do
   create_table "users", force: :cascade do |t|
     t.string   "login",                     null: false
     t.string   "display_name"
-    t.jsonb    "roles",        default: {}
+    t.json     "roles",        default: {}
     t.json     "preferences",  default: {}
     t.json     "stats",        default: {}
     t.datetime "created_at"
