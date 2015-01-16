@@ -1,4 +1,4 @@
 class UserSerializer
   include TalkSerializer
-  all_attributes
+  all_attributes except: :email
 end

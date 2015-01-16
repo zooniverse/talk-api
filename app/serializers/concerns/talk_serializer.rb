@@ -11,9 +11,10 @@ module TalkSerializer
   end
   
   module ClassMethods
-    def all_attributes
-      attrs = model_class.attribute_names rescue []
-      attributes *attrs
+    def all_attributes(except: [])
+      attrs = model_class.attribute_names.sort rescue []
+      except = Array.wrap(except).sort.collect &:to_s
+      attributes *(attrs.sort - except)
     end
   end
   
