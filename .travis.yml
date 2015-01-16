@@ -1,19 +1,17 @@
 language: ruby
+sudo: false
 cache:
   - bundler
-  - apt
 rvm:
 - 2.1.5
-before_install:
- - sudo apt-get update
- - sudo service postgresql stop
- - sudo apt-get purge postgresql-9.1 postgresql-9.2 postgresql-9.3
- - sudo apt-get install postgresql-client-common postgresql-9.4
- - sudo service postgresql start
 before_script:
-  - mv config/database.yml.travis config/database.yml
-  - RACK_ENV=test bundle exec rake db:create db:migrate
+  - rename 's/\.yml.travis$/\.yml/' config/*.yml.travis
+  - psql -U postgres -c 'create database travis_ci_test;'
+  - RACK_ENV=test bundle exec rake db:schema:load
+services:
+  - postgresql
 addons:
+  postgresql: "9.3"
   code_climate:
     repo_token:
       secure: a3KplVoRsWOnQwwTtvsfH0eufR6v8Pro75t5SOf8l7kCp3YkjaU6sfsVsZ9LoFBSlcQEw4M7G/5l7af+Sm8A9Y/OLcze3lunIIZd5TRQM4uvJINwBLxgZo7TTg9/eyzMoxXdLrTfuTd3OweGYAPCFZSfMNDVdjl9wi/7RH420Gg=
