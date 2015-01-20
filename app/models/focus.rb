@@ -3,6 +3,7 @@ class Focus < ActiveRecord::Base
   
   has_many :mentions, as: :mentionable, dependent: :destroy
   has_many :comments, through: :mentions
+  belongs_to :user
   
   validates :section, presence: true
   
