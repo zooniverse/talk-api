@@ -90,6 +90,23 @@ RSpec.describe Comment, type: :model do
       }.by 3
     end
     
+    context 'destroying' do
+      let(:subject){ create :subject }
+      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }" }
+      
+      it 'should destroy tags' do
+        tag = comment.tags.first
+        comment.destroy
+        expect{ tag.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+      
+      it 'should destroy mentions' do
+        mention = comment.mentions.first
+        comment.destroy
+        expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
+    
     context 'updating board counts' do
       let(:board) do
         discussion1 = create :discussion_with_comments, comment_count: 3, user_count: 2

@@ -2,15 +2,14 @@ class Comment < ActiveRecord::Base
   include Moderatable
   include HashChanges
   
-  has_many :mentions
-  has_many :tags
+  has_many :mentions, dependent: :destroy
+  has_many :tags, dependent: :destroy
   has_many :taggables, through: :tags
   
   belongs_to :user, required: true
   belongs_to :discussion, counter_cache: true, touch: true, required: true
   belongs_to :focus, counter_cache: true
-  belongs_to :board
-  delegate :board, to: :discussion
+  has_one :board, through: :discussion
   
   validates :body, presence: true
   validates :section, presence: true
