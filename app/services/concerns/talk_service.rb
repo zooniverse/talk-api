@@ -11,7 +11,7 @@ module TalkService
     attr_accessor :resource
   end
   
-  def initialize(params: params, action: action, current_user: current_user, model_class: nil, schema_class: nil)
+  def initialize(params:, action:, current_user:, model_class: nil, schema_class: nil)
     @params = params
     @action = action.to_sym
     @current_user = current_user
