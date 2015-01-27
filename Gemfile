@@ -13,6 +13,10 @@ gem 'pundit', '~> 0.3'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 
+group :production do
+  gem 'puma'
+end
+
 group :test, :development do
   gem 'rspec-rails'
   gem 'rspec-its'
