@@ -8,3 +8,4 @@
 /coverage
 **.orig
 .DS_Store
+.vagrant
