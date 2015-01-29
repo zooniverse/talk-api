@@ -5,7 +5,17 @@ class ApplicationController < ActionController::Base
   
   def root
     authorize :application, :index?
-    render json: { }
+    render json: {
+      boards: { href: '/boards', type: 'boards' },
+      comments: { href: '/comments', type: 'comments' },
+      conversations: { href: '/conversations', type: 'conversations' },
+      discussions: { href: '/discussions', type: 'discussions' },
+      focuses: { href: '/focuses', type: 'focuses' },
+      messages: { href: '/messages', type: 'messages' },
+      moderations: { href: '/moderations', type: 'moderations' },
+      tags: { href: '/tags', type: 'tags' },
+      users: { href: '/users', type: 'users' }
+    }
   end
   
   def sinkhole
