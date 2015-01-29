@@ -2,6 +2,10 @@
 
 The new backend for Talk
 
+[![Build Status](https://travis-ci.org/zooniverse/Talk-Api.svg?branch=master)](https://travis-ci.org/zooniverse/Talk-Api)
+[![Code Climate](https://codeclimate.com/github/zooniverse/Talk-Api/badges/gpa.svg)](https://codeclimate.com/github/zooniverse/Talk-Api)
+[![Test Coverage](https://codeclimate.com/github/zooniverse/Talk-Api/badges/coverage.svg)](https://codeclimate.com/github/zooniverse/Talk-Api)
+
 ## Setting up
 
 * Ruby 2.2
