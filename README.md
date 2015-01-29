@@ -18,20 +18,22 @@ The new backend for Talk
   * [Windows](http://docs.docker.com/installation/windows/) - Boot2Docker
 
 By default, Vagrant runs in the staging environment, so you'll want to add configurations:
-  * database.yml
-    * ```yaml
-      staging:
-        <<: *default
-        database: talk_staging
-        username: talk
-        host: <%= ENV['PG_PORT_5432_TCP_ADDR'] %>
-        password: <%= ENV['TALK_DB_PASSWORD'] %>
-    ```
-  *  panoptes.yml
-    * ```yaml
-      staging:
-        host: 'https://panoptes-staging.zooniverse.org'
-    ```
+
+* database.yml
+  ```yaml
+    staging:
+      <<: *default
+      database: talk_staging
+      username: talk
+      host: <%= ENV['PG_PORT_5432_TCP_ADDR'] %>
+      password: <%= ENV['TALK_DB_PASSWORD'] %>
+  ```
+
+* panoptes.yml
+  ```yaml
+    staging:
+      host: 'https://panoptes-staging.zooniverse.org'
+  ```
 
 Then start everything up with
 ```
