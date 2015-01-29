@@ -87,3 +87,10 @@ Some resources ([User](app/models/user.rb), [Collection](app/models/collection.r
 ## To-Do
 
 Check the [issues](https://github.com/zooniverse/Talk-Api/issues) for what's in development.
+
+
+## License
+
+Copyright 2014-2015 by the Zooniverse
+
+Distributed under the Apache Public License v2. See [LICENSE](LICENSE)
