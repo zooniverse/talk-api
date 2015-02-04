@@ -1,4 +1,6 @@
 class CommentPolicy < ApplicationPolicy
+  delegate :locked?, to: 'record.discussion'
+  
   def index?
     true
   end
@@ -8,19 +10,19 @@ class CommentPolicy < ApplicationPolicy
   end
   
   def create?
-    logged_in?
+    logged_in? && !locked?
   end
   
   def update?
-    owner?
+    owner? && !locked?
   end
   
   def destroy?
-    owner?
+    owner? && !locked?
   end
   
   def move?
-    owner? || moderator? || admin?
+    !locked? && (owner? || moderator? || admin?)
   end
   
   def upvote?

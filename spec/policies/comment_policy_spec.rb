@@ -33,4 +33,17 @@ RSpec.describe CommentPolicy, type: :policy do
     it_behaves_like 'a policy permitting', :index, :show, :create, :move, :upvote
     it_behaves_like 'a policy forbidding', :update, :destroy
   end
+  
+  context 'with a locked discussion' do
+    let(:user){ create :user }
+    before(:each){ record.discussion.update_attributes locked: true }
+    it_behaves_like 'a policy permitting', :index, :show, :upvote
+    it_behaves_like 'a policy forbidding', :create, :update, :destroy, :move
+    
+    context 'with the comment owner' do
+      let(:user){ record.user }
+      it_behaves_like 'a policy permitting', :index, :show
+      it_behaves_like 'a policy forbidding', :create, :update, :destroy, :move, :upvote
+    end
+  end
 end
