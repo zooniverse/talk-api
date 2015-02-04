@@ -2,6 +2,8 @@ class Board < ActiveRecord::Base
   has_many :discussions, dependent: :restrict_with_error
   has_many :comments, through: :discussions
   has_many :users, through: :comments
+  has_many :boards
+  belongs_to :board
   
   validates :title, presence: true
   validates :description, presence: true

@@ -3,12 +3,14 @@ require 'spec_helper'
 RSpec.describe BoardService, type: :service do
   it_behaves_like 'a service', Board do
     let(:current_user){ create :user, roles: { test: ['moderator'] } }
+    let(:parent_board){ create :board }
     let(:create_params) do
       {
         boards: {
           title: 'works',
           description: 'works',
-          section: 'test'
+          section: 'test',
+          board_id: parent_board.id
         }
       }
     end
@@ -20,7 +22,8 @@ RSpec.describe BoardService, type: :service do
           id: record.id,
           boards: {
             title: 'new title',
-            description: 'new description'
+            description: 'new description',
+            board_id: nil
           }
         }
       end
