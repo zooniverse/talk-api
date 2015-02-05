@@ -9,4 +9,17 @@ RSpec.describe Focus, type: :model do
       expect(without_section).to fail_validation section: "can't be blank"
     end
   end
+  
+  describe '#tags' do
+    let(:focus){ create :focus }
+    
+    it 'should find popular tags' do
+      query = double
+      tags = double
+      expect(Tag).to receive(:where).with(taggable_id: focus.id).and_return query
+      expect(query).to receive(:popular).with(limit: 10).and_return tags
+      expect(tags).to receive :keys
+      focus.tags
+    end
+  end
 end
