@@ -22,7 +22,9 @@ By default, Vagrant runs in the staging environment, so you'll want to add confi
 * database.yml
   ```yaml
     staging:
-      <<: *default
+      adapter: postgresql
+      encoding: unicode
+      pool: 5
       database: talk_staging
       username: talk
       host: <%= ENV['PG_PORT_5432_TCP_ADDR'] %>
@@ -33,6 +35,12 @@ By default, Vagrant runs in the staging environment, so you'll want to add confi
   ```yaml
     staging:
       host: 'https://panoptes-staging.zooniverse.org'
+  ```
+
+* secrets.yml
+  ```yaml
+    staging:
+      secret_key_base: <%= ENV['SECRET_KEY_BASE'] %>
   ```
 
 Then start everything up with
