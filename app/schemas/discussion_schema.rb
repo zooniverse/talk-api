@@ -27,6 +27,9 @@ class DiscussionSchema
       integer :board_id
       boolean :locked
       boolean :sticky
+      entity :sticky_position do
+        one_of integer, null
+      end
     end
   end
 end

@@ -53,6 +53,7 @@ RSpec.describe DiscussionSchema, type: :schema do
     with 'properties .discussions .properties' do
       its(:sticky){ is_expected.to eql type: 'boolean' }
       its(:locked){ is_expected.to eql type: 'boolean' }
+      its(:sticky_position){ is_expected.to eql oneOf:[ { 'type' => 'integer' }, { 'type' => 'null' }] }
     end
   end
 end
