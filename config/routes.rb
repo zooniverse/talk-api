@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   defaults format: 'json' do
     resources :boards
-    resources :comments
+    resources :comments do
+      member do
+        put :upvote
+        put :remove_upvote
+      end
+    end
     resources :conversations
     resources :discussions
     resources :focuses

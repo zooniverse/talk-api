@@ -29,6 +29,10 @@ class CommentPolicy < ApplicationPolicy
     logged_in? && !owner?
   end
   
+  def remove_upvote?
+    logged_in? && !owner?
+  end
+  
   class Scope < Scope
     def resolve
       scope

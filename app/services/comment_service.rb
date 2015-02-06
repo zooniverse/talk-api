@@ -3,4 +3,21 @@ class CommentService < ApplicationService
     set_user
     super
   end
+  
+  def upvote
+    find_and_authorize
+    resource.upvote! current_user
+  end
+  
+  def remove_upvote
+    find_and_authorize
+    resource.remove_upvote! current_user
+  end
+  
+  protected
+  
+  def find_and_authorize
+    find_resource unless resource
+    authorize unless authorized?
+  end
 end
