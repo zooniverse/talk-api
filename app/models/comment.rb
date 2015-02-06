@@ -1,6 +1,7 @@
 class Comment < ActiveRecord::Base
   include Moderatable
   include HashChanges
+  include HstoreUpdate
   
   has_many :mentions, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -23,6 +24,14 @@ class Comment < ActiveRecord::Base
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
+  
+  def upvote!(voter)
+    hstore_concat 'upvotes', voter.login => Time.now.to_i
+  end
+  
+  def remove_upvote!(voter)
+    hstore_delete_key 'upvotes', voter.login
+  end
   
   concerning :Tagging do
     MATCH_TAGS = /

@@ -243,4 +243,30 @@ RSpec.describe Comment, type: :model do
       expect(comment.tags.count).to eql 2
     end
   end
+  
+  describe '#upvote!' do
+    let(:comment){ create :comment, upvotes: { somebody: 1234 } }
+    let(:voter){ create :user }
+    
+    it 'should add the user login' do
+      expect {
+        comment.upvote! voter
+      }.to change {
+        comment.reload.upvotes.keys
+      }.from(['somebody']).to match_array ['somebody', voter.login]
+    end
+  end
+  
+  describe '#remove_upvote!' do
+    let(:comment){ create :comment, upvotes: { somebody: 1234, somebody_else: 4567 } }
+    let(:voter){ create :user, login: 'somebody' }
+    
+    it 'should remove the user login' do
+      expect {
+        comment.remove_upvote! voter
+      }.to change {
+        comment.reload.upvotes.keys
+      }.from(['somebody', 'somebody_else']).to match_array ['somebody_else']
+    end
+  end
 end
