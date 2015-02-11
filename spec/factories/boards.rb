@@ -20,7 +20,7 @@ FactoryGirl.define do
       end
       
       after :create do |board, evaluator|
-        create_list :board, evaluator.subboard_count, board: board
+        create_list :board, evaluator.subboard_count, parent: board
       end
     end
   end

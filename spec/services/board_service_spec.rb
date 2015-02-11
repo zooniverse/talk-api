@@ -10,7 +10,7 @@ RSpec.describe BoardService, type: :service do
           title: 'works',
           description: 'works',
           section: 'test',
-          board_id: parent_board.id
+          parent_id: parent_board.id
         }
       }
     end
@@ -23,7 +23,7 @@ RSpec.describe BoardService, type: :service do
           boards: {
             title: 'new title',
             description: 'new description',
-            board_id: nil
+            parent_id: nil
           }
         }
       end

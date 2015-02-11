@@ -9,7 +9,7 @@ class BoardSchema
       string  :title,       required: true
       string  :description, required: true
       string  :section,     required: true
-      entity  :board_id do
+      entity  :parent_id do
         one_of integer, null
       end
     end
@@ -20,7 +20,7 @@ class BoardSchema
       additional_properties false
       string :title
       string :description
-      entity :board_id do
+      entity :parent_id do
         one_of integer, null
       end
     end

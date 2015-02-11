@@ -1,3 +1,13 @@
+GIT
+  remote: git://github.com/parrish/restpack_serializer.git
+  revision: f2915cfcaba3abc20b87c7cc47f140483c55db2c
+  branch: dev
+  specs:
+    restpack_serializer (0.5.9)
+      activerecord (>= 4.0.3, < 5.0)
+      activesupport (>= 4.0.3, < 5.0)
+      kaminari (~> 0.16.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -85,7 +95,7 @@ GEM
     json-schema_builder (0.0.5)
       activesupport (~> 4.0)
       json-schema (~> 2.5)
-    kaminari (0.16.1)
+    kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     listen (2.8.4)
@@ -149,10 +159,6 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.0)
       json (~> 1.4)
-    restpack_serializer (0.5.6)
-      activerecord (>= 4.0.3, < 5.0)
-      activesupport (>= 4.0.3, < 5.0)
-      kaminari (~> 0.16.1)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -227,7 +233,7 @@ DEPENDENCIES
   pundit (~> 0.3)
   rack-cors (~> 0.2.9)
   rails (~> 4.2.0)
-  restpack_serializer (~> 0.5.6)
+  restpack_serializer!
   rspec-its
   rspec-rails
   sdoc (~> 0.4)
