@@ -13,6 +13,7 @@ module ActionRescuing
     rescue_from Pundit::NotAuthorizedError, with: :unauthorized
     
     rescue_from JSON::Schema::ValidationError, with: :unprocessable
+    rescue_from ActionController::ParameterMissing, with: :unprocessable
   end
   
   def unauthorized(exception)

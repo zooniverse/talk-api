@@ -12,7 +12,11 @@ Rails.application.routes.draw do
     resources :focuses
     resources :messages
     resources :moderations
-    resources :tags
+    resources :tags do
+      collection do
+        get :popular
+      end
+    end
     resources :users
     
     root 'application#root'

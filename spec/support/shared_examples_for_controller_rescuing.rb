@@ -44,4 +44,7 @@ RSpec.shared_examples_for 'a controller rescuing' do
   
   it_behaves_like 'ActionRescuing',
     Pundit::NotAuthorizedError.new, with: 401
+  
+  it_behaves_like 'ActionRescuing',
+    ActionController::ParameterMissing.new('foo'), with: 422
 end
