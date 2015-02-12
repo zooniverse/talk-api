@@ -47,4 +47,34 @@ RSpec.describe ConversationsController, type: :controller do
       update: { status: 401, response: :error },
       destroy: { status: 401, response: :error }
   end
+  
+  describe '#index' do
+    context 'filtering unread' do
+      let(:record){ create :conversation_with_messages }
+      let(:recipient){ record.user_conversations.where(is_unread: true).first.user }
+      let(:sender){ record.user_conversations.where(is_unread: false ).first.user }
+      let(:json){ get(:index, unread: true); response.json['conversations'] }
+      
+      before(:each) do
+        allow(subject).to receive(:current_user).and_return current_user
+      end
+      
+      context 'finding conversations' do
+        let(:current_user){ recipient }
+        
+        it 'should respond with the conversation' do
+          expect(json.length).to eql 1
+          expect(json.first['id']).to eql record.id
+        end
+      end
+      
+      context 'excluding conversations' do
+        let(:current_user){ sender }
+        
+        it 'should not respond with the conversation' do
+          expect(json).to be_empty
+        end
+      end
+    end
+  end
 end

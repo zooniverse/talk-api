@@ -21,9 +21,7 @@ class ConversationPolicy < ApplicationPolicy
   
   class Scope < Scope
     def resolve
-      scope.joins(:user_conversations).where({
-        user_conversations: { user_id: user.id }
-      })
+      scope.for_user user
     end
   end
 end

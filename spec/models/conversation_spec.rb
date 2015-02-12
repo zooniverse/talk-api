@@ -16,4 +16,31 @@ RSpec.describe Conversation, type: :model do
       expect(long_title).to fail_validation title: 'too long'
     end
   end
+  
+  describe '.for_user' do
+    let(:conversation){ create :conversation_with_messages }
+    let(:user){ conversation.users.first }
+    let(:other){ create :user }
+    
+    it 'should find conversations for a user' do
+      expect(Conversation.for_user(user).first).to eql conversation
+    end
+    
+    it 'should exclude conversations for other users' do
+      expect(Conversation.for_user(other)).to be_empty
+    end
+  end
+  
+  describe '.unread' do
+    let!(:conversation){ create :conversation_with_messages }
+    
+    it 'should find unread conversations' do
+      expect(Conversation.unread.first).to eql conversation
+    end
+    
+    it 'should exclude read conversations' do
+      conversation.user_conversations.update_all is_unread: false
+      expect(Conversation.unread).to be_empty
+    end
+  end
 end
