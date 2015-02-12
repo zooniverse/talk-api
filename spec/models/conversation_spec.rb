@@ -43,4 +43,47 @@ RSpec.describe Conversation, type: :model do
       expect(Conversation.unread).to be_empty
     end
   end
+  
+  describe '.mark_as_read_by' do
+    let(:user){ create :user }
+    let!(:conversations){ create_list :conversation_with_messages, 2, recipients: [user] }
+    let(:user_conversations){ UserConversation.where user_id: user.id }
+    
+    context 'with a single conversation' do
+      let(:to_read){ conversations.first }
+      let(:unread){ conversations.last }
+      
+      it 'should mark the user conversation' do
+        user_conversation = to_read.user_conversations.where(user_id: user.id).first
+        expect {
+          Conversation.mark_as_read_by to_read.id, user
+        }.to change {
+          user_conversation.reload.is_unread
+        }.from(true).to false
+      end
+      
+      it 'should not mark other user conversations' do
+        user_conversation = unread.user_conversations.where(user_id: user.id).first
+        expect {
+          Conversation.mark_as_read_by to_read.id, user
+        }.to_not change {
+          user_conversation.reload.is_unread
+        }
+      end
+    end
+    
+    context 'with multiple conversations' do
+      it 'should mark the user conversations' do
+        user_conversations = conversations.collect do |conversation|
+          conversation.user_conversations.where(user_id: user.id).first
+        end
+        
+        expect {
+          Conversation.mark_as_read_by conversations.collect(&:id), user
+        }.to change {
+          user_conversations.collect{ |uc| uc.reload.is_unread }
+        }.from([true, true]).to [false, false]
+      end
+    end
+  end
 end

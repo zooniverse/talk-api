@@ -13,4 +13,12 @@ class Conversation < ActiveRecord::Base
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:owner]
+  
+  def self.mark_as_read_by(conversation_ids, user_id)
+    UserConversation.where({
+      conversation_id: Array.wrap(conversation_ids),
+      user_id: user_id,
+      is_unread: true
+    }).update_all is_unread: false
+  end
 end

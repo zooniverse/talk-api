@@ -77,4 +77,20 @@ RSpec.describe ConversationsController, type: :controller do
       end
     end
   end
+  
+  describe '#show' do
+    context 'marking as read' do
+      let(:record){ create :conversation_with_messages }
+      let(:recipient){ record.user_conversations.where(is_unread: true).first.user }
+      
+      before(:each) do
+        allow(subject).to receive(:current_user).and_return recipient
+      end
+      
+      it 'should mark the conversation as read' do
+        expect(Conversation).to receive(:mark_as_read_by).with [record.id], recipient.id
+        get :show, id: record.id
+      end
+    end
+  end
 end

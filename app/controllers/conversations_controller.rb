@@ -7,4 +7,9 @@ class ConversationsController < ApplicationController
     scoped = scoped.unread if params.delete(:unread)
     render json: serializer_class.page(params, scoped)
   end
+  
+  def show
+    super
+    Conversation.mark_as_read_by resource_ids, current_user.id
+  end
 end
