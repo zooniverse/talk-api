@@ -107,6 +107,38 @@ RSpec.describe Comment, type: :model do
       end
     end
     
+    describe '#soft_destroy' do
+      let(:subject){ create :subject }
+      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }" }
+      
+      it 'should destroy tags' do
+        tag = comment.tags.first
+        comment.soft_destroy
+        expect{ tag.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+      
+      it 'should destroy mentions' do
+        mention = comment.mentions.first
+        comment.soft_destroy
+        expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+      
+      it 'should not destroy the comment' do
+        comment.soft_destroy
+        expect{ comment.reload }.to_not raise_error
+      end
+      
+      it 'should mark the comment as destroyed' do
+        comment.soft_destroy
+        expect(comment.is_deleted?).to be true
+      end
+      
+      it 'should clear the comment body' do
+        comment.soft_destroy
+        expect(comment.body).to be_blank
+      end
+    end
+    
     context 'updating board counts' do
       let(:board) do
         discussion1 = create :discussion_with_comments, comment_count: 3, user_count: 2

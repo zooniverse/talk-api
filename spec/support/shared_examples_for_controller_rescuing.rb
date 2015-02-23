@@ -46,5 +46,8 @@ RSpec.shared_examples_for 'a controller rescuing' do
     Pundit::NotAuthorizedError.new, with: 401
   
   it_behaves_like 'ActionRescuing',
+    ActiveRecord::RecordNotDestroyed.new('foo'), with: 401
+  
+  it_behaves_like 'ActionRescuing',
     ActionController::ParameterMissing.new('foo'), with: 422
 end

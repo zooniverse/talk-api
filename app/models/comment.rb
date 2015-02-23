@@ -33,6 +33,13 @@ class Comment < ActiveRecord::Base
     hstore_delete_key 'upvotes', voter.login
   end
   
+  def soft_destroy
+    update_attributes is_deleted: true, body: ''
+    mentions.destroy_all
+    tags.destroy_all
+    self
+  end
+  
   concerning :Tagging do
     MATCH_TAGS = /
       (?:^|[^\w])         # match the beginning of the word
