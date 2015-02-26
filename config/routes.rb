@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   defaults format: 'json' do
     resources :boards
+    resources :collections
     resources :comments do
       member do
         put :upvote
@@ -9,9 +10,9 @@ Rails.application.routes.draw do
     end
     resources :conversations
     resources :discussions
-    resources :focuses
     resources :messages
     resources :moderations
+    resources :subjects
     resources :tags do
       collection do
         get :popular

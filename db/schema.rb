@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150213181551) do
+ActiveRecord::Schema.define(version: 20150226200251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "postgres_fdw"
 
   create_table "boards", force: :cascade do |t|
     t.string   "title",                          null: false
@@ -82,22 +83,6 @@ ActiveRecord::Schema.define(version: 20150213181551) do
   add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", using: :btree
   add_index "discussions", ["board_id", "sticky", "updated_at"], name: "index_discussions_on_board_id_and_sticky_and_updated_at", using: :btree
   add_index "discussions", ["board_id", "updated_at"], name: "index_discussions_on_board_id_and_updated_at", using: :btree
-
-  create_table "focuses", force: :cascade do |t|
-    t.string   "type"
-    t.string   "section",                     null: false
-    t.string   "name",                        null: false
-    t.string   "description"
-    t.integer  "comments_count", default: 0
-    t.json     "data",           default: {}
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
-    t.string   "user_login"
-  end
-
-  add_index "focuses", ["section", "type", "user_id", "created_at"], name: "index_focuses_on_section_and_type_and_user_id_and_created_at", using: :btree
-  add_index "focuses", ["section", "type"], name: "index_focuses_on_section_and_type", using: :btree
 
   create_table "mentions", force: :cascade do |t|
     t.integer  "mentionable_id",   null: false

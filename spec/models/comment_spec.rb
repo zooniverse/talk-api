@@ -42,14 +42,9 @@ RSpec.describe Comment, type: :model do
       expect(comment.user_login).to eq comment.user.login
     end
     
-    it 'should denormalize the focus type for focus subclasses' do
+    it 'should denormalize the focus type for focuses' do
       subject_comment = create :comment, focus: build(:subject)
       expect(subject_comment.focus_type).to eql 'Subject'
-    end
-    
-    it 'should not denormalize the focus type for the focus base class' do
-      focus_comment = create :comment, focus: build(:focus)
-      expect(focus_comment.focus_type).to be_nil
     end
     
     it 'should update the discussion comment count' do
@@ -68,15 +63,6 @@ RSpec.describe Comment, type: :model do
       }.to change {
         discussion.reload.updated_at
       }
-    end
-    
-    it 'should update the focus comment count' do
-      focus = create :focus
-      expect {
-        create :comment_for_focus, focus: focus
-      }.to change {
-        focus.reload.comments_count
-      }.by 1
     end
     
     it 'should update the discussion user count' do

@@ -2,6 +2,6 @@ FactoryGirl.define do
   factory :mention do
     comment
     user
-    association :mentionable, factory: :focus
+    association :mentionable, factory: :subject
   end
 end

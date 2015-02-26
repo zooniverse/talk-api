@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-RSpec.describe FocusesController, type: :controller do
-  let(:resource){ Focus }
+RSpec.describe SubjectsController, type: :controller do
+  let(:resource){ Subject }
   it_behaves_like 'a controller'
   it_behaves_like 'a controller authenticating'
   it_behaves_like 'a controller rescuing'

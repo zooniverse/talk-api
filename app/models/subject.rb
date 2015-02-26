@@ -1,6 +1,6 @@
-class Subject < Focus
-  include Moderatable
+class Subject < ActiveRecord::Base
+  self.table_name = 'subjects'
   
-  moderatable_with :ignore, by: [:moderator, :admin]
-  moderatable_with :report, by: [:all]
+  include Focusable
+  belongs_to :project
 end
