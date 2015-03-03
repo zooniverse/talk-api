@@ -7,7 +7,16 @@ rvm:
 before_script:
   - rename 's/\.yml.travis$/\.yml/' config/*.yml.travis
   - psql -U postgres -c 'create database travis_ci_test;'
+  - psql -U postgres -c "create role talk with encrypted password 'password';"
+  - psql -U postgres -c "alter role talk with login;"
+  - psql -U postgres -c "alter role talk with superuser;"
+  - psql -U postgres -c "alter database travis_ci_test owner to talk;"
+  - psql -U postgres -c "grant all on database travis_ci_test to talk;"
+  - psql -U postgres -c "create database travis_ci_panoptes_test with owner=talk encoding='UTF8';"
+  - psql -U postgres -c "grant all on database travis_ci_panoptes_test to talk;"
   - RACK_ENV=test bundle exec rake db:schema:load
+  - RACK_ENV=test bundle exec rake panoptes:db:create_tables
+  - RACK_ENV=test bundle exec rake panoptes:db:setup
 services:
   - postgresql
 addons:

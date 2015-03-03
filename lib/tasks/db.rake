@@ -76,7 +76,7 @@ namespace :panoptes do
     end
     
     desc 'Creates the search view'
-    task :create_search_view do
+    task :create_search_view => :environment do
       ActiveRecord::Base.connection.execute <<-SQL
         do language plpgsql $$
           begin
@@ -183,6 +183,114 @@ namespace :panoptes do
             end if;
           end;
         $$;
+      SQL
+    end
+    
+    desc 'Create Panoptes tables for testing'
+    task :create_tables => :environment do
+      ActiveRecord::Base.establish_connection panoptes_config
+      ActiveRecord::Base.connection.execute <<-SQL
+        create sequence users_id_seq
+            start with 1
+            increment by 1
+            no minvalue
+            no maxvalue
+            cache 1;
+        
+        create table users (
+          id int4 not null default nextval('users_id_seq'::regclass),
+          email varchar(255) default ''::character varying,
+          encrypted_password varchar(255) not null default ''::character varying,
+          reset_password_token varchar(255),
+          reset_password_sent_at timestamp(6) null,
+          remember_created_at timestamp(6) null,
+          sign_in_count int4 not null default 0,
+          current_sign_in_at timestamp(6) null,
+          last_sign_in_at timestamp(6) null,
+          current_sign_in_ip varchar(255),
+          last_sign_in_ip varchar(255),
+          created_at timestamp(6) null,
+          updated_at timestamp(6) null,
+          hash_func varchar(255) default 'bcrypt'::character varying,
+          password_salt varchar(255),
+          display_name varchar(255),
+          zooniverse_id varchar(255),
+          credited_name varchar(255),
+          classifications_count int4 not null default 0,
+          activated_state int4 not null default 0,
+          languages varchar(255)[] not null default '{}'::character varying[],
+          global_email_communication bool,
+          project_email_communication bool,
+          admin bool not null default false,
+          banned bool not null default false,
+          migrated bool default false,
+          constraint users_pkey primary key (id)
+        ) with (oids=false);
+        
+        create sequence projects_id_seq
+            start with 1
+            increment by 1
+            no minvalue
+            no maxvalue
+            cache 1;
+        
+        create table projects (
+          id int4 not null default nextval('projects_id_seq'::regclass),
+          name varchar(255),
+          display_name varchar(255),
+          user_count int4,
+          created_at timestamp(6) null,
+          updated_at timestamp(6) null,
+          classifications_count int4 not null default 0,
+          activated_state int4 not null default 0,
+          primary_language varchar(255),
+          avatar text,
+          background_image text,
+          private bool,
+          lock_version int4 default 0,
+          constraint projects_pkey primary key (id)
+        ) with (oids=false);
+        
+        create sequence collections_id_seq
+            start with 1
+            increment by 1
+            no minvalue
+            no maxvalue
+            cache 1;
+        
+        create table collections (
+          id int4 not null default nextval('collections_id_seq'::regclass),
+          name varchar(255),
+          project_id int4,
+          created_at timestamp(6) null,
+          updated_at timestamp(6) null,
+          activated_state int4 not null default 0,
+          display_name varchar(255),
+          private bool,
+          lock_version int4 default 0,
+          constraint collections_pkey primary key (id)
+        ) with (oids=false);
+        
+        create sequence subjects_id_seq
+            start with 1
+            increment by 1
+            no minvalue
+            no maxvalue
+            cache 1;
+        
+        create table subjects (
+          id int4 not null default nextval('subjects_id_seq'::regclass),
+          zooniverse_id varchar(255),
+          metadata json,
+          locations json,
+          created_at timestamp(6) null,
+          updated_at timestamp(6) null,
+          project_id int4,
+          migrated bool,
+          lock_version int4 default 0,
+          upload_user_id varchar(255),
+          constraint subjects_pkey primary key (id)
+        ) with (oids=false);
       SQL
     end
     
