@@ -1,8 +1,7 @@
 class User < ActiveRecord::Base
-  include ApiResource
   include Moderatable
   
-  has_many :collections
+  has_many :roles
   has_many :user_conversations
   has_many :conversations, through: :user_conversations
   
@@ -10,10 +9,11 @@ class User < ActiveRecord::Base
   moderatable_with :report, by: [:all]
   moderatable_with :watch, by: [:moderator, :admin]
   
-  panoptes_attribute :id
-  panoptes_attribute :login
-  panoptes_attribute :email
-  panoptes_attribute :display_name, updateable: true
+  def self.from_panoptes(api_response)
+    return unless api_response.success?
+    hash = api_response.body['users'].first
+    find_by_id hash['id']
+  end
   
   def mentioned_by(comment)
     # TO-DO: notification

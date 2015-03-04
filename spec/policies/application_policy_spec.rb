@@ -16,111 +16,93 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: [] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a user' do
-    let(:user){ OpenStruct.new id: 1, roles: { } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'a' }
+    let(:user){ create :user }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'a' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: [] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a owner' do
-    let(:user){ OpenStruct.new id: 1, roles: { } }
-    let(:record){ OpenStruct.new user_id: 1, section: 'a' }
+    let(:user){ create :user }
+    let(:record){ OpenStruct.new user_id: user.id, section: 'a' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: [] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a section moderator' do
-    let(:user){ OpenStruct.new id: 1, roles: { 'a' => ['moderator'] } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'a' }
+    let(:user){ create :moderator, section: 'a' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'a' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: ['moderator'] }
-    it{ is_expected.to have_attributes section_roles: ['moderator'] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a non-section moderator' do
-    let(:user){ OpenStruct.new id: 1, roles: { 'a' => ['moderator'] } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'b' }
+    let(:user){ create :moderator, section: 'a' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: [] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a zooniverse moderator' do
-    let(:user){ OpenStruct.new id: 1, roles: { 'zooniverse' => ['moderator'] } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'b' }
+    let(:user){ create :moderator, section: 'zooniverse' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: ['moderator'] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: ['moderator'] }
   end
   
   context 'with a section admin' do
-    let(:user){ OpenStruct.new id: 1, roles: { 'a' => ['admin'] } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'a' }
+    let(:user){ create :admin, section: 'a' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'a' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to be_admin }
     it{ is_expected.to have_attributes user_roles: ['admin'] }
-    it{ is_expected.to have_attributes section_roles: ['admin'] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a non-section admin' do
-    let(:user){ OpenStruct.new id: 1, roles: { 'a' => ['admin'] } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'b' }
+    let(:user){ create :admin, section: 'a' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to have_attributes user_roles: [] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: [] }
   end
   
   context 'with a zooniverse admin' do
-    let(:user){ OpenStruct.new id: 1, roles: { 'zooniverse' => ['admin'] } }
-    let(:record){ OpenStruct.new user_id: 2, section: 'b' }
+    let(:user){ create :admin, section: 'zooniverse' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to be_admin }
     it{ is_expected.to have_attributes user_roles: ['admin'] }
-    it{ is_expected.to have_attributes section_roles: [] }
-    it{ is_expected.to have_attributes zooniverse_roles: ['admin'] }
   end
 end

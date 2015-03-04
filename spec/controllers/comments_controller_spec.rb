@@ -110,13 +110,13 @@ RSpec.describe CommentsController, type: :controller do
             record.reload.upvotes
           }.from({
             
-          }).to user.login => kind_of(String)
+          }).to user.display_name => kind_of(String)
         end
       end
     end
     
     describe '#remove_upvote' do
-      let(:record){ create :comment, upvotes: { user.login => Time.now.to_i } }
+      let(:record){ create :comment, upvotes: { user.display_name => Time.now.to_i } }
       let(:upvote_method){ :remove_upvote }
       
       it_behaves_like 'a CommentsController upvoting' do
@@ -126,7 +126,7 @@ RSpec.describe CommentsController, type: :controller do
           }.to change{
             record.reload.upvotes
           }.from({
-            user.login => kind_of(String)
+            user.display_name => kind_of(String)
           }).to({ })
         end
       end

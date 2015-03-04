@@ -53,17 +53,11 @@ class ApplicationPolicy
     end
     
     def user_roles
-      (section_roles + zooniverse_roles).uniq
-    end
-    
-    def section_roles
-      return [] unless logged_in? && record.respond_to?(:section)
-      user.roles.fetch record.section, []
-    end
-    
-    def zooniverse_roles
+      return @_roles if @_roles
       return [] unless logged_in?
-      user.roles.fetch 'zooniverse', []
+      sections = ['zooniverse']
+      sections += [record.section] if record.respond_to?(:section)
+      @_roles = user.roles.where(scope: sections).collect(&:name).uniq
     end
   end
   

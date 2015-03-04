@@ -20,7 +20,7 @@ RSpec.describe DiscussionsController, type: :controller do
   end
   
   context 'with an authorized user' do
-    let(:user){ create :user, roles: { zooniverse: ['moderator'] } }
+    let(:user){ create :moderator, section: 'zooniverse' }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
     
     it_behaves_like 'a controller rendering', :destroy

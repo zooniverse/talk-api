@@ -37,9 +37,9 @@ RSpec.describe Comment, type: :model do
       }.to comment.discussion.section
     end
     
-    it 'should denormalize the user login' do
+    it 'should denormalize the user display_name' do
       comment = create :comment
-      expect(comment.user_login).to eq comment.user.login
+      expect(comment.user_display_name).to eq comment.user.display_name
     end
     
     it 'should denormalize the focus type for focuses' do
@@ -193,9 +193,9 @@ RSpec.describe Comment, type: :model do
     let(:collection_mention){ "^C#{ collection.id }" }
     
     let(:user){ create :user }
-    let(:user_mention){ "@#{ user.login }" }
+    let(:user_mention){ "@#{ user.display_name }" }
     
-    let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.login }?" }
+    let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.display_name }?" }
     let(:comment){ create :comment, body: body }
     
     it 'should match subjects' do
@@ -266,20 +266,20 @@ RSpec.describe Comment, type: :model do
     let(:comment){ create :comment, upvotes: { somebody: 1234 } }
     let(:voter){ create :user }
     
-    it 'should add the user login' do
+    it 'should add the user display_name' do
       expect {
         comment.upvote! voter
       }.to change {
         comment.reload.upvotes.keys
-      }.from(['somebody']).to match_array ['somebody', voter.login]
+      }.from(['somebody']).to match_array ['somebody', voter.display_name]
     end
   end
   
   describe '#remove_upvote!' do
     let(:comment){ create :comment, upvotes: { somebody: 1234, somebody_else: 4567 } }
-    let(:voter){ create :user, login: 'somebody' }
+    let(:voter){ create :user, display_name: 'somebody' }
     
-    it 'should remove the user login' do
+    it 'should remove the user display_name' do
       expect {
         comment.remove_upvote! voter
       }.to change {

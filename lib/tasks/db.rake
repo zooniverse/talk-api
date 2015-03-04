@@ -63,15 +63,17 @@ namespace :panoptes do
           project_id int4
         ) server panoptes;
         
-        create foreign table if not exists panoptes_users (
+        create foreign table if not exists users (
           id int4,
           email varchar(255),
-          login varchar(255),
+          created_at timestamp(6),
+          updated_at timestamp(6),
           display_name varchar(255),
           zooniverse_id varchar(255),
+          credited_name varchar(255),
           admin bool,
           banned bool
-        ) server panoptes options (table_name 'users');
+        ) server panoptes;
       SQL
     end
     
@@ -117,8 +119,8 @@ namespace :panoptes do
                   'Comment' as searchable_type,
                   
                   comments.body || ' ' ||
-                  string_agg(panoptes_users.login, '') || ' ' ||
-                  string_agg(panoptes_users.display_name, '')
+                  string_agg(users.display_name, '') || ' ' ||
+                  string_agg(users.credited_name, '')
                   as content,
                   
                   coalesce(string_agg(tags.name, ' '), '') as tags,
@@ -127,7 +129,7 @@ namespace :panoptes do
                   left join tags on tags.comment_id = comments.id
                   join discussions on discussions.id = comments.discussion_id
                   join boards on boards.id = discussions.board_id
-                  join panoptes_users on panoptes_users.id = comments.user_id
+                  join users on users.id = comments.user_id
                 where
                   boards.permissions ->> 'read' = 'all'
                 group by
