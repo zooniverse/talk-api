@@ -1,6 +1,4 @@
 class Collection < ActiveRecord::Base
-  self.table_name = 'collections'
-  
   include Focusable
   belongs_to :project
   
