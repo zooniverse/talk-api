@@ -8,7 +8,7 @@ RSpec.describe Moderation, type: :model do
     end
     
     it 'should require a section' do
-      without_section = build :focus, section: nil
+      without_section = build :moderation, section: nil
       expect(without_section).to fail_validation section: "can't be blank"
     end
   end

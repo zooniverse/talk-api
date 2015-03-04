@@ -50,7 +50,7 @@ RSpec.describe ModerationService, type: :service do
     end
     
     context 'when actioning a moderation' do
-      let(:current_user){ create :user, roles: { test: ['moderator'] } }
+      let(:current_user){ create :moderator }
       
       it_behaves_like 'a service updating', Moderation do
         let(:update_params) do

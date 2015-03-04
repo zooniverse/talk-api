@@ -17,12 +17,12 @@ RSpec.describe DiscussionPolicy, type: :policy do
   end
   
   context 'with a moderator' do
-    let(:user){ create :user, roles: { test: ['moderator'] } }
+    let(:user){ create :moderator }
     it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
   end
   
   context 'with an admin' do
-    let(:user){ create :user, roles: { test: ['admin'] } }
+    let(:user){ create :admin }
     it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
   end
 end

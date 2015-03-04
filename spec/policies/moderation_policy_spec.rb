@@ -16,18 +16,18 @@ RSpec.describe ModerationPolicy, type: :policy do
   end
   
   context 'with a moderator' do
-    let(:user){ create :user, roles: { test: ['moderator'] } }
+    let(:user){ create :moderator }
     it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
   end
   
   context 'with an admin' do
-    let(:user){ create :user, roles: { test: ['admin'] } }
+    let(:user){ create :admin }
     it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
   end
   
   context 'with scope' do
     let!(:other_records){ create_list :moderation, 2, section: 'other' }
-    let(:user){ create :user, roles: { test: ['moderator'] } }
+    let(:user){ create :moderator }
     let(:records){ create_list :moderation, 2, section: 'test' }
     let(:subject){ ModerationPolicy::Scope.new(user, Moderation).resolve }
     

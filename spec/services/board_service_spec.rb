@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe BoardService, type: :service do
   it_behaves_like 'a service', Board do
-    let(:current_user){ create :user, roles: { test: ['moderator'] } }
+    let(:current_user){ create :moderator }
     let(:parent_board){ create :board }
     let(:create_params) do
       {

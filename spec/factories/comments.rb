@@ -6,7 +6,7 @@ FactoryGirl.define do
     discussion
     
     factory :comment_for_focus do
-      focus
+      association :focus, factory: :subject
     end
   end
 end

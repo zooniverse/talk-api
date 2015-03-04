@@ -35,7 +35,7 @@ class Discussion < ActiveRecord::Base
   end
   
   def denormalize_attributes
-    self.user_login = user.login
+    self.user_display_name = user.display_name
   end
   
   def clear_deleted_comments

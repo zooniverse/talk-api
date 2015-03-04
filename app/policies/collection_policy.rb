@@ -8,20 +8,20 @@ class CollectionPolicy < ApplicationPolicy
   end
   
   def create?
-    logged_in?
+    false
   end
   
   def update?
-    owner?
+    false
   end
   
   def destroy?
-    owner?
+    false
   end
   
   class Scope < Scope
     def resolve
-      scope
+      scope.where 'private is not true'
     end
   end
 end

@@ -1,7 +1,7 @@
 require 'rspec'
 
 RSpec.describe Mention, type: :model do
-  let(:focus){ create :focus }
+  let(:focus){ create :subject }
   
   describe '#notify_mentioned' do
     it 'should notify of the mention' do

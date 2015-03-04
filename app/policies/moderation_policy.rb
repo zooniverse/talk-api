@@ -21,7 +21,7 @@ class ModerationPolicy < ApplicationPolicy
   
   class Scope < Scope
     def resolve
-      if zooniverse_roles.any?
+      if user.roles.where(scope: 'zooniverse', name: ['moderator', 'admin']).any?
         scope
       else
         scope.where 'section = any(array[:sections])', sections: privileged_sections
@@ -29,9 +29,7 @@ class ModerationPolicy < ApplicationPolicy
     end
     
     def privileged_sections
-      user.roles.select do |section, roles|
-        'moderator'.in?(roles) || 'admin'.in?(roles)
-      end.keys
+      user.roles.where(name: ['moderator', 'admin']).distinct(:scope).pluck :scope
     end
   end
 end

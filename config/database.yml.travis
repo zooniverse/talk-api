@@ -1,4 +1,11 @@
 test:
   adapter: postgresql
   database: travis_ci_test
-  username: postgres
+  username: talk
+  password: password
+
+panoptes_test:
+  adapter: postgresql
+  database: travis_ci_panoptes_test
+  username: talk
+  password: password

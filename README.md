@@ -75,11 +75,12 @@ The app is built to conform to the [JSON API spec](http://jsonapi.org/)
 ## Resources
 
 * Board
+* Collection
 * Comment
 * Conversation
 * Discussion
-* Focus (Subject, Collection)
 * Moderation
+* Subject
 * Tag
 * User
 

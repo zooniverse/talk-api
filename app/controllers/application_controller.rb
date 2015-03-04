@@ -8,11 +8,12 @@ class ApplicationController < ActionController::Base
     render json: {
       boards: { href: '/boards', type: 'boards' },
       comments: { href: '/comments', type: 'comments' },
+      collections: { href: '/collections', type: 'collections' },
       conversations: { href: '/conversations', type: 'conversations' },
       discussions: { href: '/discussions', type: 'discussions' },
-      focuses: { href: '/focuses', type: 'focuses' },
       messages: { href: '/messages', type: 'messages' },
       moderations: { href: '/moderations', type: 'moderations' },
+      subjects: { href: '/subjects', type: 'subjects' },
       tags: { href: '/tags', type: 'tags' },
       users: { href: '/users', type: 'users' }
     }

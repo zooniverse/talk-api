@@ -22,13 +22,13 @@ RSpec.describe ConversationPolicy, type: :policy do
   end
   
   context 'with a moderator' do
-    let(:user){ create :user, roles: { zooniverse: ['moderator'] } }
+    let(:user){ create :moderator, section: 'zooniverse' }
     it_behaves_like 'a policy permitting', :index, :show, :create
     it_behaves_like 'a policy forbidding', :update, :destroy
   end
   
   context 'with an admin' do
-    let(:user){ create :user, roles: { zooniverse: ['admin'] } }
+    let(:user){ create :admin, section: 'zooniverse' }
     it_behaves_like 'a policy permitting', :index, :show, :create
     it_behaves_like 'a policy forbidding', :update, :destroy
   end

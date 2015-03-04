@@ -21,7 +21,7 @@ class SubjectPolicy < ApplicationPolicy
   
   class Scope < Scope
     def resolve
-      scope
+      scope.joins(:project).where 'projects.private is not true'
     end
   end
 end

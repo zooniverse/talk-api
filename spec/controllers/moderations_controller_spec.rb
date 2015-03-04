@@ -19,7 +19,7 @@ RSpec.describe ModerationsController, type: :controller do
   end
   
   context 'with an authorized user' do
-    let(:user){ create :user, roles: { zooniverse: ['moderator'] } }
+    let(:user){ create :moderator, section: 'zooniverse' }
     let(:target){ create :comment }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
     

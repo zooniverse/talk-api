@@ -9,7 +9,7 @@ class Comment < ActiveRecord::Base
   
   belongs_to :user, required: true
   belongs_to :discussion, counter_cache: true, touch: true, required: true
-  belongs_to :focus, counter_cache: true
+  belongs_to :focus, polymorphic: true
   has_one :board, through: :discussion
   
   validates :body, presence: true
@@ -26,11 +26,11 @@ class Comment < ActiveRecord::Base
   moderatable_with :report, by: [:all]
   
   def upvote!(voter)
-    hstore_concat 'upvotes', voter.login => Time.now.to_i
+    hstore_concat 'upvotes', voter.display_name => Time.now.to_i
   end
   
   def remove_upvote!(voter)
-    hstore_delete_key 'upvotes', voter.login
+    hstore_delete_key 'upvotes', voter.display_name
   end
   
   def soft_destroy
@@ -75,7 +75,7 @@ class Comment < ActiveRecord::Base
   concerning :Mentioning do
     MATCH_MENTIONS = /
       (?:^|\s)            # match the beginning of the word
-      ( \^[SC](\d+) ) |   # match mentioned focuses
+      ( \^([SC])(\d+) ) | # match mentioned focuses
       ( @([-\w\d]{3,}) )  # match mentioned users
     /imx
     
@@ -86,11 +86,12 @@ class Comment < ActiveRecord::Base
     
     def parse_mentions
       self.mentioning = { }
-      body.scan(MATCH_MENTIONS).each do |focus_mention, focus_id, user_mention, login|
+      body.scan(MATCH_MENTIONS).each do |focus_mention, focus_type, focus_id, user_mention, display_name|
         if focus_mention
-          mentioned focus_mention, Focus.find_by_id(focus_id)
+          focus_klass = { 'S' => Subject, 'C' => Collection }[focus_type]
+          mentioned focus_mention, focus_klass.find_by_id(focus_id)
         else
-          mentioned user_mention, User.find_by_login(login)
+          mentioned user_mention, User.find_by_display_name(display_name)
         end
       end
     end
@@ -117,8 +118,7 @@ class Comment < ActiveRecord::Base
   end
   
   def denormalize_attributes
-    self.user_login = user.login
-    self.focus_type ||= focus.type if focus
+    self.user_display_name = user.display_name
   end
   
   def update_counters

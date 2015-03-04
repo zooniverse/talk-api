@@ -1,7 +1,6 @@
-class Collection < Focus
-  include Moderatable
-  
-  belongs_to :user, required: true
+class Collection < ActiveRecord::Base
+  include Focusable
+  belongs_to :project
   
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]

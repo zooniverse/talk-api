@@ -11,9 +11,9 @@ RSpec.describe UsersController, type: :controller do
     update: { status: 401, response: :error }
   
   context 'without an authorized user' do
+    it_behaves_like 'a controller rendering', :show
     it_behaves_like 'a controller restricting',
-      index: { status: 401, response: :error },
-      update: { status: 401, response: :error }
+      index: { status: 401, response: :error }
   end
   
   context 'with an authorized user' do
