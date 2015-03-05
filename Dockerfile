@@ -12,7 +12,7 @@ ADD ./Gemfile.lock /rails_app/
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y supervisor && \
+    apt-get install -y supervisor git && \
     apt-get clean
 
 RUN cd /rails_app && \
