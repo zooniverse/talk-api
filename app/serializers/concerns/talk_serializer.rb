@@ -6,6 +6,10 @@ module TalkSerializer
     attr_reader :model
     attributes :href, :links
     
+    class << self
+      attr_accessor :default_sort
+    end
+    
     is_sectioned = model_class.columns_hash.has_key?('section') rescue false
     can_filter_by(:section) if is_sectioned
   end
