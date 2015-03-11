@@ -3,14 +3,13 @@ class Discussion < ActiveRecord::Base
   
   belongs_to :user, required: true
   belongs_to :board, required: true, counter_cache: true
-  has_many :comments
+  has_many :comments, dependent: :destroy
   
   validates :title, presence: true, length: 3..140
   validates :section, presence: true
   
   before_validation :set_section
   before_create :denormalize_attributes
-  before_destroy :clear_deleted_comments
   after_update :update_board_counters
   
   moderatable_with :destroy, by: [:moderator, :admin]
@@ -36,15 +35,6 @@ class Discussion < ActiveRecord::Base
   
   def denormalize_attributes
     self.user_display_name = user.display_name
-  end
-  
-  def clear_deleted_comments
-    if comments.where(is_deleted: false).any?
-      errors.add :comments, :'restrict_dependent_destroy.many', record: 'comments'
-      false
-    else
-      comments.destroy_all
-    end
   end
   
   def update_board_counters

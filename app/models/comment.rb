@@ -34,9 +34,11 @@ class Comment < ActiveRecord::Base
   end
   
   def soft_destroy
-    update_attributes is_deleted: true, body: ''
+    update_attributes is_deleted: true, body: 'This comment has been deleted'
     mentions.destroy_all
     tags.destroy_all
+    # prevent empty discussions
+    discussion.destroy unless discussion.comments.where(is_deleted: false).any?
     self
   end
   

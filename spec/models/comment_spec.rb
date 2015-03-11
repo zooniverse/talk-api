@@ -96,6 +96,7 @@ RSpec.describe Comment, type: :model do
     describe '#soft_destroy' do
       let(:subject){ create :subject }
       let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }" }
+      let!(:other){ create :comment, discussion: comment.discussion }
       
       it 'should destroy tags' do
         tag = comment.tags.first
@@ -121,7 +122,13 @@ RSpec.describe Comment, type: :model do
       
       it 'should clear the comment body' do
         comment.soft_destroy
-        expect(comment.body).to be_blank
+        expect(comment.body).to eql 'This comment has been deleted'
+      end
+      
+      it 'should destroy discussions when empty' do
+        other.soft_destroy
+        comment.soft_destroy
+        expect{ comment.discussion.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
     
