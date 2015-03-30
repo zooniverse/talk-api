@@ -2,6 +2,7 @@ module Searchable
   extend ActiveSupport::Concern
   
   included do
+    include Searchable::Querying
     class_attribute :searchable_klass
     klass_name = "Searchable#{ name }"
     self.searchable_klass = if Object.const_defined?(klass_name)

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Board, type: :model do
+  it_behaves_like 'a searchable interface'
   it_behaves_like 'a searchable model' do
     let(:searchable){ create :board, permissions: { read: 'all' } }
     let(:unsearchable){ create :board, permissions: { read: 'admin' } }
