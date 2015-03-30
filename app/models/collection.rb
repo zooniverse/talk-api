@@ -10,4 +10,8 @@ class Collection < ActiveRecord::Base
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
   moderatable_with :watch, by: [:moderator, :admin]
+  
+  def self.refresh!
+    connection.execute 'refresh materialized view concurrently searchable_collections;'
+  end
 end
