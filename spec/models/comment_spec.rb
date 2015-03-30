@@ -2,6 +2,15 @@ require 'spec_helper'
 
 RSpec.describe Comment, type: :model do
   it_behaves_like 'moderatable'
+  it_behaves_like 'a searchable model' do
+    let(:searchable_board){ create :board, permissions: { read: 'all' } }
+    let(:searchable_discussion){ create :discussion, board: searchable_board }
+    let(:searchable){ create :comment, discussion: searchable_discussion }
+    
+    let(:unsearchable_board){ create :board, permissions: { read: 'admin' } }
+    let(:unsearchable_discussion){ create :discussion, board: unsearchable_board }
+    let(:unsearchable){ create :comment, discussion: unsearchable_discussion }
+  end
   
   context 'validating' do
     it 'should require a body' do
