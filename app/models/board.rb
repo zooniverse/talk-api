@@ -11,6 +11,8 @@ class Board < ActiveRecord::Base
   validates :description, presence: true
   validates :section, presence: true
   
+  after_update :cascade_searchable, if: :permissions_changed?
+  
   def searchable?
     permissions['read'] == 'all'
   end
@@ -31,5 +33,27 @@ class Board < ActiveRecord::Base
     self.comments_count = comments.count
     self.users_count = users.select(:id).distinct.count
     save if changed?
+  end
+  
+  # This should be moved into a background worker
+  def cascade_searchable
+    # was public, but isn't now
+    if permissions_was['read'] == 'all' && permissions['read'] != 'all'
+      each_discussion_and_comment &:destroy_searchable
+    # wasn't public, but is now
+    elsif permissions_was['read'] != 'all' && permissions['read'] == 'all'
+      each_discussion_and_comment &:update_searchable
+    end
+  end
+  
+  protected
+  
+  def each_discussion_and_comment
+    discussions.find_each do |discussion|
+      yield discussion
+      discussion.comments.find_each do |comment|
+        yield comment
+      end
+    end
   end
 end
