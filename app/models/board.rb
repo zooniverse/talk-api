@@ -1,4 +1,6 @@
 class Board < ActiveRecord::Base
+  include Searchable
+  
   has_many :discussions, dependent: :restrict_with_error
   has_many :comments, through: :discussions
   has_many :users, through: :comments
@@ -8,6 +10,22 @@ class Board < ActiveRecord::Base
   validates :title, presence: true
   validates :description, presence: true
   validates :section, presence: true
+  
+  def searchable?
+    permissions['read'] == 'all'
+  end
+  
+  def searchable_update
+    <<-SQL
+      update searchable_boards
+      set content =
+        setweight(to_tsvector(boards.title), 'A') ||
+        setweight(to_tsvector(boards.description), 'A')
+      from boards
+      where searchable_boards.searchable_id = #{ id } and
+      boards.id = #{ id }
+    SQL
+  end
   
   def count_users_and_comments!
     self.comments_count = comments.count
