@@ -3,6 +3,7 @@ module ActionRescuing
   
   included do
     rescue_from ActiveRecord::RecordNotFound, with: :not_found
+    rescue_from ActiveRecord::UnknownAttributeError, with: :unprocessable
     rescue_from ActionController::UnpermittedParameters, with: :unprocessable
     rescue_from TalkService::ParameterError, with: :unprocessable
     rescue_from ActionController::RoutingError, with: :not_found
