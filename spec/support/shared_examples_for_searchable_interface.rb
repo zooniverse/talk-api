@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.shared_examples_for 'a searchable interface' do
+RSpec.shared_examples_for 'a search proxy' do
   describe '.search' do
     it 'should parse the query' do
       expect(described_class).to receive(:_parse_query).with 'test query'
@@ -14,7 +14,9 @@ RSpec.shared_examples_for 'a searchable interface' do
       described_class.search 'test query'
     end
   end
-  
+end
+
+RSpec.shared_examples_for 'a search query parser' do
   describe '._parse_query' do
     def expect_parsed(query, parsed)
       expect(described_class._parse_query(query)).to eql parsed
@@ -94,4 +96,9 @@ RSpec.shared_examples_for 'a searchable interface' do
       end
     end
   end
+end
+
+RSpec.shared_examples_for 'a searchable interface' do
+  it_behaves_like 'a search proxy'
+  it_behaves_like 'a search query parser'
 end
