@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Search, type: :model do
   it_behaves_like 'a search query parser'
+  before(:each){ Collection.refresh! }
   
   it 'should set the default page size' do
     expect(Search.default_per_page).to eql 10
