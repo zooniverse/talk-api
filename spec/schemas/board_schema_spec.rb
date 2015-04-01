@@ -13,6 +13,16 @@ RSpec.describe BoardSchema, type: :schema do
         its(:title){ is_expected.to eql type: 'string' }
         its(:description){ is_expected.to eql type: 'string' }
         its(:parent_id){ is_expected.to eql oneOf: [{ 'type' => 'integer' }, 'type' => 'null' ] }
+        
+        with :permissions do
+          its(:type){ is_expected.to eql 'object' }
+          its(:required){ is_expected.to eql %w(read write) }
+          
+          with :properties do
+            its(:read){ is_expected.to eql type: 'string' }
+            its(:write){ is_expected.to eql type: 'string' }
+          end
+        end
       end
     end
   end
@@ -22,7 +32,7 @@ RSpec.describe BoardSchema, type: :schema do
     it_behaves_like 'a board schema'
     
     with 'properties .boards' do
-      its(:required){ is_expected.to eql %w(title description section) }
+      its(:required){ is_expected.to eql %w(title description section permissions) }
       
       with :properties do
         its(:section){ is_expected.to eql type: 'string' }

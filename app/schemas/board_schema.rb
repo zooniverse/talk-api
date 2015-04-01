@@ -12,6 +12,10 @@ class BoardSchema
       entity  :parent_id do
         one_of integer, null
       end
+      object  :permissions, required: true do
+        string :read, required: true
+        string :write, required: true
+      end
     end
   end
   
@@ -22,6 +26,10 @@ class BoardSchema
       string :description
       entity :parent_id do
         one_of integer, null
+      end
+      object :permissions do
+        string :read, required: true
+        string :write, required: true
       end
     end
   end
