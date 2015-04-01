@@ -13,6 +13,7 @@ gem 'pundit', '~> 0.3'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 gem 'newrelic_rpm', '~> 3.11'
+gem 'honeybadger', '~> 2.0'
 
 group :production do
   gem 'puma'

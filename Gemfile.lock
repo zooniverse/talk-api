@@ -88,6 +88,7 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     hike (1.2.3)
     hitimes (1.2.2)
+    honeybadger (2.0.10)
     i18n (0.7.0)
     json (1.8.1)
     json-schema (2.5.0)
@@ -226,6 +227,7 @@ DEPENDENCIES
   faraday-http-cache (~> 0.4)
   faraday_middleware (~> 0.9)
   guard-rspec
+  honeybadger (~> 2.0)
   json-schema (~> 2.5)
   json-schema_builder (~> 0.0.5)
   newrelic_rpm (~> 3.11)
