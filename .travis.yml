@@ -20,7 +20,7 @@ before_script:
 services:
   - postgresql
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
   code_climate:
     repo_token:
       secure: Cc8J0Xm4PMLbZZvdI//NIaKwj9IY5j2RvbpYPrZW8BafbbxdlBZwZsMYnNOCOlSKhZSO87zxTQno3Yyv2ZnzsET1qj3XZ+6W5Q+INmxv9FSMZdbYyO+oRto8X/i0gjO+CerP642AKTOj9omaSxDKLoP/2dr6VKEQaxO4hFWNYgc=

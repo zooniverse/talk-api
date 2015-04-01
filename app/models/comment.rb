@@ -2,6 +2,7 @@ class Comment < ActiveRecord::Base
   include Moderatable
   include HashChanges
   include HstoreUpdate
+  include Searchable
   
   has_many :mentions, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -40,6 +41,30 @@ class Comment < ActiveRecord::Base
     # prevent empty discussions
     discussion.destroy unless discussion.comments.where(is_deleted: false).any?
     self
+  end
+  
+  def searchable?
+    return @searchable if @searchable
+    @searchable = discussion.searchable?
+  end
+  
+  def searchable_update
+    <<-SQL
+      update searchable_comments
+      set content =
+        setweight(to_tsvector(comments.body), 'B') ||
+        setweight(to_tsvector(users.display_name), 'B') ||
+        setweight(to_tsvector(users.display_name), 'B') ||
+        setweight(to_tsvector(tag_list.names), 'A')
+      from comments, users, (
+        select coalesce(string_agg(name, ' '), '') as names
+        from tags
+        where comment_id = #{ id }
+      ) as tag_list
+      where searchable_comments.searchable_id = #{ id } and
+      users.id = comments.user_id and
+      comments.id = #{ id }
+    SQL
   end
   
   concerning :Tagging do

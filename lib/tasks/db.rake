@@ -10,6 +10,7 @@ namespace :panoptes do
   namespace :db do
     desc 'Setup postgres_fdw'
     task :setup_fdw => :environment do
+      # Setup foreign data wrappers on Talk
       ActiveRecord::Base.connection.execute <<-SQL
         do language plpgsql $$
           begin
@@ -82,107 +83,40 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         do language plpgsql $$
           begin
-            if (select count(*) from pg_matviews where matviewname = 'searches') = 0 then
-              create materialized view searches as
-                select
-                  boards.id as searchable_id,
-                  'Board' as searchable_type,
-                  
-                  boards.title || ' ' ||
-                  boards.description
-                  as content,
-                  
-                  '' as tags,
-                  boards.section as section
-                from boards
-                where boards.permissions ->> 'read' = 'all'
-              
-              union
+            if (select count(*) from pg_matviews where matviewname = 'searchable_collections') = 0 then
+              create materialized view searchable_collections as
+              select
+                collections.id as searchable_id,
+                'Collection'::text as searchable_type,
                 
-                select
-                  discussions.id as searchable_id,
-                  'Discussion' as searchable_type,
-                  
-                  discussions.title
-                  as content,
-                  
-                  '' as tags,
-                  discussions.section as section
-                from discussions
-                  join boards on boards.id = discussions.board_id
-                where boards.permissions ->> 'read' = 'all'
-              
-              union
+                setweight(to_tsvector(collections.name), 'B') ||
+                setweight(to_tsvector(coalesce(collections.display_name, '')), 'B') ||
+                setweight(to_tsvector(string_agg(coalesce(tags.name, ''), ' ')), 'A') ||
+                setweight(to_tsvector('C' || collections.id::text), 'A')
+                as content,
                 
-                select
-                  comments.id as searchable_id,
-                  'Comment' as searchable_type,
-                  
-                  comments.body || ' ' ||
-                  string_agg(users.display_name, '') || ' ' ||
-                  string_agg(users.credited_name, '')
-                  as content,
-                  
-                  coalesce(string_agg(tags.name, ' '), '') as tags,
-                  comments.section as section
-                from comments
-                  left join tags on tags.comment_id = comments.id
-                  join discussions on discussions.id = comments.discussion_id
-                  join boards on boards.id = discussions.board_id
-                  join users on users.id = comments.user_id
-                where
-                  boards.permissions ->> 'read' = 'all'
-                group by
-                  comments.id
+                projects.id || '-' || projects.name as section
+              from collections
+                left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
+                join projects on projects.id = collections.project_id
+              where
+                collections.private is not true and projects.private is not true
+              group by
+                collections.id, collections.name, collections.display_name, projects.id, projects.name;
               
-              union
-                
-                select
-                  collections.id as searchable_id,
-                  'Collection' as searchable_type,
-                  
-                  string_agg(collections.name, '') || ' ' ||
-                  coalesce(string_agg(collections.display_name, ''), '')  || ' ' ||
-                  'C' || string_agg(collections.id::text, '')
-                  as content,
-                  
-                  coalesce(string_agg(tags.name, ' '), '') as tags,
-                  string_agg(projects.id || '-' || projects.name, '') as section
-                from collections
-                  left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
-                  join projects on projects.id = collections.project_id
-                where
-                  collections.private is not true and projects.private is not true
-                group by
-                  collections.id
-              
-              union
-                
-                select
-                  subjects.id as searchable_id,
-                  'Subject' as searchable_type,
-                  
-                  string_agg(subjects.id::text, '') || ' ' ||
-                  'S' || string_agg(subjects.id::text, '')
-                  as content,
-                  
-                  coalesce(string_agg(tags.name, ' '), '') as tags,
-                  string_agg(projects.id || '-' || projects.name, '') as section
-                from subjects
-                  join tags on tags.taggable_id = subjects.id and tags.taggable_type = 'Collection'
-                  join projects on projects.id = subjects.project_id
-                where
-                  projects.private is not true
-                group by
-                  subjects.id;
-              
-              create index search_index on searches using gin(
-                setweight(to_tsvector('english', tags), 'A'),
-                setweight(to_tsvector('english', content), 'B')
-              );
-              
-              create index search_section_index on searches using btree(section);
+              create unique index search_collections_id_index on searchable_collections using btree(searchable_id);
+              create index search_collections_index on searchable_collections using gin(content);
+              create index search_collections_section_index on searchable_collections using btree(section, searchable_type);
             end if;
+            
+            create or replace view searches as
+              select * from searchable_boards
+              union all
+              select * from searchable_collections
+              union all
+              select * from searchable_comments
+              union all
+              select * from searchable_discussions;
           end;
         $$;
       SQL
@@ -190,17 +124,12 @@ namespace :panoptes do
     
     desc 'Create Panoptes tables for testing'
     task :create_tables => :environment do
+      raise 'This is only meant for test or development' unless Rails.env.test? || Rails.env.development?
       ActiveRecord::Base.establish_connection panoptes_config
       ActiveRecord::Base.connection.execute <<-SQL
-        create sequence users_id_seq
-            start with 1
-            increment by 1
-            no minvalue
-            no maxvalue
-            cache 1;
-        
+        drop table if exists users;
         create table users (
-          id int4 not null default nextval('users_id_seq'::regclass),
+          id serial,
           email varchar(255) default ''::character varying,
           encrypted_password varchar(255) not null default ''::character varying,
           reset_password_token varchar(255),
@@ -227,17 +156,11 @@ namespace :panoptes do
           banned bool not null default false,
           migrated bool default false,
           constraint users_pkey primary key (id)
-        ) with (oids=false);
+        );
         
-        create sequence projects_id_seq
-            start with 1
-            increment by 1
-            no minvalue
-            no maxvalue
-            cache 1;
-        
+        drop table if exists projects;
         create table projects (
-          id int4 not null default nextval('projects_id_seq'::regclass),
+          id serial,
           name varchar(255),
           display_name varchar(255),
           user_count int4,
@@ -251,17 +174,11 @@ namespace :panoptes do
           private bool,
           lock_version int4 default 0,
           constraint projects_pkey primary key (id)
-        ) with (oids=false);
+        );
         
-        create sequence collections_id_seq
-            start with 1
-            increment by 1
-            no minvalue
-            no maxvalue
-            cache 1;
-        
+        drop table if exists collections;
         create table collections (
-          id int4 not null default nextval('collections_id_seq'::regclass),
+          id serial,
           name varchar(255),
           project_id int4,
           created_at timestamp(6) null,
@@ -271,17 +188,11 @@ namespace :panoptes do
           private bool,
           lock_version int4 default 0,
           constraint collections_pkey primary key (id)
-        ) with (oids=false);
+        );
         
-        create sequence subjects_id_seq
-            start with 1
-            increment by 1
-            no minvalue
-            no maxvalue
-            cache 1;
-        
+        drop table if exists subjects;
         create table subjects (
-          id int4 not null default nextval('subjects_id_seq'::regclass),
+          id serial,
           zooniverse_id varchar(255),
           metadata json,
           locations json,
@@ -292,7 +203,7 @@ namespace :panoptes do
           lock_version int4 default 0,
           upload_user_id varchar(255),
           constraint subjects_pkey primary key (id)
-        ) with (oids=false);
+        );
       SQL
     end
     

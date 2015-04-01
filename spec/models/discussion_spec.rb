@@ -2,6 +2,14 @@ require 'spec_helper'
 
 RSpec.describe Discussion, type: :model do
   it_behaves_like 'moderatable'
+  it_behaves_like 'a searchable interface'
+  it_behaves_like 'a searchable model' do
+    let(:searchable_board){ create :board, permissions: { read: 'all' } }
+    let(:searchable){ create :discussion, board: searchable_board }
+    
+    let(:unsearchable_board){ create :board, permissions: { read: 'admin' } }
+    let(:unsearchable){ create :discussion, board: unsearchable_board }
+  end
   
   context 'validating' do
     it 'should require a title' do

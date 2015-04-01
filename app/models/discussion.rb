@@ -1,5 +1,6 @@
 class Discussion < ActiveRecord::Base
   include Moderatable
+  include Searchable
   
   belongs_to :user, required: true
   belongs_to :board, required: true, counter_cache: true
@@ -16,6 +17,22 @@ class Discussion < ActiveRecord::Base
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
   moderatable_with :watch, by: [:moderator, :admin]
+  
+  def searchable?
+    return @searchable if @searchable
+    @searchable = board.searchable?
+  end
+  
+  def searchable_update
+    <<-SQL
+      update searchable_discussions
+      set content =
+        setweight(to_tsvector(discussions.title), 'A')
+      from discussions
+      where searchable_discussions.searchable_id = #{ id } and
+      discussions.id = #{ id }
+    SQL
+  end
   
   def count_users!
     self.users_count = comments.select(:user_id).distinct.count
