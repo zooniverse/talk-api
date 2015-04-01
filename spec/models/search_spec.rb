@@ -46,4 +46,32 @@ RSpec.describe Search, type: :model do
       expect(sql).to match /ORDER BY ts_rank\(content, 'foo'\) desc/
     end
   end
+  
+  describe '.serialize_search' do
+    it 'should preload searchables' do
+      expect(Search).to receive(:preload).with(:searchable).and_call_original
+      Search.with_content('foo').serialize_search
+    end
+    
+    it 'should return serialized searchables' do
+      board = create :board, permissions: { read: 'all' }
+      expect_any_instance_of(Search).to receive(:serialize)
+      Search.serialize_search
+    end
+  end
+  
+  describe '#serialize' do
+    let(:board){ create :board, permissions: { read: 'all' } }
+    let(:search){ Search.where(searchable_id: board.id, searchable_type: 'Board').first }
+    
+    it 'should use the serializer' do
+      expect(BoardSerializer).to receive(:as_json).with an_instance_of(Board)
+      search.serialize
+    end
+    
+    it 'should memoize the serializer class' do
+      search.serialize
+      expect(Search.serializers['Board']).to eql BoardSerializer
+    end
+  end
 end
