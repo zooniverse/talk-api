@@ -25,5 +25,15 @@ FactoryGirl.define do
         user.roles.create scope: evaluator.section, name: 'admin'
       end
     end
+    
+    factory :scientist do
+      transient do
+        section 'test'
+      end
+      
+      after :create do |user, evaluator|
+        user.roles.create scope: evaluator.section, name: 'scientist'
+      end
+    end
   end
 end

@@ -15,6 +15,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to_not be_team }
     it{ is_expected.to have_attributes user_roles: [] }
   end
   
@@ -26,6 +27,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to_not be_team }
     it{ is_expected.to have_attributes user_roles: [] }
   end
   
@@ -37,6 +39,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to_not be_team }
     it{ is_expected.to have_attributes user_roles: [] }
   end
   
@@ -48,6 +51,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to be_team }
     it{ is_expected.to have_attributes user_roles: ['moderator'] }
   end
   
@@ -59,6 +63,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to_not be_team }
     it{ is_expected.to have_attributes user_roles: [] }
   end
   
@@ -70,6 +75,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to be_team }
     it{ is_expected.to have_attributes user_roles: ['moderator'] }
   end
   
@@ -81,6 +87,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to be_admin }
+    it{ is_expected.to be_team }
     it{ is_expected.to have_attributes user_roles: ['admin'] }
   end
   
@@ -92,6 +99,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
+    it{ is_expected.to_not be_team }
     it{ is_expected.to have_attributes user_roles: [] }
   end
   
@@ -103,6 +111,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to be_admin }
+    it{ is_expected.to be_team }
     it{ is_expected.to have_attributes user_roles: ['admin'] }
   end
 end
