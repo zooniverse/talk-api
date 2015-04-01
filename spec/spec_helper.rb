@@ -18,6 +18,7 @@ RSpec.configure do |config|
   
   config.before(:suite){ WebMock.disable_net_connect! }
   config.after(:suite){ WebMock.allow_net_connect! }
+  config.before(:each){ Collection.refresh! }
   
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
