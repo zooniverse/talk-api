@@ -23,5 +23,6 @@ Rails.application.routes.draw do
     root 'application#root'
   end
   
+  get '/searches' => 'searches#index'
   match "*path", to: "application#sinkhole", via: :all
 end
