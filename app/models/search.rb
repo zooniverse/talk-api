@@ -11,6 +11,4 @@ class Search < ActiveRecord::Base
       .order("ts_rank(content, #{ connection.quote query }) desc")
   }
   
-  paginates_per 10
-  max_paginates_per 100
 end
