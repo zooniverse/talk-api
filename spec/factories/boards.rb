@@ -3,6 +3,7 @@ FactoryGirl.define do
     title 'A board'
     description 'Some board'
     section 'test'
+    permissions read: 'all', write: 'all'
     
     factory :board_with_discussions do
       transient do

@@ -4,7 +4,7 @@ RSpec.describe Comment, type: :model do
   it_behaves_like 'moderatable'
   it_behaves_like 'a searchable interface'
   it_behaves_like 'a searchable model' do
-    let(:searchable_board){ create :board, permissions: { read: 'all' } }
+    let(:searchable_board){ create :board }
     let(:searchable_discussion){ create :discussion, board: searchable_board }
     let(:searchable){ create :comment, discussion: searchable_discussion }
     

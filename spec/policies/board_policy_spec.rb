@@ -27,7 +27,7 @@ RSpec.describe BoardPolicy, type: :policy do
   end
   
   context 'with scope' do
-    let!(:public_boards){ create_list :board, 2, section: '1-project', permissions: { read: 'all', write: 'all' } }
+    let!(:public_boards){ create_list :board, 2, section: '1-project' }
     let!(:team_boards){ create_list :board, 2, section: '1-project', permissions: { read: 'team', write: 'team' } }
     let!(:admin_boards){ create_list :board, 2, section: '1-project', permissions: { read: 'admin', write: 'admin' } }
     let!(:moderator_boards){ create_list :board, 2, section: '1-project', permissions: { read: 'moderator', write: 'moderator' } }

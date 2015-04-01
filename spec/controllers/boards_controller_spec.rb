@@ -28,7 +28,8 @@ RSpec.describe BoardsController, type: :controller do
           boards: {
             title: 'works',
             description: 'works',
-            section: 'test'
+            section: 'test',
+            permissions: { read: 'all', write: 'all' }
           }
         }
       end

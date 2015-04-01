@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Board, type: :model do
   it_behaves_like 'a searchable interface'
   it_behaves_like 'a searchable model' do
-    let(:searchable){ create :board, permissions: { read: 'all' } }
+    let(:searchable){ create :board }
     let(:unsearchable){ create :board, permissions: { read: 'admin' } }
   end
   
@@ -29,7 +29,7 @@ RSpec.describe Board, type: :model do
   end
   
   describe '#cascade_searchable' do
-    let(:board){ create :board_with_discussions, discussion_count: 2, permissions: { read: 'all' } }
+    let(:board){ create :board_with_discussions, discussion_count: 2 }
     let(:children){ board.discussions.all.to_a + board.comments.all.to_a }
     let(:comments) do
       board.discussions.collect do |discussion|

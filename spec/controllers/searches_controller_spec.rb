@@ -138,7 +138,7 @@ RSpec.describe SearchesController, type: :controller do
     end
     
     describe 'meta' do
-      let!(:board){ create :board, title: 'Test board', section: 'zooniverse', permissions: { read: 'all' } }
+      let!(:board){ create :board, title: 'Test board', section: 'zooniverse' }
       let!(:discussions){ discussions = create_list :discussion, 2, title: 'testing', board: board }
       let!(:comments){ discussions.each{ |d| create_list :comment, 2, discussion: d, body: 'tested' } }
       

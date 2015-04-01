@@ -10,7 +10,8 @@ RSpec.describe BoardService, type: :service do
           title: 'works',
           description: 'works',
           section: 'test',
-          parent_id: parent_board.id
+          parent_id: parent_board.id,
+          permissions: { read: 'all', write: 'all' }
         }
       }
     end
@@ -23,7 +24,8 @@ RSpec.describe BoardService, type: :service do
           boards: {
             title: 'new title',
             description: 'new description',
-            parent_id: nil
+            parent_id: nil,
+            permissions: { read: 'admin', write: 'admin' }
           }
         }
       end

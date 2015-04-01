@@ -55,14 +55,14 @@ RSpec.describe Search, type: :model do
     end
     
     it 'should return serialized searchables' do
-      board = create :board, permissions: { read: 'all' }
+      board = create :board
       expect_any_instance_of(Search).to receive(:serialize)
       Search.serialize_search
     end
   end
   
   describe '#serialize' do
-    let(:board){ create :board, permissions: { read: 'all' } }
+    let(:board){ create :board }
     let(:search){ Search.where(searchable_id: board.id, searchable_type: 'Board').first }
     
     it 'should use the serializer' do
