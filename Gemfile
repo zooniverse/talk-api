@@ -12,6 +12,7 @@ gem 'faraday-http-cache', '~> 0.4'
 gem 'pundit', '~> 0.3'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
+gem 'newrelic_rpm', '~> 3.11'
 
 group :production do
   gem 'puma'
