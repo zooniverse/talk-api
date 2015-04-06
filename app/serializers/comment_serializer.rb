@@ -1,13 +1,13 @@
 class CommentSerializer
   include TalkSerializer
+  include ModerationActions
+  
   all_attributes
   can_sort_by :created_at
   self.default_sort = 'created_at'
   
   def custom_attributes
-    {
-      focus: focus
-    }
+    super.merge focus: focus
   end
   
   def focus

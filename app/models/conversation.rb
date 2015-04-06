@@ -12,7 +12,8 @@ class Conversation < ActiveRecord::Base
   
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
-  moderatable_with :report, by: [:owner]
+  # All users able to view a conversation are able to report it
+  # moderatable_with :report, by: [:participant]
   
   def self.mark_as_read_by(conversation_ids, user_id)
     UserConversation.where({
