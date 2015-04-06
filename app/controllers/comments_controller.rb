@@ -3,12 +3,12 @@ class CommentsController < ApplicationController
   
   def upvote
     service.upvote
-    render json: serializer_class.resource(service.resource)
+    render json: serializer_class.resource(service.resource, nil, current_user: current_user)
   end
   
   def remove_upvote
     service.remove_upvote
-    render json: serializer_class.resource(service.resource)
+    render json: serializer_class.resource(service.resource, nil, current_user: current_user)
   end
   
   def destroy
