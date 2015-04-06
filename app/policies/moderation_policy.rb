@@ -20,6 +20,7 @@ class ModerationPolicy < ApplicationPolicy
   end
   
   def available_actions
+    return [] unless logged_in?
     @available_actions ||= record.target.class.moderatable.select do |action, roles|
       roles[:all] ||
       (roles[:moderator] && moderator?) ||

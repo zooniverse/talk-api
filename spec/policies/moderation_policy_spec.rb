@@ -8,7 +8,7 @@ RSpec.describe ModerationPolicy, type: :policy do
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
-    its(:available_actions){ is_expected.to match_array [:report] }
+    its(:available_actions){ is_expected.to be_empty }
   end
   
   context 'with a user' do
