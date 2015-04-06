@@ -19,6 +19,15 @@ class ModerationPolicy < ApplicationPolicy
     moderator? || admin?
   end
   
+  def available_actions
+    @available_actions ||= record.target.class.moderatable.select do |action, roles|
+      roles[:all] ||
+      (roles[:moderator] && moderator?) ||
+      (roles[:admin] && admin?) ||
+      (roles[:team] && team?)
+    end.keys
+  end
+  
   class Scope < Scope
     def resolve
       if user.roles.where(scope: 'zooniverse', name: ['moderator', 'admin']).any?
