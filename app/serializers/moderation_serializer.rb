@@ -3,13 +3,11 @@ class ModerationSerializer
   all_attributes
   
   def custom_attributes
-    {
-      target: target
-    }
+    super.merge target: target
   end
   
   def target
-    target_serializer.as_json model.target
+    target_serializer.as_json(model.target) if model.target
   rescue
     nil
   end

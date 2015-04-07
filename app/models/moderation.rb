@@ -34,6 +34,7 @@ class Moderation < ActiveRecord::Base
   def destroy_target
     self.state = 'closed'
     target.destroy!
+    self.target = nil
   end
   
   def ignore_target

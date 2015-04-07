@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150331175344) do
+ActiveRecord::Schema.define(version: 20150407210341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,8 +107,8 @@ ActiveRecord::Schema.define(version: 20150331175344) do
   add_index "messages", ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at", using: :btree
 
   create_table "moderations", force: :cascade do |t|
-    t.integer  "target_id",                null: false
-    t.string   "target_type",              null: false
+    t.integer  "target_id"
+    t.string   "target_type"
     t.integer  "state",       default: 0
     t.json     "reports",     default: []
     t.json     "actions",     default: []
