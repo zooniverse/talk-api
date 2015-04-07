@@ -28,10 +28,16 @@ RSpec.describe Moderation, type: :model do
       expect(moderation).to be_opened
     end
     
-    it 'should update actioned_at when transitioning state' do
+    it 'should update actioned_at when actioning' do
       moderation = create :moderation
+      moderator = create :moderator
       expect {
-        moderation.closed!
+        moderation.actions << {
+          user_id: moderator.id,
+          message: 'closing',
+          state: 'closed'
+        }
+        moderation.save
       }.to change {
         moderation.actioned_at
       }
