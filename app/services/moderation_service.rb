@@ -11,8 +11,28 @@ class ModerationService < ApplicationService
   end
   
   def update_resource
-    set_user_on(:actions) if unrooted_params[:actions]
+    set_user_on(:actions) if actioning?
     super
+  end
+  
+  def authorize
+    build unless resource
+    @authorized = policy.send "#{ action }?"
+    @authorized &= actioning? && can_action? if updating?
+    unauthorized! unless authorized?
+  end
+  
+  def updating?
+    action == :update
+  end
+  
+  def actioning?
+    updating? && unrooted_params[:actions].is_a?(Array)
+  end
+  
+  def can_action?
+    moderation_action = unrooted_params[:actions].first || { }
+    policy.can_action? moderation_action.fetch('action', '')
   end
   
   protected

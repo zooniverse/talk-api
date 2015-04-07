@@ -18,14 +18,6 @@ RSpec.describe ModerationSchema, type: :schema do
     end
   end
   
-  shared_examples_for 'moderation schema state' do
-    with :state do
-      its(:type){ is_expected.to eql 'string' }
-      its(:enum){ is_expected.to eql Moderation.states.keys }
-      its(:default){ is_expected.to eql 'opened' }
-    end
-  end
-  
   describe '#create' do
     let(:schema_method){ :create }
     its(:type){ is_expected.to eql 'object' }
@@ -66,9 +58,13 @@ RSpec.describe ModerationSchema, type: :schema do
             its(:required){ is_expected.to eql ['user_id', 'message'] }
             
             with :properties do
-              include_context 'moderation schema state'
               its(:user_id){ is_expected.to eql type: 'integer' }
               its(:message){ is_expected.to eql type: 'string' }
+              
+              with :action do
+                its(:type){ is_expected.to eql 'string' }
+                its(:enum){ is_expected.to match_array ['destroy', 'ignore', 'watch'] }
+              end
             end
           end
         end

@@ -23,16 +23,10 @@ class ModerationSchema
   
   protected
   
-  def state(obj)
-    obj.string :state do
-      enum Moderation.states.keys
-      default default_state
+  def action(obj)
+    obj.string :action do
+      enum [:destroy, :ignore, :watch]
     end
-  end
-  
-  def default_state
-    key = Moderation.column_defaults['state']
-    Moderation.states.invert[key]
   end
   
   def reports(obj)
@@ -48,8 +42,8 @@ class ModerationSchema
     obj.array :actions, min_items: 1 do
       items type: :object do |item|
         integer :user_id, required: true
+        action item
         string  :message, required: true
-        state item
       end
     end
   end

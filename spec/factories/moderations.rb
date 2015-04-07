@@ -6,7 +6,6 @@ FactoryGirl.define do
     trait(:opened){ state 0 }
     trait(:ignored){ state 1 }
     trait(:closed){ state 2 }
-    trait(:logged){ state 3 }
-    trait(:watched){ state 4 }
+    trait(:watched){ state 3 }
   end
 end

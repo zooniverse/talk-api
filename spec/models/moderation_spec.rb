@@ -35,12 +35,46 @@ RSpec.describe Moderation, type: :model do
         moderation.actions << {
           user_id: moderator.id,
           message: 'closing',
-          state: 'closed'
+          action: 'ignore'
         }
         moderation.save
       }.to change {
         moderation.actioned_at
       }
+    end
+  end
+  
+  context 'applying an action' do
+    let(:target){ create :comment }
+    let(:moderator){ create :moderator }
+    subject{ create :moderation, target: target }
+    let(:action_param) do
+      {
+        user_id: moderator.id,
+        message: 'actioning'
+      }
+    end
+    
+    before(:each) do
+      subject.actions << action
+      subject.save!
+      subject.reload
+    end
+    
+    context 'when destroying' do
+      let(:action){ action_param.merge action: 'destroy' }
+      its(:state){ is_expected.to eql 'closed' }
+      its(:target){ is_expected.to be_nil }
+    end
+    
+    context 'when ignoring' do
+      let(:action){ action_param.merge action: 'ignore' }
+      its(:state){ is_expected.to eql 'ignored' }
+    end
+    
+    context 'when watching' do
+      let(:action){ action_param.merge action: 'watch' }
+      its(:state){ is_expected.to eql 'watched' }
     end
   end
 end

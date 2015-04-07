@@ -19,6 +19,10 @@ class ModerationPolicy < ApplicationPolicy
     moderator? || admin?
   end
   
+  def can_action?(action)
+    available_actions.include? action.to_sym
+  end
+  
   def available_actions
     return [] unless logged_in?
     @available_actions ||= record.target.class.moderatable.select do |action, roles|

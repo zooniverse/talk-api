@@ -47,7 +47,7 @@ RSpec.describe ModerationsController, type: :controller do
           moderations: {
             actions: [{
               message: 'closing',
-              state: 'closed'
+              action: 'ignore'
             }]
           }
         }

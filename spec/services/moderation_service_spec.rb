@@ -58,8 +58,8 @@ RSpec.describe ModerationService, type: :service do
             id: record.id,
             moderations: {
               actions: [{
-                message: 'closing',
-                state: 'closed'
+                action: 'ignore',
+                message: 'closing'
               }]
             }
           }
@@ -68,15 +68,22 @@ RSpec.describe ModerationService, type: :service do
         it 'should add the action' do
           service.update
           expect(service.resource.actions).to include({
+            'action' => 'ignore',
             'message' => 'closing',
-            'state' => 'closed',
             'user_id' => current_user.id
           })
         end
         
         it 'should set the moderation state' do
           service.update
-          expect(service.resource).to be_closed
+          expect(service.resource).to be_ignored
+        end
+        
+        it 'should ensure the action is permitted' do
+          expect_any_instance_of(ModerationPolicy)
+            .to receive(:can_action?).with('ignore')
+            .and_call_original
+          service.update
         end
       end
     end
