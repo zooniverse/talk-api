@@ -1,35 +1,35 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.0'
-gem 'rack-cors', '~> 0.2.9'
-gem 'pg'
+gem 'rails', '~> 4.2.1'
+gem 'rack-cors', '~> 0.3.1'
+gem 'pg', '~> 0.18.1'
 gem 'restpack_serializer', github: 'parrish/restpack_serializer', branch: 'dev'
-gem 'json-schema', '~> 2.5'
+gem 'json-schema', '~> 2.5.0'
 gem 'json-schema_builder', '~> 0.0.5'
-gem 'faraday', '~> 0.9'
-gem 'faraday_middleware', '~> 0.9'
-gem 'faraday-http-cache', '~> 0.4'
-gem 'pundit', '~> 0.3'
+gem 'faraday', '~> 0.9.1'
+gem 'faraday_middleware', '~> 0.9.1'
+gem 'faraday-http-cache', '~> 1.1.0'
+gem 'pundit', '~> 0.3.0'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 gem 'newrelic_rpm', '~> 3.11'
-gem 'honeybadger', '~> 2.0'
+gem 'honeybadger', '~> 2.0.10'
 
 group :production do
-  gem 'puma'
+  gem 'puma', '~> 2.11.1'
 end
 
 group :test, :development do
-  gem 'rspec-rails'
-  gem 'rspec-its'
-  gem 'spring-commands-rspec'
-  gem 'factory_girl_rails'
-  gem 'guard-rspec'
-  gem 'pry'
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec-its', '~> 1.2.0'
+  gem 'spring-commands-rspec', '~> 1.0.4'
+  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'guard-rspec', '~> 4.5.0'
+  gem 'pry', '~> 0.10.1'
 end
 
 group :test do
-  gem 'webmock'
-  gem 'codeclimate-test-reporter'
-  gem 'simplecov'
+  gem 'webmock', '~> 1.21.0'
+  gem 'codeclimate-test-reporter', '~> 0.4.7'
+  gem 'simplecov', '~> 0.9.2'
 end
