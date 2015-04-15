@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   defaults format: 'json' do
     resources :boards
@@ -24,5 +26,6 @@ Rails.application.routes.draw do
   end
   
   get '/searches' => 'searches#index'
+  mount Sidekiq::Web => '/sidekiq'
   match "*path", to: "application#sinkhole", via: :all
 end

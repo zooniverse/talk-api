@@ -15,7 +15,8 @@ module Talk
       'app/services',
       'app/services/concerns',
       'app/serializers/concerns',
-      'app/serializers'
+      'app/serializers',
+      'app/workers'
     ].collect{ |path| Rails.root.join path }
     
     config.middleware.insert_before 0, Rack::Cors do
