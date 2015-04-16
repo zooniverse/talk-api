@@ -2,5 +2,6 @@ class UserSerializer
   include TalkSerializer
   include ModerationActions
   
-  all_attributes except: :email
+  attributes :id, :created_at, :updated_at, :display_name,
+    :zooniverse_id, :credited_name, :admin, :banned
 end
