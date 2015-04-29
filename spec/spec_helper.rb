@@ -9,8 +9,10 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'json/schema_builder/rspec'
 require 'webmock/rspec'
+require 'sidekiq/testing'
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
+Sidekiq::Testing.fake!
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods

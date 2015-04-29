@@ -7,4 +7,11 @@ RSpec.describe Notification, type: :model do
       expect(without_target).to fail_validation user: "can't be blank"
     end
   end
+  
+  context 'creating' do
+    it 'should publish' do
+      expect(NotificationWorker).to receive :perform_async
+      create :notification
+    end
+  end
 end
