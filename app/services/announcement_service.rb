@@ -1,0 +1,2 @@
+class AnnouncementService < ApplicationService
+end
