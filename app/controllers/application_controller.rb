@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   def root
     authorize :application, :index?
     render json: {
+      announcements: { href: '/announcements', type: 'announcements' },
       boards: { href: '/boards', type: 'boards' },
       comments: { href: '/comments', type: 'comments' },
       collections: { href: '/collections', type: 'collections' },
