@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :roles
   has_many :user_conversations
   has_many :conversations, through: :user_conversations
+  has_many :notifications
   
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
