@@ -1,4 +1,5 @@
 class Announcement < ActiveRecord::Base
+  scope :expired, ->{ where 'expired_at < ?', Time.now.utc }
   before_create :assign_default_expiration
   
   protected
