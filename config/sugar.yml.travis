@@ -1,0 +1,4 @@
+test:
+  host: http://sugar.localhost
+  username: talk
+  password: password
