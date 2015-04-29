@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
       discussions: { href: '/discussions', type: 'discussions' },
       messages: { href: '/messages', type: 'messages' },
       moderations: { href: '/moderations', type: 'moderations' },
+      notifications: { href: '/notifications', type: 'notifications' },
       subjects: { href: '/subjects', type: 'subjects' },
       tags: { href: '/tags', type: 'tags' },
       users: { href: '/users', type: 'users' }

@@ -32,7 +32,7 @@ class ApplicationPolicy
     end
     
     def owner?
-      logged_in? && user.id == record.user_id
+      logged_in? && Array.wrap(record).all?{ |r| user.id == r.user_id }
     end
     
     # TO-DO: refactor to use an ALL query
