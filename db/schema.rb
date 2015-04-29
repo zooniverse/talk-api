@@ -11,12 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150407210341) do
+ActiveRecord::Schema.define(version: 20150429150504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
   enable_extension "postgres_fdw"
+
+  create_table "announcements", force: :cascade do |t|
+    t.text     "message",    null: false
+    t.string   "section",    null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "announcements", ["created_at"], name: "index_announcements_on_created_at", using: :btree
+  add_index "announcements", ["expires_at"], name: "index_announcements_on_expires_at", using: :btree
+  add_index "announcements", ["section", "created_at"], name: "index_announcements_on_section_and_created_at", using: :btree
 
   create_table "boards", force: :cascade do |t|
     t.string   "title",                          null: false
@@ -120,6 +132,20 @@ ActiveRecord::Schema.define(version: 20150407210341) do
 
   add_index "moderations", ["section", "state", "updated_at"], name: "index_moderations_on_section_and_state_and_updated_at", using: :btree
   add_index "moderations", ["target_id", "target_type"], name: "index_moderations_on_target_id_and_target_type", using: :btree
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "user_id"
+    t.text     "message",                    null: false
+    t.string   "url",                        null: false
+    t.string   "section",                    null: false
+    t.boolean  "delivered",  default: false, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications", ["created_at"], name: "expiring_index", using: :btree
+  add_index "notifications", ["user_id", "delivered", "created_at"], name: "unread_index", using: :btree
+  add_index "notifications", ["user_id", "section", "delivered", "created_at"], name: "unread_section_index", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.integer "user_id", null: false
