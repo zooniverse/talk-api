@@ -12,7 +12,7 @@ FactoryGirl.define do
       end
       
       after :create do |user, evaluator|
-        user.roles.create scope: evaluator.section, name: 'moderator'
+        user.roles.create section: evaluator.section, name: 'moderator'
       end
     end
     
@@ -22,7 +22,7 @@ FactoryGirl.define do
       end
       
       after :create do |user, evaluator|
-        user.roles.create scope: evaluator.section, name: 'admin'
+        user.roles.create section: evaluator.section, name: 'admin'
       end
     end
     
@@ -32,7 +32,7 @@ FactoryGirl.define do
       end
       
       after :create do |user, evaluator|
-        user.roles.create scope: evaluator.section, name: 'scientist'
+        user.roles.create section: evaluator.section, name: 'scientist'
       end
     end
   end

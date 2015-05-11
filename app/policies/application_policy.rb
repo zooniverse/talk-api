@@ -69,7 +69,7 @@ class ApplicationPolicy
       return [] unless logged_in?
       sections = ['zooniverse']
       sections += [record.section] if record.respond_to?(:section)
-      @_roles = user.roles.where(scope: sections).collect(&:name).uniq
+      @_roles = user.roles.where(section: sections).collect(&:name).uniq
     end
   end
   
@@ -95,8 +95,8 @@ class ApplicationPolicy
       return { } unless logged_in?
       @_roles = { }
       user.roles.each do |role|
-        @_roles[role.scope] ||= []
-        @_roles[role.scope] << role.name
+        @_roles[role.section] ||= []
+        @_roles[role.section] << role.name
       end
       @_roles
     end
