@@ -1,6 +1,6 @@
 class RolePolicy < ApplicationPolicy
   def index?
-    accessible_section?
+    admin?
   end
   
   def show?
