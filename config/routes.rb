@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     resources :messages
     resources :moderations
     resources :notifications
+    resources :roles
     resources :subjects
     resources :tags do
       collection do

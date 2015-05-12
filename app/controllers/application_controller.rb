@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
       messages: { href: '/messages', type: 'messages' },
       moderations: { href: '/moderations', type: 'moderations' },
       notifications: { href: '/notifications', type: 'notifications' },
+      roles: { href: '/roles', type: 'roles' },
       subjects: { href: '/subjects', type: 'subjects' },
       tags: { href: '/tags', type: 'tags' },
       users: { href: '/users', type: 'users' }
