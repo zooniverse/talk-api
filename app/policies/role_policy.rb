@@ -27,7 +27,10 @@ class RolePolicy < ApplicationPolicy
     
     def accessible_section?
       return true if privileged_sections.include?('zooniverse')
-      privileged_sections.include? record.section
+      Array.wrap(record).each do |r|
+        return false unless privileged_sections.include?(r.section)
+      end
+      true
     end
   end
   

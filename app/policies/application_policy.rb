@@ -38,8 +38,8 @@ class ApplicationPolicy
     # TO-DO: refactor to use an ALL query
     def participant?
       return false unless logged_in?
-      Array.wrap(record).each do |record|
-        return false unless record.users.exists?(id: user.id)
+      Array.wrap(record).each do |r|
+        return false unless r.users.exists?(id: user.id)
       end
       true
     end
