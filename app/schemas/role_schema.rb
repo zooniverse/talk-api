@@ -15,7 +15,6 @@ class RoleSchema
   def update
     root do |root_object|
       additional_properties false
-      string :section, required: true
       role_names root_object
     end
   end

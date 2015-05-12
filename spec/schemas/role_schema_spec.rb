@@ -8,13 +8,9 @@ RSpec.describe RoleSchema, type: :schema do
     with 'properties .roles' do
       its(:additionalProperties){ is_expected.to be false }
       
-      with :properties do
-        its(:section){ is_expected.to eql type: 'string' }
-        
-        with :name do
-          its(:type){ is_expected.to eql 'string' }
-          its(:enum){ is_expected.to eql %w(admin moderator scientist team) }
-        end
+      with 'properties .name' do
+        its(:type){ is_expected.to eql 'string' }
+        its(:enum){ is_expected.to eql %w(admin moderator scientist team) }
       end
     end
   end
@@ -28,6 +24,7 @@ RSpec.describe RoleSchema, type: :schema do
       
       with :properties do
         its(:user_id){ is_expected.to eql type: 'integer' }
+        its(:section){ is_expected.to eql type: 'string' }
       end
     end
   end
@@ -37,7 +34,7 @@ RSpec.describe RoleSchema, type: :schema do
     it_behaves_like 'a role schema'
     
     with 'properties .roles' do
-      its(:required){ is_expected.to eql %w(section name) }
+      its(:required){ is_expected.to eql %w(name) }
       
       with :properties do
         its(:user_id){ is_expected.to be nil }
