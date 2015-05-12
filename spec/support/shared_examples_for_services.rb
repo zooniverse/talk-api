@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.shared_examples_for 'a service' do |resource|
+RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
   subject{ described_class }
   let(:resource_schema){ "#{ resource.name }Schema".constantize }
   
@@ -76,38 +76,40 @@ RSpec.shared_examples_for 'a service' do |resource|
     end
   end
   
-  describe '#set_user' do
-    context 'without a user' do
-      let(:current_user){ nil }
-      it 'should raise an error' do
-        expect{ service.set_user }.to raise_error Pundit::NotAuthorizedError
+  if sets_user
+    describe '#set_user' do
+      context 'without a user' do
+        let(:current_user){ nil }
+        it 'should raise an error' do
+          expect{ service.set_user }.to raise_error Pundit::NotAuthorizedError
+        end
       end
-    end
-    
-    context 'without valid params' do
-      it 'should raise an error' do
+      
+      context 'without valid params' do
+        it 'should raise an error' do
+          expect{
+            service.set_user do
+              unrooted_params[:does][:not][:exist] = 123
+            end
+          }.to raise_error TalkService::ParameterError
+        end
+      end
+      
+      it 'should set the user id' do
         expect{
-          service.set_user do
-            unrooted_params[:does][:not][:exist] = 123
-          end
-        }.to raise_error TalkService::ParameterError
+          service.set_user
+        }.to change{
+          service.unrooted_params[:user_id]
+        }.from(nil).to current_user.id
       end
-    end
-    
-    it 'should set the user id' do
-      expect{
-        service.set_user
-      }.to change{
-        service.unrooted_params[:user_id]
-      }.from(nil).to current_user.id
-    end
-    
-    it 'should accept a block' do
-      expect{
-        service.set_user{ unrooted_params[:foo] = 123 }
-      }.to change{
-        service.unrooted_params[:foo]
-      }.from(nil).to 123
+      
+      it 'should accept a block' do
+        expect{
+          service.set_user{ unrooted_params[:foo] = 123 }
+        }.to change{
+          service.unrooted_params[:foo]
+        }.from(nil).to 123
+      end
     end
   end
   

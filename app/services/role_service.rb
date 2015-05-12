@@ -1,0 +1,2 @@
+class RoleService < ApplicationService
+end
