@@ -54,11 +54,30 @@ namespace :panoptes do
           private bool
         ) server panoptes;
         
+        create foreign table if not exists collection_subjects (
+          id int4,
+          subject_id int4,
+          collection_id int4
+        ) server panoptes;
+        
+        create foreign table if not exists media (
+          id int4,
+          type varchar(255),
+          linked_id int4,
+          linked_type varchar(255),
+          content_type varchar(255),
+          src text,
+          path_opts text[],
+          private bool,
+          external_link bool,
+          created_at timestamp(6),
+          updated_at timestamp(6)
+        ) server panoptes;
+        
         create foreign table if not exists subjects (
           id int4,
           zooniverse_id varchar(255),
           metadata json,
-          locations json,
           created_at timestamp(6),
           updated_at timestamp(6),
           project_id int4
@@ -129,80 +148,109 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         drop table if exists users;
         create table users (
-          id serial,
-          email varchar(255) default ''::character varying,
-          encrypted_password varchar(255) not null default ''::character varying,
-          reset_password_token varchar(255),
-          reset_password_sent_at timestamp(6) null,
-          remember_created_at timestamp(6) null,
-          sign_in_count int4 not null default 0,
-          current_sign_in_at timestamp(6) null,
-          last_sign_in_at timestamp(6) null,
-          current_sign_in_ip varchar(255),
-          last_sign_in_ip varchar(255),
-          created_at timestamp(6) null,
-          updated_at timestamp(6) null,
-          hash_func varchar(255) default 'bcrypt'::character varying,
-          password_salt varchar(255),
-          display_name varchar(255),
-          zooniverse_id varchar(255),
-          credited_name varchar(255),
-          classifications_count int4 not null default 0,
-          activated_state int4 not null default 0,
-          languages varchar(255)[] not null default '{}'::character varying[],
-          global_email_communication bool,
-          project_email_communication bool,
-          admin bool not null default false,
-          banned bool not null default false,
-          migrated bool default false,
+          id serial not null,
+          email character varying default ''::character varying,
+          encrypted_password character varying default ''::character varying not null,
+          reset_password_token character varying,
+          reset_password_sent_at timestamp without time zone,
+          remember_created_at timestamp without time zone,
+          sign_in_count integer default 0 not null,
+          current_sign_in_at timestamp without time zone,
+          last_sign_in_at timestamp without time zone,
+          current_sign_in_ip character varying,
+          last_sign_in_ip character varying,
+          created_at timestamp without time zone,
+          updated_at timestamp without time zone,
+          hash_func character varying default 'bcrypt'::character varying,
+          password_salt character varying,
+          display_name character varying,
+          zooniverse_id character varying,
+          credited_name character varying,
+          classifications_count integer default 0 not null,
+          activated_state integer default 0 not null,
+          languages character varying[] default '{}'::character varying[] not null,
+          global_email_communication boolean,
+          project_email_communication boolean,
+          admin boolean default false not null,
+          banned boolean default false not null,
+          migrated boolean default false,
+          valid_email boolean default true not null,
+          uploaded_subjects_count integer default 0,
           constraint users_pkey primary key (id)
         );
         
         drop table if exists projects;
         create table projects (
-          id serial,
-          name varchar(255),
-          display_name varchar(255),
-          user_count int4,
-          created_at timestamp(6) null,
-          updated_at timestamp(6) null,
-          classifications_count int4 not null default 0,
-          activated_state int4 not null default 0,
-          primary_language varchar(255),
-          avatar text,
-          background_image text,
-          private bool,
-          lock_version int4 default 0,
+          id serial not null,
+          name character varying,
+          display_name character varying,
+          user_count integer,
+          created_at timestamp without time zone,
+          updated_at timestamp without time zone,
+          classifications_count integer default 0 not null,
+          activated_state integer default 0 not null,
+          primary_language character varying,
+          private boolean,
+          lock_version integer default 0,
+          configuration jsonb,
+          approved boolean default false,
+          beta boolean default false,
+          live boolean default false not null,
+          urls jsonb default '[]'::jsonb,
+          migrated boolean default false,
           constraint projects_pkey primary key (id)
         );
         
         drop table if exists collections;
         create table collections (
-          id serial,
-          name varchar(255),
-          project_id int4,
-          created_at timestamp(6) null,
-          updated_at timestamp(6) null,
-          activated_state int4 not null default 0,
-          display_name varchar(255),
-          private bool,
-          lock_version int4 default 0,
+          id serial not null,
+          name character varying,
+          project_id integer,
+          created_at timestamp without time zone,
+          updated_at timestamp without time zone,
+          activated_state integer default 0 not null,
+          display_name character varying,
+          private boolean,
+          lock_version integer default 0,
           constraint collections_pkey primary key (id)
         );
         
         drop table if exists subjects;
         create table subjects (
-          id serial,
-          zooniverse_id varchar(255),
-          metadata json,
-          locations json,
-          created_at timestamp(6) null,
-          updated_at timestamp(6) null,
-          project_id int4,
-          migrated bool,
-          lock_version int4 default 0,
-          upload_user_id varchar(255),
+          id serial not null,
+          zooniverse_id character varying,
+          metadata jsonb default '{}'::jsonb,
+          created_at timestamp without time zone,
+          updated_at timestamp without time zone,
+          project_id integer,
+          migrated boolean,
+          lock_version integer default 0,
+          upload_user_id character varying,
           constraint subjects_pkey primary key (id)
+        );
+        
+        drop table if exists collection_subjects;
+        create table collection_subjects (
+          id serial not null,
+          subject_id int4 not null,
+          collection_id int4 not null,
+          constraint collection_subjects_pkey primary key (id)
+        );
+        
+        drop table if exists media;
+        create table media (
+          id serial not null,
+          type character varying,
+          linked_id integer,
+          linked_type character varying,
+          content_type character varying,
+          src text,
+          path_opts text[] default '{}'::text[],
+          private boolean default false,
+          external_link boolean default false,
+          created_at timestamp without time zone not null,
+          updated_at timestamp without time zone not null,
+          constraint media_pkey primary key (id)
         );
       SQL
     end

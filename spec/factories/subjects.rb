@@ -1,11 +1,9 @@
 FactoryGirl.define do
   factory :subject do
     sequence :id
-    locations do
-      [{
-        "image/png" => "panoptes-uploads.zooniverse.org/#{ id }.png"
-      }]
-    end
     project
+    after(:create) do |subject|
+      create_list :medium, 2, linked: subject
+    end
   end
 end
