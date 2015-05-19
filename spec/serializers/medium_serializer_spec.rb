@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe MediumSerializer, type: :serializer do
-  it_behaves_like 'a talk serializer', exposing: [:id, :href, :content_type, :media_type, :external_link] do
+  it_behaves_like 'a talk serializer', exposing: [:id, :href, :src, :content_type, :media_type, :external_link] do
     subject{ json }
     
     its([:media_type]){ is_expected.to eql instance.type }
