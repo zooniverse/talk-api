@@ -88,7 +88,7 @@ RSpec.describe Sugar, type: :lib do
     end
     
     it 'should set request headers' do
-      Sugar.send method, body
+      Sugar.send method, object
       expect(stubbed_request).to have_been_requested.once
     end
   end
@@ -96,14 +96,16 @@ RSpec.describe Sugar, type: :lib do
   describe '.notify' do
     it_behaves_like 'a sugar request' do
       let(:method){ :notify }
-      let(:body){ create :notification }
+      let(:object){ create :notification }
+      let(:body){ { notifications: [object] } }
     end
   end
   
   describe '.announce' do
     it_behaves_like 'a sugar request' do
       let(:method){ :announce }
-      let(:body){ create :announcement }
+      let(:object){ create :announcement }
+      let(:body){ { announcements: [object] } }
     end
   end
 end

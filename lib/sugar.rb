@@ -31,11 +31,11 @@ class Sugar
     ::Rails.logger.warn 'Sugar configuration is not valid'
   end
   
-  def self.notify(notification)
-    request :post, '/notify', notification.to_json
+  def self.notify(*notifications)
+    request :post, '/notify', { notifications: notifications }.to_json
   end
   
-  def self.announce(announcement)
-    request :post, '/announce', announcement.to_json
+  def self.announce(*announcements)
+    request :post, '/announce', { announcements: announcements }.to_json
   end
 end
