@@ -7,4 +7,13 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.active_support.deprecation = :log
   config.active_record.migration_error = :page_load
+  config.action_mailer.default_url_options = {
+    protocol: 'http',
+    host: 'localhost',
+    port: 3000
+  }
+  
+  config.after_initialize do
+    Rails.application.routes.default_url_options = config.action_mailer.default_url_options
+  end
 end

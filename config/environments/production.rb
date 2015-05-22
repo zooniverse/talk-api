@@ -11,4 +11,12 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
   config.log_formatter = ::Logger::Formatter.new
   config.active_record.dump_schema_after_migration = false
+  config.action_mailer.default_url_options = {
+    protocol: 'https',
+    host: 'talk.zooniverse.org'
+  }
+  
+  config.after_initialize do
+    Rails.application.routes.default_url_options = config.action_mailer.default_url_options
+  end
 end
