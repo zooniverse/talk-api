@@ -17,6 +17,11 @@ class User < ActiveRecord::Base
   end
   
   def mentioned_by(comment)
-    # TO-DO: notification
+    Notification.create({
+      user_id: id,
+      message: "You were mentioned by #{ comment.user_display_name }",
+      url: Rails.application.routes.url_helpers.comment_url(comment.id),
+      section: comment.section
+    })
   end
 end
