@@ -22,7 +22,8 @@ namespace :panoptes do
               create server panoptes foreign data wrapper postgres_fdw options (
                 host 'localhost',
                 dbname '#{ panoptes_config['database'] }',
-                port '#{ panoptes_config.fetch('port', 5432) }'
+                port '#{ panoptes_config.fetch('port', 5432) }',
+                use_remote_estimate 'true'
               );
               
               create user mapping for #{ panoptes_config['username'] } server panoptes options (
