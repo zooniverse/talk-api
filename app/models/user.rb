@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   has_many :user_conversations
   has_many :conversations, through: :user_conversations
   has_many :notifications
+  has_many :subscriptions
+  has_many :subscription_preferences
   
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]

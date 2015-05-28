@@ -4,5 +4,6 @@ FactoryGirl.define do
     message 'testing'
     url 'http://www.example.com'
     section 'zooniverse'
+    subscription
   end
 end

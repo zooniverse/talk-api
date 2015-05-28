@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150512154505) do
+ActiveRecord::Schema.define(version: 20150527164413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,15 +135,17 @@ ActiveRecord::Schema.define(version: 20150512154505) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "user_id"
-    t.text     "message",                    null: false
-    t.string   "url",                        null: false
-    t.string   "section",                    null: false
-    t.boolean  "delivered",  default: false, null: false
+    t.text     "message",                         null: false
+    t.string   "url",                             null: false
+    t.string   "section",                         null: false
+    t.boolean  "delivered",       default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "subscription_id",                 null: false
   end
 
   add_index "notifications", ["created_at"], name: "expiring_index", using: :btree
+  add_index "notifications", ["subscription_id"], name: "index_notifications_on_subscription_id", using: :btree
   add_index "notifications", ["user_id", "delivered", "created_at"], name: "unread_index", using: :btree
   add_index "notifications", ["user_id", "section", "delivered", "created_at"], name: "unread_section_index", using: :btree
 
@@ -183,6 +185,29 @@ ActiveRecord::Schema.define(version: 20150512154505) do
 
   add_index "searchable_discussions", ["content"], name: "index_searchable_discussions_on_content", using: :gin
   add_index "searchable_discussions", ["section", "searchable_type"], name: "index_searchable_discussions_on_section_and_searchable_type", using: :btree
+
+  create_table "subscription_preferences", force: :cascade do |t|
+    t.integer  "category",                    null: false
+    t.integer  "user_id",                     null: false
+    t.integer  "email_digest", default: 0,    null: false
+    t.boolean  "enabled",      default: true, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscription_preferences", ["user_id", "category"], name: "index_subscription_preferences_on_user_id_and_category", using: :btree
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer  "category",    null: false
+    t.integer  "user_id",     null: false
+    t.integer  "source_id",   null: false
+    t.string   "source_type", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subscriptions", ["source_id", "source_type"], name: "index_subscriptions_on_source_id_and_source_type", using: :btree
+  add_index "subscriptions", ["user_id", "category"], name: "index_subscriptions_on_user_id_and_category", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string   "name",          null: false
