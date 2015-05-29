@@ -1,4 +1,6 @@
 class UserConversation < ActiveRecord::Base
+  include Subscribable
+  
   belongs_to :conversation
   belongs_to :user, required: true
   

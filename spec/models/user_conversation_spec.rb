@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe UserConversation, type: :model do
+  it_behaves_like 'a subscribable model'
+  
   context 'validating' do
     it 'should require a user' do
       without_user = build :user_conversation, user_id: nil
