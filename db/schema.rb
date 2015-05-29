@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527164413) do
+ActiveRecord::Schema.define(version: 20150528210650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(version: 20150527164413) do
 
   add_index "subscriptions", ["source_id", "source_type"], name: "index_subscriptions_on_source_id_and_source_type", using: :btree
   add_index "subscriptions", ["user_id", "category"], name: "index_subscriptions_on_user_id_and_category", using: :btree
+  add_index "subscriptions", ["user_id", "source_id", "source_type"], name: "index_subscriptions_on_user_id_and_source_id_and_source_type", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string   "name",          null: false
