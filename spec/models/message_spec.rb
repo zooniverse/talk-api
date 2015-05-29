@@ -37,4 +37,89 @@ RSpec.describe Message, type: :model do
       }
     end
   end
+  
+  describe '#subscribe_user' do
+    let(:sender_subscription) do
+      Subscription.messages.where source: user_conversation, user: user
+    end
+    
+    let(:recipient_subscriptions) do
+      Subscription.messages.where source: recipient_conversations, user: recipients
+    end
+    
+    context 'when preference is enabled' do
+      include_context 'existing conversation'
+      
+      it 'should subscribe messaging users' do
+        expect(user_conversation.subscriptions.exists?).to be true
+      end
+      
+      it 'should subscribe messaged users' do
+        expect(recipient_subscriptions.exists?).to be true
+        expect(recipient_subscriptions.collect(&:user)).to match_array recipients
+      end
+    end
+    
+    context 'when preference is disabled' do
+      context 'for the sender' do
+        before(:each) do
+          user.preference_for(:messages).update_attributes enabled: false
+        end
+        include_context 'existing conversation'
+        
+        it 'should not subscribe the sender' do
+          expect(sender_subscription.exists?).to be false
+        end
+        
+        it 'should subscribe the recipients' do
+          expect(recipient_subscriptions.exists?).to be true
+        end
+      end
+      
+      context 'for the recipient' do
+        before(:each) do
+          recipients.each do |recipient|
+            recipient.preference_for(:messages).update_attributes enabled: false
+          end
+        end
+        include_context 'existing conversation'
+        
+        it 'should not subscribe the recipients' do
+          expect(recipient_subscriptions.exists?).to be false
+        end
+        
+        it 'should subscribe the sender' do
+          expect(sender_subscription.exists?).to be true
+        end
+      end
+    end
+  end
+  
+  describe '#notify_subscribers' do
+    before(:each) do
+      user.preference_for(:messages).update_attributes enabled: false
+    end
+    include_context 'existing conversation'
+    
+    let(:recipient_notifications){ Notification.where subscription: recipient_subscriptions }
+    let(:recipient_subscriptions) do
+      Subscription.messages.where source: recipient_conversations, user: recipients
+    end
+    
+    it 'should create notifications for subscribed users' do
+      notified_users = recipient_notifications.reload.collect &:user
+      expect(notified_users).to match_array recipients
+    end
+    
+    it 'should not create notifications for unsubscribed users' do
+      expect(Notification.where(user: user).exists?).to be false
+    end
+    
+    it 'should not create a notification for the messaging user' do
+      Notification.destroy_all
+      sender = recipients.first
+      create :message, user: sender, conversation: conversation
+      expect(Notification.where(user: sender).exists?).to be false
+    end
+  end
 end

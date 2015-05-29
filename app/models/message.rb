@@ -21,6 +21,30 @@ class Message < ActiveRecord::Base
   
   after_create :set_conversations_unread!
   
+  concerning :Subscribing do
+    included do
+      after_create :notify_subscribers, :subscribe_user
+    end
+    
+    def notify_subscribers
+      Subscription.messages.where(source: recipient_conversations, user: recipients).each do |subscription|
+        Notification.create({
+          user_id: subscription.user_id,
+          message: "#{ user.display_name } has sent you a message: #{ body }",
+          url: Rails.application.routes.url_helpers.message_url(id),
+          section: 'zooniverse',
+          subscription: subscription
+        }) if subscription.try(:enabled?)
+      end
+    end
+    
+    def subscribe_user
+      user_conversations.each do |user_conversation|
+        user_conversation.user.subscribe_to user_conversation, :messages
+      end
+    end
+  end
+  
   protected
   
   def set_conversations_unread!
