@@ -304,4 +304,58 @@ RSpec.describe Comment, type: :model do
       }.from(['somebody', 'somebody_else']).to match_array ['somebody_else']
     end
   end
+  
+  describe '#subscribe_user' do
+    let(:commenting_user){ create :user }
+    let(:discussion){ create :discussion }
+    let(:subscriber){ create :subscription, source: discussion, category: :participating_discussions }
+    let(:subscription){ commenting_user.subscriptions.participating_discussions.where source: discussion }
+    let(:comment){ create :comment, discussion: discussion, user: commenting_user }
+    
+    it 'should subscribe commenting users' do
+      comment
+      expect(subscription.exists?).to be true
+    end
+    
+    context 'when preference is disabled' do
+      before(:each) do
+        commenting_user.preference_for(:participating_discussions).update_attributes enabled: false
+      end
+      
+      it 'should not subscribe the user' do
+        comment
+        expect(subscription.exists?).to be false
+      end
+    end
+  end
+  
+  describe '#notify_subscribers' do
+    let(:users){ create_list :user, 2 }
+    let(:user_subscriptions){ Subscription.participating_discussions.where source: discussion, user: users }
+    let(:notifications){ Notification.where subscription: user_subscriptions }
+    let(:notified_users){ notifications.reload.collect &:user }
+    let(:unsubscribed_user){ create :user }
+    let(:discussion){ create :discussion }
+    
+    before(:each) do
+      users.each{ |user| user.subscribe_to discussion, :participating_discussions }
+      unsubscribed_user.preference_for(:participating_discussions).update_attributes enabled: false
+    end
+    
+    it 'should create notifications for subscribed users' do
+      create :comment, discussion: discussion
+      expect(notified_users).to match_array users
+    end
+    
+    it 'should not create notifications for unsubscribed users' do
+      create :comment, discussion: discussion
+      expect(notified_users).to_not include unsubscribed_user
+    end
+    
+    it 'should not create a notification for the commenting user' do
+      user = users.first
+      create :comment, discussion: discussion, user: user
+      expect(user.notifications).to be_empty
+    end
+  end
 end

@@ -85,7 +85,7 @@ RSpec.describe User, type: :model do
         expect {
           user.mentioned_by comment
         }.to_not change{
-          Subscription.count
+          Subscription.mentions.count
         }
       end
     end
