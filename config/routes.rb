@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :notifications
     resources :roles
     resources :subjects
+    resources :subscription_preferences
     resources :tags do
       collection do
         get :popular
