@@ -1,6 +1,7 @@
 GIT
   remote: git://github.com/parrish/restpack_serializer.git
-  revision: f2915cfcaba3abc20b87c7cc47f140483c55db2c
+  revision: d0011da676cd5ebbc76cf23483e7549816914aa9
+  ref: d0011da676
   branch: dev
   specs:
     restpack_serializer (0.5.9)
@@ -97,7 +98,7 @@ GEM
     honeybadger (2.0.10)
     i18n (0.7.0)
     ice_cube (0.11.1)
-    json (1.8.2)
+    json (1.8.3)
     json-schema (2.5.0)
       addressable (~> 2.3)
     json-schema_builder (0.0.5)
@@ -110,7 +111,7 @@ GEM
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
-    loofah (2.0.1)
+    loofah (2.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.9)
     mail (2.6.3)
@@ -118,7 +119,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.4.3)
     mini_portile (0.6.2)
-    minitest (5.5.1)
+    minitest (5.7.0)
     multi_json (1.11.0)
     multipart-post (2.0.0)
     nenv (0.2.0)
@@ -137,7 +138,7 @@ GEM
       rack (>= 1.1, < 2.0)
     pundit (0.3.0)
       activesupport (>= 3.0.0)
-    rack (1.6.0)
+    rack (1.6.1)
     rack-cors (0.3.1)
     rack-protection (1.5.3)
       rack
