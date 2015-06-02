@@ -54,4 +54,31 @@ RSpec.describe Subscription, type: :model do
       end
     end
   end
+  
+  describe '#clear_notifications' do
+    let!(:notifications){ create_list :notification, 2, subscription: subscription }
+    let!(:other_notification){ create :notification }
+    
+    context 'when disabling' do
+      let!(:subscription){ create :subscription }
+      it 'should clear notifications' do
+        expect{
+          subscription.update_attributes enabled: false
+        }.to change{
+          Notification.count
+        }.from(3).to 1
+      end
+    end
+    
+    context 'when not disabling' do
+      let!(:subscription){ create :subscription, enabled: false }
+      it 'should not clear notifications' do
+        expect{
+          subscription.update_attributes enabled: true
+        }.to_not change{
+          Notification.count
+        }
+      end
+    end
+  end
 end

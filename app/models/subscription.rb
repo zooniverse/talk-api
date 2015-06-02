@@ -6,7 +6,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :source, polymorphic: true, required: true
   
   before_create :ensure_enabled
-  alias_method :enabled?, :persisted?
+  after_update :clear_notifications, if: ->{ enabled_change == [true, false] }
   
   def preference
     @preference ||= SubscriptionPreference.find_or_default_for(user, category)
@@ -14,5 +14,13 @@ class Subscription < ActiveRecord::Base
   
   def ensure_enabled
     preference.enabled?
+  end
+  
+  def enabled?
+    persisted? && super
+  end
+  
+  def clear_notifications
+    notifications.destroy_all
   end
 end

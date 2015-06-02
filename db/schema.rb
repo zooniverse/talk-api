@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528210650) do
+ActiveRecord::Schema.define(version: 20150602213925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -198,12 +198,13 @@ ActiveRecord::Schema.define(version: 20150528210650) do
   add_index "subscription_preferences", ["user_id", "category"], name: "index_subscription_preferences_on_user_id_and_category", using: :btree
 
   create_table "subscriptions", force: :cascade do |t|
-    t.integer  "category",    null: false
-    t.integer  "user_id",     null: false
-    t.integer  "source_id",   null: false
-    t.string   "source_type", null: false
+    t.integer  "category",                   null: false
+    t.integer  "user_id",                    null: false
+    t.integer  "source_id",                  null: false
+    t.string   "source_type",                null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enabled",     default: true, null: false
   end
 
   add_index "subscriptions", ["source_id", "source_type"], name: "index_subscriptions_on_source_id_and_source_type", using: :btree
