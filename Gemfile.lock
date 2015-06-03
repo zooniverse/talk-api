@@ -1,7 +1,7 @@
 GIT
   remote: git://github.com/parrish/restpack_serializer.git
-  revision: d0011da676cd5ebbc76cf23483e7549816914aa9
-  ref: d0011da676
+  revision: 502a51e2dd0f79488b1e58edfab59879017452e2
+  ref: 502a51e2dd
   branch: dev
   specs:
     restpack_serializer (0.5.9)
