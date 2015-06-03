@@ -24,7 +24,7 @@ Sidekiq::Web.use Rack::Auth::Basic do |name, password|
   name.present? &&
   password.present? &&
   name == sidekiq_admin['sidekiq_admin_name'] &&
-  password == sidekiq_admin_name['sidekiq_admin_password']
+  password == sidekiq_admin['sidekiq_admin_password']
 end unless Rails.env.test? || Rails.env.development?
 
 require 'sidetiq'
