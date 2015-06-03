@@ -17,12 +17,14 @@ Sidekiq.configure_server do |config|
   end
 end
 
+sidekiq_admin = YAML.load_file 'config/sidekiq_admin.yml'
+
 require 'sidekiq/web'
 Sidekiq::Web.use Rack::Auth::Basic do |name, password|
   name.present? &&
   password.present? &&
-  name == ENV['SIDEKIQ_ADMIN_NAME'] &&
-  password == ENV['SIDEKIQ_ADMIN_PASSWORD']
+  name == sidekiq_admin['sidekiq_admin_name'] &&
+  password == sidekiq_admin_name['sidekiq_admin_password']
 end unless Rails.env.test? || Rails.env.development?
 
 require 'sidetiq'

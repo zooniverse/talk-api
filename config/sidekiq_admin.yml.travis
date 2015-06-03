@@ -1,0 +1,2 @@
+sidekiq_admin_name: 'foo'
+sidekiq_admin_password: 'bar'
