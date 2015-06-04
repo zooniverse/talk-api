@@ -19,8 +19,8 @@ RSpec.describe BoardSchema, type: :schema do
           its(:required){ is_expected.to eql %w(read write) }
           
           with :properties do
-            its(:read){ is_expected.to eql type: 'string' }
-            its(:write){ is_expected.to eql type: 'string' }
+            its(:read){ is_expected.to eql enum: %w(all team moderator admin) }
+            its(:write){ is_expected.to eql enum: %w(all team moderator admin) }
           end
         end
       end
@@ -44,8 +44,12 @@ RSpec.describe BoardSchema, type: :schema do
     let(:schema_method){ :update }
     it_behaves_like 'a board schema'
     
-    with 'properties .boards .properties' do
-      its(:section){ is_expected.to be nil }
+    with 'properties .boards' do
+      its(:required){ is_expected.to be_nil }
+      
+      with :properties do
+        its(:section){ is_expected.to be nil }
+      end
     end
   end
 end
