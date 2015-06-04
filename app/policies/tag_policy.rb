@@ -4,7 +4,7 @@ class TagPolicy < ApplicationPolicy
   end
   
   def show?
-    true
+    comment_policy.show?
   end
   
   def create?
@@ -19,9 +19,29 @@ class TagPolicy < ApplicationPolicy
     false
   end
   
+  def comment_policy
+    CommentPolicy.new user, comments
+  end
+  
+  def comments
+    Array.wrap(record).compact.collect &:comment
+  end
+  
   class Scope < Scope
+    delegate :zooniverse_admin?, :permissions, to: :@comment_scope
+    
+    def initialize(user, scope)
+      @comment_scope = CommentPolicy::Scope.new user, Comment
+      super
+    end
+    
     def resolve
-      scope
+      return scope.all if zooniverse_admin?
+      scope.joins(comment: { discussion: :board }).where permissions.join(' or ')
+    end
+    
+    def comment_scope
+      CommentPolicy::Scope.new user, Comment
     end
   end
 end
