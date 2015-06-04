@@ -4,7 +4,7 @@ class BoardPolicy < ApplicationPolicy
   end
   
   def show?
-    true
+    readable?
   end
   
   def create?
@@ -12,14 +12,28 @@ class BoardPolicy < ApplicationPolicy
   end
   
   def update?
-    moderator? || admin?
+    (moderator? || admin?) && writable?
   end
   
   def destroy?
-    moderator? || admin?
+    (moderator? || admin?) && writable?
   end
   
-  class Scope < Scope
+  def readable?
+    return false unless board_ids.compact.present?
+    ReadableScope.new(user, Board.where(id: board_ids)).resolve.pluck(:id).sort == board_ids.sort
+  end
+  
+  def writable?
+    return false unless board_ids.compact.present? && logged_in?
+    WritableScope.new(user, Board.where(id: board_ids)).resolve.pluck(:id).sort == board_ids.sort
+  end
+  
+  def board_ids
+    Array.wrap(record).collect &:id
+  end
+  
+  class PermissionsScope < Scope
     def resolve
       return scope.all if zooniverse_admin?
       scope.where permissions.join(' or ')
@@ -30,15 +44,15 @@ class BoardPolicy < ApplicationPolicy
     end
     
     def for_all
-      "(permissions ->> 'read' = 'all')"
+      "(boards.permissions ->> '#{ @permission }' = 'all')"
     end
     
     def for_roles
       user_roles.collect do |section, roles|
         roles << 'team' if team_for?(section)
         roles << 'moderator' if 'admin'.in?(roles)
-        quoted_roles = roles.collect{ |role| quote role }.join ', '
-        "(permissions ->> 'read' in (#{ quoted_roles }) and section = #{ quote section })"
+        quoted_roles = roles.uniq.collect{ |role| quote role }.join ', '
+        "(boards.permissions ->> '#{ @permission }' in (#{ quoted_roles }) and boards.section = #{ quote section })"
       end
     end
     
@@ -54,5 +68,22 @@ class BoardPolicy < ApplicationPolicy
     def quote(string)
       ActiveRecord::Base.connection.quote string
     end
+  end
+  
+  class ReadableScope < PermissionsScope
+    def initialize(user, scope)
+      @permission = :read
+      super
+    end
+  end
+  
+  class WritableScope < PermissionsScope
+    def initialize(user, scope)
+      @permission = :write
+      super
+    end
+  end
+  
+  class Scope < ReadableScope
   end
 end
