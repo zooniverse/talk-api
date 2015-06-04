@@ -1,27 +1,49 @@
 class DiscussionPolicy < ApplicationPolicy
+  delegate :writable?, to: :board_policy
+  
   def index?
     true
   end
   
   def show?
-    true
+    board_policy.show?
   end
   
   def create?
-    logged_in?
+    writable?
   end
   
   def update?
-    moderator? || admin?
+    (moderator? || admin?) && writable?
   end
   
   def destroy?
-    moderator? || admin?
+    (moderator? || admin?) && writable?
+  end
+  
+  def board_policy
+    BoardPolicy.new user, boards
+  end
+  
+  def boards
+    Array.wrap(record).compact.collect &:board
   end
   
   class Scope < Scope
+    delegate :zooniverse_admin?, :permissions, to: :@board_scope
+    
+    def initialize(user, scope)
+      @board_scope = BoardPolicy::Scope.new user, Board
+      super
+    end
+    
     def resolve
-      scope
+      return scope.all if zooniverse_admin?
+      scope.joins(:board).where permissions.join(' or ')
+    end
+    
+    def board_scope
+      BoardPolicy::Scope.new user, Board
     end
   end
 end
