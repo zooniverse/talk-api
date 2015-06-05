@@ -56,8 +56,18 @@ RSpec.describe Search, type: :model do
     
     it 'should return serialized searchables' do
       board = create :board
-      expect_any_instance_of(Search).to receive(:serialize)
+      expect_any_instance_of(Search).to receive(:serialize).and_call_original
       Search.serialize_search
+    end
+    
+    it 'should add the searchable type to the results' do
+      board = create :board
+      discussion = create :discussion, board: board
+      comment = create :comment, discussion: discussion
+      
+      allow(Search).to receive(:with_content).and_return Search.all
+      results = Search.with_content.serialize_search
+      expect(results.collect{ |h| h[:type] }).to match_array %w(Board Discussion Comment)
     end
   end
   

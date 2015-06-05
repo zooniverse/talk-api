@@ -17,7 +17,9 @@ class Search < ActiveRecord::Base
   }
   
   def self.serialize_search
-    preload(:searchable).collect &:serialize
+    preload(:searchable).collect do |searchable|
+      searchable.serialize.merge type: searchable.searchable_type
+    end
   end
   
   def serialize
