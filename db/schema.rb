@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150602213925) do
+ActiveRecord::Schema.define(version: 20150605155121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,7 @@ ActiveRecord::Schema.define(version: 20150602213925) do
     t.datetime "updated_at"
   end
 
+  add_index "roles", ["user_id", "section", "name"], name: "index_roles_on_user_id_and_section_and_name", unique: true, using: :btree
   add_index "roles", ["user_id"], name: "index_roles_on_user_id", using: :btree
 
   create_table "searchable_boards", primary_key: "searchable_id", force: :cascade do |t|
