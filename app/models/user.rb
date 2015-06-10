@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     
     Notification.create({
       user_id: id,
-      message: "You were mentioned by #{ comment.user_display_name }",
+      message: "You were mentioned by #{ comment.user.display_name }",
       url: Rails.application.routes.url_helpers.comment_url(comment.id),
       section: comment.section,
       subscription: subscription

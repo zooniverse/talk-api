@@ -87,6 +87,7 @@ namespace :panoptes do
         create foreign table if not exists users (
           id int4,
           email varchar(255),
+          login varchar(255),
           created_at timestamp(6),
           updated_at timestamp(6),
           display_name varchar(255),
@@ -164,7 +165,8 @@ namespace :panoptes do
           updated_at timestamp without time zone,
           hash_func character varying default 'bcrypt'::character varying,
           password_salt character varying,
-          display_name character varying,
+          login character varying not null,
+          display_name character varying not null,
           zooniverse_id character varying,
           credited_name character varying,
           classifications_count integer default 0 not null,

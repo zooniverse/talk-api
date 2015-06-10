@@ -48,9 +48,9 @@ RSpec.describe Discussion, type: :model do
       }.to discussion.board.section
     end
     
-    it 'should denormalize the user display_name' do
+    it 'should denormalize the user login' do
       discussion = create :discussion
-      expect(discussion.user_display_name).to eq discussion.user.display_name
+      expect(discussion.user_login).to eq discussion.user.login
     end
     
     it 'should update the board discussion count' do

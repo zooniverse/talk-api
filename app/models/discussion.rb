@@ -52,7 +52,7 @@ class Discussion < ActiveRecord::Base
   end
   
   def denormalize_attributes
-    self.user_display_name = user.display_name
+    self.user_login = user.login
   end
   
   def update_board_counters

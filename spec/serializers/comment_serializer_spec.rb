@@ -7,6 +7,7 @@ RSpec.describe CommentSerializer, type: :serializer do
     let(:json){ CommentSerializer.resource(id: model_instance.id)[:comments].first }
     subject{ json }
     
+    its([:user_display_name]){ is_expected.to eql model_instance.user.display_name }
     it{ is_expected.to include :focus }
     its([:links]){ is_expected.to eql focus: focus.id.to_s, focus_type: 'Subject' }
     

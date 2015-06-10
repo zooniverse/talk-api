@@ -68,7 +68,7 @@ RSpec.describe User, type: :model do
     context 'notification' do
       subject{ user.mentioned_by comment }
       its(:user_id){ is_expected.to eql user.id }
-      its(:message){ is_expected.to eql "You were mentioned by #{ comment.user_display_name }" }
+      its(:message){ is_expected.to eql "You were mentioned by #{ comment.user.display_name }" }
       its(:url){ is_expected.to eql "http://localhost:3000/comments/#{ comment.id }" }
       its(:section){ is_expected.to eql comment.section }
     end

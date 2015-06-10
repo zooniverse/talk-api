@@ -1,8 +1,9 @@
 FactoryGirl.define do
   factory :user do
     external_id
-    display_name { "user#{ id }" }
-    email { "#{ display_name }@example.com" }
+    login { "user#{ id }" }
+    display_name { "User #{ id }" }
+    email { "#{ login }@example.com" }
     admin false
     banned false
     
