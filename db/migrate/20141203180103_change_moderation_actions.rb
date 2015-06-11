@@ -1,4 +1,4 @@
-class ModerationActions < ActiveRecord::Migration
+class ChangeModerationActions < ActiveRecord::Migration
   def up
     rename_column :moderations, :action, :actions
     change_column_default :moderations, :actions, [ ]
