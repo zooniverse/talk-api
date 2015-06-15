@@ -21,7 +21,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
   
   context 'with a user' do
     let(:user){ create :user }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'a' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-1' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
@@ -33,7 +33,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
   
   context 'with a owner' do
     let(:user){ create :user }
-    let(:record){ OpenStruct.new user_id: user.id, section: 'a' }
+    let(:record){ OpenStruct.new user_id: user.id, section: 'project-1' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to be_owner }
@@ -44,8 +44,8 @@ RSpec.describe ApplicationPolicy, type: :policy do
   end
   
   context 'with a section moderator' do
-    let(:user){ create :moderator, section: 'a' }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'a' }
+    let(:user){ create :moderator, section: 'project-1' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-1' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
@@ -56,8 +56,8 @@ RSpec.describe ApplicationPolicy, type: :policy do
   end
   
   context 'with a non-section moderator' do
-    let(:user){ create :moderator, section: 'a' }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
+    let(:user){ create :moderator, section: 'project-1' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-2' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
@@ -69,7 +69,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
   
   context 'with a zooniverse moderator' do
     let(:user){ create :moderator, section: 'zooniverse' }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-2' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
@@ -80,8 +80,8 @@ RSpec.describe ApplicationPolicy, type: :policy do
   end
   
   context 'with a section admin' do
-    let(:user){ create :admin, section: 'a' }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'a' }
+    let(:user){ create :admin, section: 'project-1' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-1' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
@@ -92,8 +92,8 @@ RSpec.describe ApplicationPolicy, type: :policy do
   end
   
   context 'with a non-section admin' do
-    let(:user){ create :admin, section: 'a' }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
+    let(:user){ create :admin, section: 'project-1' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-2' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }
@@ -105,7 +105,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
   
   context 'with a zooniverse admin' do
     let(:user){ create :admin, section: 'zooniverse' }
-    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'b' }
+    let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-2' }
     
     it{ is_expected.to be_logged_in }
     it{ is_expected.to_not be_owner }

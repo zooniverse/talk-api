@@ -6,7 +6,7 @@ RSpec.describe ModerationService, type: :service do
     let(:create_params) do
       {
         moderations: {
-          section: 'test',
+          section: 'project-1',
           target_id: target.id,
           target_type: target.class.name,
           reports: [{
@@ -23,7 +23,7 @@ RSpec.describe ModerationService, type: :service do
       subject!{ service.resource }
       
       its(:target){ is_expected.to eql target }
-      its(:section){ is_expected.to eql 'test' }
+      its(:section){ is_expected.to eql 'project-1' }
       its(:reports){ is_expected.to include 'message' => 'works', 'user_id' => current_user.id }
       
       context 'when the target is already reported' do

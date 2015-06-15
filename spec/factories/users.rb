@@ -8,7 +8,7 @@ FactoryGirl.define do
     
     factory :moderator do
       transient do
-        section 'test'
+        section 'project-1'
       end
       
       after :create do |user, evaluator|
@@ -18,7 +18,7 @@ FactoryGirl.define do
     
     factory :admin do
       transient do
-        section 'test'
+        section 'project-1'
       end
       
       after :create do |user, evaluator|
@@ -28,7 +28,7 @@ FactoryGirl.define do
     
     factory :scientist do
       transient do
-        section 'test'
+        section 'project-1'
       end
       
       after :create do |user, evaluator|

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :discussion do
     title 'A discussion'
-    section 'test'
+    section 'project-1'
     board
     user
     

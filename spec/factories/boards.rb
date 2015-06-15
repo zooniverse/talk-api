@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :board do
     title 'A board'
     description 'Some board'
-    section 'test'
+    section 'project-1'
     permissions read: 'all', write: 'all'
     
     factory :board_with_discussions do

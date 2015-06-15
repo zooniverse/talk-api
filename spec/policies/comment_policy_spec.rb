@@ -8,7 +8,7 @@ RSpec.describe CommentPolicy, type: :policy do
   let(:subject){ CommentPolicy.new user, record }
   
   context 'with permissions read:all write:all' do
-    let(:board){ create :board, section: 'test', permissions: { read: 'all', write: 'all' } }
+    let(:board){ create :board, section: 'project-1', permissions: { read: 'all', write: 'all' } }
     
     context 'without a user' do
       it_behaves_like 'a policy permitting', :index, :show
@@ -41,7 +41,7 @@ RSpec.describe CommentPolicy, type: :policy do
   end
   
   context 'with permissions read:team write:team' do
-    let(:board){ create :board, section: 'test', permissions: { read: 'team', write: 'team' } }
+    let(:board){ create :board, section: 'project-1', permissions: { read: 'team', write: 'team' } }
     
     context 'without a user' do
       it_behaves_like 'a policy excluding'
@@ -74,7 +74,7 @@ RSpec.describe CommentPolicy, type: :policy do
   end
   
   context 'with permissions read:moderator write:moderator' do
-    let(:board){ create :board, section: 'test', permissions: { read: 'moderator', write: 'moderator' } }
+    let(:board){ create :board, section: 'project-1', permissions: { read: 'moderator', write: 'moderator' } }
     
     context 'without a user' do
       it_behaves_like 'a policy excluding'
@@ -113,7 +113,7 @@ RSpec.describe CommentPolicy, type: :policy do
   end
   
   context 'with permissions read:admin write:admin' do
-    let(:board){ create :board, section: 'test', permissions: { read: 'admin', write: 'admin' } }
+    let(:board){ create :board, section: 'project-1', permissions: { read: 'admin', write: 'admin' } }
     
     context 'without a user' do
       it_behaves_like 'a policy excluding'
@@ -165,23 +165,23 @@ RSpec.describe CommentPolicy, type: :policy do
   end
   
   context 'with scope' do
-    let(:public_board){ create :board, section: '1-project' }
+    let(:public_board){ create :board, section: 'project-1' }
     let(:public_discussion){ create :discussion, board: public_board }
     let!(:public_comments){ create_list :comment, 2, discussion: public_discussion }
     
-    let(:team_board){ create :board, section: '1-project', permissions: { read: 'team', write: 'team' } }
+    let(:team_board){ create :board, section: 'project-1', permissions: { read: 'team', write: 'team' } }
     let(:team_discussion){ create :discussion, board: team_board }
     let(:team_comments){ create_list :comment, 2, discussion: team_discussion }
     
-    let(:admin_board){ create :board, section: '1-project', permissions: { read: 'admin', write: 'admin' } }
+    let(:admin_board){ create :board, section: 'project-1', permissions: { read: 'admin', write: 'admin' } }
     let(:admin_discussion){ create :discussion, board: admin_board }
     let(:admin_comments){ create_list :comment, 2, discussion: admin_discussion }
     
-    let(:moderator_board){ create :board, section: '1-project', permissions: { read: 'moderator', write: 'moderator' } }
+    let(:moderator_board){ create :board, section: 'project-1', permissions: { read: 'moderator', write: 'moderator' } }
     let(:moderator_discussion){ create :discussion, board: moderator_board }
     let(:moderator_comments){ create_list :comment, 2, discussion: moderator_discussion }
     
-    let(:other_board){ create :board, section: '2-project', permissions: { read: 'admin', write: 'admin' } }
+    let(:other_board){ create :board, section: 'project-2', permissions: { read: 'admin', write: 'admin' } }
     let(:other_discussion){ create :discussion, board: other_board }
     let(:other_comments){ create_list :comment, 2, discussion: other_discussion }
     
@@ -192,17 +192,17 @@ RSpec.describe CommentPolicy, type: :policy do
     end
     
     context 'with a scientist' do
-      let(:user){ create :scientist, section: '1-project' }
+      let(:user){ create :scientist, section: 'project-1' }
       it{ is_expected.to match_array public_comments + team_comments }
     end
     
     context 'with a moderator' do
-      let(:user){ create :moderator, section: '1-project' }
+      let(:user){ create :moderator, section: 'project-1' }
       it{ is_expected.to match_array public_comments + team_comments + moderator_comments }
     end
     
     context 'with an admin' do
-      let(:user){ create :admin, section: '1-project' }
+      let(:user){ create :admin, section: 'project-1' }
       it{ is_expected.to match_array public_comments + team_comments + moderator_comments + admin_comments }
     end
     
@@ -213,13 +213,13 @@ RSpec.describe CommentPolicy, type: :policy do
   end
   
   context 'with mixed permissions' do
-    let(:user){ create :moderator, section: '1-project' }
+    let(:user){ create :moderator, section: 'project-1' }
     
-    let(:permitted_board){ create :board, section: '1-project', permissions: { read: 'moderator', write: 'moderator' } }
+    let(:permitted_board){ create :board, section: 'project-1', permissions: { read: 'moderator', write: 'moderator' } }
     let(:permitted_discussion){ create :discussion, board: permitted_board }
     let(:permitted_comment){ create :comment, discussion: permitted_discussion }
     
-    let(:unpermitted_board){ create :board, section: '2-project', permissions: { read: 'moderator', write: 'moderator' } }
+    let(:unpermitted_board){ create :board, section: 'project-2', permissions: { read: 'moderator', write: 'moderator' } }
     let(:unpermitted_discussion){ create :discussion, board: unpermitted_board }
     let(:unpermitted_comment){ create :comment, discussion: unpermitted_discussion }
     

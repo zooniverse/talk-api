@@ -2,13 +2,13 @@ require 'spec_helper'
 
 RSpec.describe RoleService, type: :service do
   it_behaves_like 'a service', Role, sets_user: false do
-    let(:current_user){ create :admin, section: 'test' }
+    let(:current_user){ create :admin, section: 'project-1' }
     let(:parent_board){ create :role }
     let(:create_params) do
       {
         roles: {
           user_id: create(:user).id,
-          section: 'test',
+          section: 'project-1',
           name: 'moderator'
         }
       }
@@ -16,7 +16,7 @@ RSpec.describe RoleService, type: :service do
     
     it_behaves_like 'a service creating', Role
     it_behaves_like 'a service updating', Role do
-      let(:current_user){ create :admin, section: 'test' }
+      let(:current_user){ create :admin, section: 'project-1' }
       let(:update_params) do
         {
           id: record.id,

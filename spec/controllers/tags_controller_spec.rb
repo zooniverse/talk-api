@@ -13,7 +13,7 @@ RSpec.describe TagsController, type: :controller do
   
   describe '#popular' do
     let(:project){ create :project, name: 'tagged' }
-    let(:section){ "#{ project.id }-#{ project.name }" }
+    let(:section){ "project-#{ project.id }" }
     let(:tagged_subject){ create :subject }
     let(:tagged_collection){ create :collection }
     
@@ -38,7 +38,7 @@ RSpec.describe TagsController, type: :controller do
     
     context 'with an empty section' do
       include_context 'TagsController#popular'
-      let(:params){ { section: 'empty' } }
+      let(:params){ { section: 'project-1' } }
       it{ is_expected.to be_successful }
       its(:json){ is_expected.to eql 'tags' => [] }
     end

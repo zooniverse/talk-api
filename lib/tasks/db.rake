@@ -115,7 +115,7 @@ namespace :panoptes do
                 setweight(to_tsvector('C' || collections.id::text), 'A')
                 as content,
                 
-                projects.id || '-' || projects.name as section
+                'project-' || projects.id as section
               from collections
                 left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
                 join projects on projects.id = collections.project_id

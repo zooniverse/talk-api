@@ -2,9 +2,9 @@ require 'spec_helper'
 
 RSpec.describe Tag, type: :model do
   describe '.in_section' do
-    let!(:section_a){ create :tag, taggable_section: 'a' }
-    let!(:section_b){ create :tag, taggable_section: 'b' }
-    subject{ Tag.in_section 'a' }
+    let!(:section_a){ create :tag, taggable_section: 'project-1' }
+    let!(:section_b){ create :tag, taggable_section: 'project-2' }
+    subject{ Tag.in_section 'project-1' }
     
     it{ is_expected.to include section_a }
     it{ is_expected.to_not include section_b }

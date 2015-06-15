@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :comment do
     body 'A comment'
-    section 'test'
+    section 'project-1'
     user
     discussion
     

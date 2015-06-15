@@ -24,13 +24,13 @@ RSpec.describe RolePolicy, type: :policy do
   end
   
   context 'with a non-section admin' do
-    let(:user){ create :admin, section: 'other' }
+    let(:user){ create :admin, section: 'project-2' }
     it_behaves_like 'a policy permitting', :index, :show
     it_behaves_like 'a policy forbidding', :create, :update, :destroy
   end
   
   context 'with a section admin' do
-    let(:user){ create :admin, section: 'test' }
+    let(:user){ create :admin, section: 'project-1' }
     it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
   end
   

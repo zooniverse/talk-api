@@ -2,13 +2,13 @@ require 'spec_helper'
 
 RSpec.describe AnnouncementService, type: :service do
   it_behaves_like 'a service', Announcement do
-    let(:current_user){ create :admin, section: 'test' }
+    let(:current_user){ create :admin, section: 'project-1' }
     let(:parent_board){ create :announcement }
     let(:create_params) do
       {
         announcements: {
           message: 'works',
-          section: 'test',
+          section: 'project-1',
           expires_at: 1.hour.from_now.as_json
         }
       }

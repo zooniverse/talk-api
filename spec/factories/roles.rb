@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :role do
     user
     name 'admin'
-    section 'test'
+    section 'project-1'
     
     %w(admin moderator scientist team).each do |role_name|
       factory :"#{ role_name }_role" do

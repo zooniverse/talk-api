@@ -31,7 +31,7 @@ RSpec.describe RolesController, type: :controller do
         {
           roles: {
             user_id: create(:user).id,
-            section: 'test',
+            section: 'project-1',
             name: 'moderator'
           }
         }

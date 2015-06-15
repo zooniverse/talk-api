@@ -28,7 +28,7 @@ RSpec.describe ModerationsController, type: :controller do
       let(:request_params) do
         {
           moderations: {
-            section: 'test',
+            section: 'project-1',
             target_id: target.id,
             target_type: 'Comment',
             reports: [{

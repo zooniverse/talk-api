@@ -9,7 +9,7 @@ RSpec.describe BoardService, type: :service do
         boards: {
           title: 'works',
           description: 'works',
-          section: 'test',
+          section: 'project-1',
           parent_id: parent_board.id,
           permissions: { read: 'all', write: 'all' }
         }

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe ModerationPolicy, type: :policy do
   let(:user){ }
-  let(:comment){ create :comment, section: 'test' }
+  let(:comment){ create :comment, section: 'project-1' }
   let(:record){ create :moderation, target: comment }
   let(:subject){ ModerationPolicy.new user, record }
   
@@ -31,9 +31,9 @@ RSpec.describe ModerationPolicy, type: :policy do
   end
   
   context 'with scope' do
-    let!(:other_records){ create_list :moderation, 2, section: 'other' }
-    let(:user){ create :moderator, section: 'test' }
-    let(:records){ create_list :moderation, 2, section: 'test' }
+    let!(:other_records){ create_list :moderation, 2, section: 'project-2' }
+    let(:user){ create :moderator, section: 'project-1' }
+    let(:records){ create_list :moderation, 2, section: 'project-1' }
     let(:subject){ ModerationPolicy::Scope.new(user, Moderation).resolve }
     
     it{ is_expected.to match_array records }

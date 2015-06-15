@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :moderation do
     association :target, factory: :comment
-    section 'test'
+    section 'project-1'
     
     trait(:opened){ state 0 }
     trait(:ignored){ state 1 }
