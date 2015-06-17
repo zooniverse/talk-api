@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605155121) do
+ActiveRecord::Schema.define(version: 20150610183929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,20 +48,20 @@ ActiveRecord::Schema.define(version: 20150605155121) do
 
   create_table "comments", force: :cascade do |t|
     t.string   "category"
-    t.text     "body",                              null: false
+    t.text     "body",                          null: false
     t.integer  "focus_id"
     t.string   "focus_type"
-    t.string   "section",                           null: false
+    t.string   "section",                       null: false
     t.integer  "discussion_id"
-    t.integer  "user_id",                           null: false
-    t.string   "user_display_name",                 null: false
-    t.boolean  "is_deleted",        default: false
-    t.json     "versions",          default: []
+    t.integer  "user_id",                       null: false
+    t.string   "user_login",                    null: false
+    t.boolean  "is_deleted",    default: false
+    t.json     "versions",      default: []
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.json     "mentioning",        default: {},    null: false
-    t.json     "tagging",           default: {}
-    t.hstore   "upvotes",           default: {}
+    t.json     "mentioning",    default: {},    null: false
+    t.json     "tagging",       default: {}
+    t.hstore   "upvotes",       default: {}
   end
 
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
@@ -78,15 +78,15 @@ ActiveRecord::Schema.define(version: 20150605155121) do
   add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at", using: :btree
 
   create_table "discussions", force: :cascade do |t|
-    t.string   "title",                             null: false
-    t.string   "section",                           null: false
+    t.string   "title",                           null: false
+    t.string   "section",                         null: false
     t.integer  "board_id"
-    t.integer  "user_id",                           null: false
-    t.string   "user_display_name",                 null: false
-    t.boolean  "sticky",            default: false
-    t.boolean  "locked",            default: false
-    t.integer  "users_count",       default: 0
-    t.integer  "comments_count",    default: 0
+    t.integer  "user_id",                         null: false
+    t.string   "user_login",                      null: false
+    t.boolean  "sticky",          default: false
+    t.boolean  "locked",          default: false
+    t.integer  "users_count",     default: 0
+    t.integer  "comments_count",  default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "sticky_position"

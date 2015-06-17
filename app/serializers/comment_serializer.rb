@@ -7,7 +7,7 @@ class CommentSerializer
   self.default_sort = 'created_at'
   
   def custom_attributes
-    super.merge focus: focus
+    super.merge focus: focus, user_display_name: model.user.display_name
   end
   
   def focus

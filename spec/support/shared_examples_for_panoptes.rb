@@ -24,12 +24,13 @@ RSpec.shared_examples_for 'panoptes requests' do
         users: [
           {
             id: current_user.id.to_s,
+            login: current_user.login,
             display_name: current_user.display_name,
             credited_name: nil,
             email: current_user.email,
             created_at: Time.now.utc,
             updated_at: Time.now.utc,
-            owner_name: current_user.display_name,
+            owner_name: current_user.login,
             links: { }
           }
         ],

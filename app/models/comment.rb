@@ -31,11 +31,11 @@ class Comment < ActiveRecord::Base
   moderatable_with :report, by: [:all]
   
   def upvote!(voter)
-    hstore_concat 'upvotes', voter.display_name => Time.now.to_i
+    hstore_concat 'upvotes', voter.login => Time.now.to_i
   end
   
   def remove_upvote!(voter)
-    hstore_delete_key 'upvotes', voter.display_name
+    hstore_delete_key 'upvotes', voter.login
   end
   
   def soft_destroy
@@ -57,8 +57,8 @@ class Comment < ActiveRecord::Base
       update searchable_comments
       set content =
         setweight(to_tsvector(comments.body), 'B') ||
-        setweight(to_tsvector(users.display_name), 'B') ||
-        setweight(to_tsvector(users.display_name), 'B') ||
+        setweight(to_tsvector(users.login), 'B') ||
+        setweight(to_tsvector(users.login), 'B') ||
         setweight(to_tsvector(tag_list.names), 'A')
       from comments, users, (
         select coalesce(string_agg(name, ' '), '') as names
@@ -78,7 +78,7 @@ class Comment < ActiveRecord::Base
   end
   
   def denormalize_attributes
-    self.user_display_name = user.display_name
+    self.user_login = user.login
   end
   
   def update_counters

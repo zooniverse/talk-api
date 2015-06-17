@@ -15,12 +15,12 @@ class Comment
     
     def parse_mentions
       self.mentioning = { }
-      body.scan(MATCH_MENTIONS).each do |focus_mention, focus_type, focus_id, user_mention, display_name|
+      body.scan(MATCH_MENTIONS).each do |focus_mention, focus_type, focus_id, user_mention, login|
         if focus_mention
           focus_klass = { 'S' => Subject, 'C' => Collection }[focus_type]
           mentioned focus_mention, focus_klass.find_by_id(focus_id)
         else
-          mentioned user_mention, User.find_by_display_name(display_name)
+          mentioned user_mention, User.find_by_login(login)
         end
       end
     end
