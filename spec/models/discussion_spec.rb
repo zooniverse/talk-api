@@ -61,6 +61,17 @@ RSpec.describe Discussion, type: :model do
         board.reload.discussions_count
       }.by 1
     end
+    
+    context 'updating discussion counts' do
+      let(:user){ create :user }
+      let(:discussion){ build :discussion, user: user }
+      let!(:comment){ discussion.comments.build user: user, body: 'asdf' }
+      before(:each){ discussion.save }
+      subject{ discussion }
+      
+      its(:comments_count){ is_expected.to eql 1 }
+      its(:users_count){ is_expected.to eql 1 }
+    end
   end
   
   context 'updating' do
