@@ -25,4 +25,8 @@ module TalkSerializer
   def links
     { }
   end
+  
+  def current_user
+    @context[:current_user]
+  end
 end

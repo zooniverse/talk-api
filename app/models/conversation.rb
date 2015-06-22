@@ -8,6 +8,11 @@ class Conversation < ActiveRecord::Base
   scope :for_user, ->(user){ joins(:user_conversations).where user_conversations: { user_id: user.id } }
   scope :unread, ->{ joins(:user_conversations).where user_conversations: { is_unread: true } }
   
+  default_scope do
+    includes(:user_conversations)
+      .order 'user_conversations.is_unread desc, conversations.updated_at desc'
+  end
+  
   validates :title, presence: true, length: 3..140
   
   moderatable_with :destroy, by: [:moderator, :admin]
