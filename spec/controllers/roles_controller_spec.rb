@@ -44,7 +44,8 @@ RSpec.describe RolesController, type: :controller do
         {
           id: record.id,
           roles: {
-            name: 'scientist'
+            name: 'scientist',
+            is_shown: false
           }
         }
       end

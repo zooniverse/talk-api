@@ -7,6 +7,11 @@ RSpec.describe Role, type: :model do
       expect(without_user).to fail_validation user: "can't be blank"
     end
     
+    it 'should require is_shown' do
+      without_is_shown = build :role, is_shown: nil
+      expect(without_is_shown).to fail_validation is_shown: 'must be true or false'
+    end
+    
     it 'should prevent duplicates' do
       role = create :role
       duplicate = build :role, user: role.user, section: role.section, name: role.name

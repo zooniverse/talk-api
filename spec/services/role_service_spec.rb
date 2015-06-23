@@ -21,7 +21,8 @@ RSpec.describe RoleService, type: :service do
         {
           id: record.id,
           roles: {
-            name: 'scientist'
+            name: 'scientist',
+            is_shown: false
           }
         }
       end

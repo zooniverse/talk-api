@@ -8,9 +8,13 @@ RSpec.describe RoleSchema, type: :schema do
     with 'properties .roles' do
       its(:additionalProperties){ is_expected.to be false }
       
-      with 'properties .name' do
-        its(:type){ is_expected.to eql 'string' }
-        its(:enum){ is_expected.to eql %w(admin moderator scientist team) }
+      with :properties do
+        its(:is_shown){ is_expected.to eql type: 'boolean', default: true }
+        
+        with :name do
+          its(:type){ is_expected.to eql 'string' }
+          its(:enum){ is_expected.to eql %w(admin moderator scientist team) }
+        end
       end
     end
   end
