@@ -29,6 +29,22 @@ RSpec.describe Comment, type: :model do
       allow(without_section).to receive :set_section
       expect(without_section).to fail_validation section: "can't be blank"
     end
+    
+    context 'requiring a focus_type', :focus do
+      context 'when focus_id is blank' do
+        it 'should permit a blank focus_type' do
+          without_focus_type = build :comment, focus_id: nil, focus_type: nil
+          expect(without_focus_type).to be_valid
+        end
+      end
+      
+      context 'when focus_id is present' do
+        it 'should not permit a blank focus_type' do
+          without_focus_type = build :comment, focus_id: create(:subject).id, focus_type: nil
+          expect(without_focus_type).to fail_validation focus_type: 'must be "Subject" or "Collection"'
+        end
+      end
+    end
   end
   
   context 'creating' do

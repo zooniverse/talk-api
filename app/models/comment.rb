@@ -19,6 +19,11 @@ class Comment < ActiveRecord::Base
   
   validates :body, presence: true
   validates :section, presence: true
+  validates :focus_type, inclusion: {
+    in: ['Subject', 'Collection'],
+    if: ->{ focus_id.present? },
+    message: 'must be "Subject" or "Collection"'
+  }
   
   before_validation :set_section
   before_create :denormalize_attributes
