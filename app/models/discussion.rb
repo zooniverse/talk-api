@@ -12,6 +12,7 @@ class Discussion < ActiveRecord::Base
   
   before_validation :set_section
   before_create :denormalize_attributes
+  before_save :clear_sticky, unless: ->{ sticky? }
   after_update :update_board_counters
   
   moderatable_with :destroy, by: [:moderator, :admin]
@@ -59,5 +60,9 @@ class Discussion < ActiveRecord::Base
     changes.fetch(:board_id, []).compact.each do |id|
       Board.find_by_id(id).try :count_users_and_comments!
     end
+  end
+  
+  def clear_sticky
+    self.sticky_position = nil
   end
 end

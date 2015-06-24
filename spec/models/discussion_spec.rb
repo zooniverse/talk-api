@@ -116,4 +116,16 @@ RSpec.describe Discussion, type: :model do
       expect(discussion.comments.count).to eql 0
     end
   end
+  
+  describe '#clear_sticky' do
+    let(:discussion){ create :discussion, sticky: true, sticky_position: 1 }
+    
+    it 'should clear sticky' do
+      expect{
+        discussion.update_attributes sticky: false
+      }.to change{
+        discussion.sticky_position
+      }.to nil
+    end
+  end
 end
