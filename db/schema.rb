@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150623144240) do
+ActiveRecord::Schema.define(version: 20150624172525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,10 +89,10 @@ ActiveRecord::Schema.define(version: 20150623144240) do
     t.integer  "comments_count",  default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "sticky_position"
+    t.float    "sticky_position"
   end
 
-  add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", using: :btree
+  add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", where: "(sticky = true)", using: :btree
   add_index "discussions", ["board_id", "sticky", "updated_at"], name: "index_discussions_on_board_id_and_sticky_and_updated_at", using: :btree
   add_index "discussions", ["board_id", "updated_at"], name: "index_discussions_on_board_id_and_updated_at", using: :btree
 
