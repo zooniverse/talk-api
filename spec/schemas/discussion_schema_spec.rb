@@ -17,6 +17,9 @@ RSpec.describe DiscussionSchema, type: :schema do
         end
         
         its(:board_id){ is_expected.to eql type: 'integer' }
+        
+        its(:sticky){ is_expected.to eql type: 'boolean', default: false }
+        its(:sticky_position){ is_expected.to eql oneOf:[ { 'type' => 'number' }, { 'type' => 'null' }] }
       end
     end
   end
@@ -51,9 +54,7 @@ RSpec.describe DiscussionSchema, type: :schema do
     let(:schema_method){ :update }
     include_context 'discussion schema'
     with 'properties .discussions .properties' do
-      its(:sticky){ is_expected.to eql type: 'boolean' }
       its(:locked){ is_expected.to eql type: 'boolean' }
-      its(:sticky_position){ is_expected.to eql oneOf:[ { 'type' => 'integer' }, { 'type' => 'null' }] }
     end
   end
 end
