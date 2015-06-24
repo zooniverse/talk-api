@@ -30,7 +30,7 @@ RSpec.describe Comment, type: :model do
       expect(without_section).to fail_validation section: "can't be blank"
     end
     
-    context 'requiring a focus_type', :focus do
+    context 'requiring a focus_type' do
       context 'when focus_id is blank' do
         it 'should permit a blank focus_type' do
           without_focus_type = build :comment, focus_id: nil, focus_type: nil
