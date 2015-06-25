@@ -28,6 +28,22 @@ RSpec.describe Board, type: :model do
     end
   end
   
+  describe '#subject_default' do
+    let!(:default_board){ create :board, section: 'project-1', subject_default: true }
+    
+    it 'should not allow other default boards in the section' do
+      expect {
+        create :board, section: 'project-1', subject_default: true
+      }.to raise_error ActiveRecord::RecordNotUnique
+    end
+    
+    it 'should be scoped to section' do
+      expect {
+        create :board, section: 'project-2', subject_default: true
+      }.to_not raise_error
+    end
+  end
+  
   describe '#cascade_searchable' do
     let(:board){ create :board_with_discussions, discussion_count: 2 }
     let(:children){ board.discussions.all.to_a + board.comments.all.to_a }

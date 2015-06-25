@@ -9,6 +9,7 @@ class BoardSchema
       string  :title,       required: true
       string  :description, required: true
       string  :section,     required: true
+      boolean :subject_default
       entity  :parent_id do
         one_of integer, null
       end
@@ -19,9 +20,10 @@ class BoardSchema
   def update
     root do |root_object|
       additional_properties false
-      string :title
-      string :description
-      entity :parent_id do
+      string  :title
+      string  :description
+      boolean :subject_default
+      entity  :parent_id do
         one_of integer, null
       end
       permissions root_object

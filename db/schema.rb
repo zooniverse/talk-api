@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150624172525) do
+ActiveRecord::Schema.define(version: 20150625215239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,9 +31,9 @@ ActiveRecord::Schema.define(version: 20150624172525) do
   add_index "announcements", ["section", "created_at"], name: "index_announcements_on_section_and_created_at", using: :btree
 
   create_table "boards", force: :cascade do |t|
-    t.string   "title",                          null: false
-    t.string   "description",                    null: false
-    t.string   "section",                        null: false
+    t.string   "title",                             null: false
+    t.string   "description",                       null: false
+    t.string   "section",                           null: false
     t.integer  "users_count",       default: 0
     t.integer  "comments_count",    default: 0
     t.integer  "discussions_count", default: 0
@@ -41,10 +41,12 @@ ActiveRecord::Schema.define(version: 20150624172525) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "parent_id"
+    t.boolean  "subject_default",   default: false, null: false
   end
 
   add_index "boards", ["parent_id", "created_at"], name: "index_boards_on_parent_id_and_created_at", using: :btree
   add_index "boards", ["section", "created_at"], name: "index_boards_on_section_and_created_at", using: :btree
+  add_index "boards", ["section", "subject_default"], name: "index_boards_on_section_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
 
   create_table "comments", force: :cascade do |t|
     t.string   "category"
@@ -90,10 +92,12 @@ ActiveRecord::Schema.define(version: 20150624172525) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.float    "sticky_position"
+    t.boolean  "subject_default", default: false, null: false
   end
 
   add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", where: "(sticky = true)", using: :btree
   add_index "discussions", ["board_id", "sticky", "updated_at"], name: "index_discussions_on_board_id_and_sticky_and_updated_at", using: :btree
+  add_index "discussions", ["board_id", "title", "subject_default"], name: "index_discussions_on_board_id_and_title_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
   add_index "discussions", ["board_id", "updated_at"], name: "index_discussions_on_board_id_and_updated_at", using: :btree
 
   create_table "mentions", force: :cascade do |t|

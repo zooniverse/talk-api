@@ -7,7 +7,7 @@ class Discussion < ActiveRecord::Base
   belongs_to :board, required: true, counter_cache: true
   has_many :comments, dependent: :destroy
   
-  validates :title, presence: true, length: 3..140
+  validates :title, presence: true, length: { in: 3..140, unless: ->{ subject_default? } }
   validates :section, presence: true
   
   before_validation :set_section

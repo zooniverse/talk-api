@@ -31,6 +31,10 @@ RSpec.describe DiscussionSchema, type: :schema do
     with 'properties .discussions' do
       its(:required){ is_expected.to eql %w(title board_id user_id comments) }
       
+      with :properties do
+        its(:subject_default){ is_expected.to eql type: 'boolean' }
+      end
+      
       with 'properties .comments' do
         its(:type){ is_expected.to eql 'array' }
         its(:minItems){ is_expected.to eql 1 }

@@ -38,6 +38,30 @@ RSpec.describe Discussion, type: :model do
     end
   end
   
+  describe '#subject_default' do
+    let(:board){ create :board }
+    let(:subject){ create :subject }
+    let!(:default_discussion){ create :discussion, title: subject.id, board: board, subject_default: true }
+    
+    it 'should not allow other default discussions for the subject on the board' do
+      expect {
+        create :discussion, title: subject.id, board: board, subject_default: true
+      }.to raise_error ActiveRecord::RecordNotUnique
+    end
+    
+    it 'should be scoped to the board' do
+      expect {
+        create :discussion, title: subject.id, subject_default: true
+      }.to_not raise_error
+    end
+    
+    it 'should be scoped to the title' do
+      expect {
+        create :discussion, board: board, title: create(:subject).id, subject_default: true
+      }.to_not raise_error
+    end
+  end
+  
   context 'creating' do
     it 'should set the section' do
       discussion = build :discussion, section: nil

@@ -4,7 +4,7 @@ class DiscussionSerializer
   
   all_attributes
   can_include :comments, :board, :user
-  can_filter_by :sticky
+  can_filter_by :title, :subject_default, :sticky
   can_sort_by :updated_at, :sticky, :sticky_position
   self.default_sort = '-sticky,sticky_position,-updated_at'
   
