@@ -13,6 +13,7 @@ class Discussion < ActiveRecord::Base
   before_validation :set_section
   before_create :denormalize_attributes
   before_save :clear_sticky, unless: ->{ sticky? }
+  before_save :set_sticky_position, if: ->{ sticky? && sticky_position.nil? }
   after_update :update_board_counters
   
   moderatable_with :destroy, by: [:moderator, :admin]
@@ -64,5 +65,10 @@ class Discussion < ActiveRecord::Base
   
   def clear_sticky
     self.sticky_position = nil
+  end
+  
+  def set_sticky_position
+    last_sticky = board.discussions.where(sticky: true).order(sticky_position: :desc).first
+    self.sticky_position = (last_sticky.try(:sticky_position) || 0) + 1
   end
 end

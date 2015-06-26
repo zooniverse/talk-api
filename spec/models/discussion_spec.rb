@@ -152,4 +152,25 @@ RSpec.describe Discussion, type: :model do
       }.to nil
     end
   end
+  
+  describe '#set_sticky_position' do
+    let(:board){ create :board }
+    def create_discussion(position: nil)
+      create :discussion, board: board, sticky: true, sticky_position: position
+    end
+    
+    it 'should start with sticky_position 1' do
+      expect(create_discussion.sticky_position).to eql 1.0
+    end
+    
+    it 'should default to the next position' do
+      create_discussion
+      expect(create_discussion.sticky_position).to eql 2.0
+    end
+    
+    it 'should not override the attribute' do
+      create_discussion
+      expect(create_discussion(position: 100).sticky_position).to eql 100.0
+    end
+  end
 end
