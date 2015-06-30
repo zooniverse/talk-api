@@ -63,8 +63,9 @@ class Comment < ActiveRecord::Base
       set content =
         setweight(to_tsvector(comments.body), 'B') ||
         setweight(to_tsvector(users.login), 'B') ||
-        setweight(to_tsvector(users.login), 'B') ||
+        setweight(to_tsvector(users.display_name), 'B') ||
         setweight(to_tsvector(tag_list.names), 'A')
+        #{ searchable_focus }
       from comments, users, (
         select coalesce(string_agg(name, ' '), '') as names
         from tags
@@ -73,6 +74,15 @@ class Comment < ActiveRecord::Base
       where searchable_comments.searchable_id = #{ id } and
       users.id = comments.user_id and
       comments.id = #{ id }
+    SQL
+  end
+  
+  def searchable_focus
+    return '' unless focus
+    <<-SQL
+      || setweight(to_tsvector(focus_type), 'C')
+      || setweight(to_tsvector(focus_id::text), 'A')
+      || setweight(to_tsvector(substring(focus_type, 1, 1) || focus_id::text), 'A')
     SQL
   end
   
