@@ -25,9 +25,9 @@ RSpec.describe ConversationSerializer, type: :serializer do
     
     it 'should order by unread first and updated at' do
       expect(conversation_ids).to eql [
-        unread_conversation.id,
-        read_conversation.id,
-        old_read_conversation.id
+        unread_conversation.id.to_s,
+        read_conversation.id.to_s,
+        old_read_conversation.id.to_s
       ]
     end
   end
@@ -41,12 +41,12 @@ RSpec.describe ConversationSerializer, type: :serializer do
     let(:json){ ConversationSerializer.page({ sort: ConversationSerializer.default_sort }, policy_scope.resolve, current_user: recipient) }
     
     it 'should indicate unread conversations' do
-      conversation = json[:conversations].find{ |h| h[:id] == unread_conversation.id }
+      conversation = json[:conversations].find{ |h| h[:id] == unread_conversation.id.to_s }
       expect(conversation[:is_unread]).to be true
     end
     
     it 'should indicate read conversations' do
-      conversation = json[:conversations].find{ |h| h[:id] == read_conversation.id }
+      conversation = json[:conversations].find{ |h| h[:id] == read_conversation.id.to_s }
       expect(conversation[:is_unread]).to be false
     end
   end

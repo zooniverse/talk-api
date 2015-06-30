@@ -8,7 +8,7 @@ RSpec.describe ModerationSerializer, type: :serializer do
     context 'with a target' do
       subject{ json }
       it{ is_expected.to include :target }
-      its([:target]){ is_expected.to include :id => target.id }
+      its([:target]){ is_expected.to include :id => target.id.to_s }
     end
     
     context 'without a target' do
@@ -19,7 +19,7 @@ RSpec.describe ModerationSerializer, type: :serializer do
       
       subject{ json }
       its([:target]){ is_expected.to_not be_present }
-      its([:target_id]){ is_expected.to be_nil }
+      its([:target_id]){ is_expected.to_not be_present }
       its([:target_type]){ is_expected.to be_nil }
     end
   end

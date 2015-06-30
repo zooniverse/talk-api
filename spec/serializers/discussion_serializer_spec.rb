@@ -15,7 +15,7 @@ RSpec.describe DiscussionSerializer, type: :serializer do
       let(:json){ serializer.page({ sort: serializer.default_sort }, policy_scope.resolve) }
       subject{ json[:discussions].collect{ |d| d[:id] } }
       
-      it{ is_expected.to eql [sticky1.id, sticky2.id, discussion1.id, discussion2.id] }
+      it{ is_expected.to eql [sticky1.id, sticky2.id, discussion1.id, discussion2.id].collect(&:to_s) }
     end
   end
   

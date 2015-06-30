@@ -64,7 +64,7 @@ RSpec.describe ConversationsController, type: :controller do
         
         it 'should respond with the conversation' do
           expect(json.length).to eql 1
-          expect(json.first['id']).to eql record.id
+          expect(json.first['id']).to eql record.id.to_s
         end
       end
       
