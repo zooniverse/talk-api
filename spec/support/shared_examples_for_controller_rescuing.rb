@@ -53,4 +53,7 @@ RSpec.shared_examples_for 'a controller rescuing' do
   
   it_behaves_like 'ActionRescuing',
     ActiveRecord::UnknownAttributeError.new('foo', 'bar'), with: 422
+  
+  it_behaves_like 'ActionRescuing',
+    Talk::BannedUserError.new, with: 403
 end
