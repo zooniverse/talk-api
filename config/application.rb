@@ -9,6 +9,13 @@ require 'rails/test_unit/railtie'
 Bundler.require(*Rails.groups)
 
 module Talk
+  class BannedUserError < StandardError
+    def message
+      'You are banned'
+    end
+    alias_method :to_s, :message
+  end
+  
   class Application < Rails::Application
     config.autoload_paths += [
       'lib',

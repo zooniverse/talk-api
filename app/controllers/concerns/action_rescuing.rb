@@ -16,10 +16,15 @@ module ActionRescuing
     
     rescue_from JSON::Schema::ValidationError, with: :unprocessable
     rescue_from ActionController::ParameterMissing, with: :unprocessable
+    rescue_from Talk::BannedUserError, with: :forbidden
   end
   
   def unauthorized(exception)
     render_exception :unauthorized, exception
+  end
+  
+  def forbidden(exception)
+    render_exception :forbidden, exception
   end
   
   def not_found(exception)

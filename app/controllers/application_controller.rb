@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
   include ActionRendering
   include ActionRescuing
   
+  before_action :enforce_ban, if: ->{ current_user }
+  
   def root
     authorize :application, :index?
     render json: {
@@ -43,6 +45,10 @@ class ApplicationController < ActionController::Base
     def current_user
       return unless bearer_token
       @current_user ||= User.from_panoptes panoptes.get 'me'
+    end
+    
+    def enforce_ban
+      raise Talk::BannedUserError if current_user.banned?
     end
   end
 end
