@@ -4,7 +4,7 @@ class ConversationSerializer
   
   all_attributes
   attribute :is_unread
-  can_include :messages
+  can_include :messages, :users
   
   def custom_attributes
     super.tap do |attrs|

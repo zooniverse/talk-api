@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe ConversationSerializer, type: :serializer do
-  it_behaves_like 'a talk serializer', exposing: :all, including: [:messages]
+  it_behaves_like 'a talk serializer', exposing: :all, including: [:messages, :users]
   
   it_behaves_like 'a moderatable serializer' do
     let(:record){ create :conversation_with_messages }
