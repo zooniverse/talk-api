@@ -24,9 +24,10 @@ RSpec.describe Notification, type: :model do
   end
   
   context 'creating' do
+    let(:notification){ create :notification }
     it 'should publish' do
       expect(NotificationWorker).to receive :perform_async
-      create :notification
+      notification.run_callbacks :commit
     end
   end
 end

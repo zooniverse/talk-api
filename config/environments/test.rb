@@ -9,6 +9,7 @@ Rails.application.configure do
   config.action_dispatch.show_exceptions = false
   config.action_mailer.delivery_method = :test
   config.active_support.deprecation = :stderr
+  config.active_record.raise_in_transactional_callbacks = true
   config.action_mailer.default_url_options = {
     protocol: 'http',
     host: 'localhost',

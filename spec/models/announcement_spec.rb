@@ -7,9 +7,10 @@ RSpec.describe Announcement, type: :model do
   end
   
   context 'creating' do
+    let(:announcement){ create :announcement }
     it 'should publish' do
       expect(AnnouncementWorker).to receive :perform_async
-      create :announcement
+      announcement.run_callbacks :commit
     end
   end
 end

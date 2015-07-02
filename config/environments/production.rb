@@ -11,6 +11,7 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
   config.log_formatter = ::Logger::Formatter.new
   config.active_record.dump_schema_after_migration = false
+  config.active_record.raise_in_transactional_callbacks = true
   config.action_mailer.default_url_options = {
     protocol: 'https',
     host: 'talk.zooniverse.org'
