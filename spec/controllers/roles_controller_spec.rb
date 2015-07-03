@@ -30,7 +30,7 @@ RSpec.describe RolesController, type: :controller do
       let(:request_params) do
         {
           roles: {
-            user_id: create(:user).id,
+            user_id: create(:user).id.to_s,
             section: 'project-1',
             name: 'moderator'
           }
@@ -42,7 +42,7 @@ RSpec.describe RolesController, type: :controller do
       let(:current_user){ user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           roles: {
             name: 'scientist',
             is_shown: false

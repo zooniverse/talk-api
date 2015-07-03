@@ -30,7 +30,7 @@ RSpec.describe ConversationsController, type: :controller do
     
     it_behaves_like 'a controller creating' do
       let(:recipients){ create_list :user, 2 }
-      let(:recipient_ids){ recipients.collect &:id }
+      let(:recipient_ids){ recipients.collect{ |r| r.id.to_s } }
       
       let(:request_params) do
         {
@@ -89,7 +89,7 @@ RSpec.describe ConversationsController, type: :controller do
       
       it 'should mark the conversation as read' do
         expect(Conversation).to receive(:mark_as_read_by).with [record.id], recipient.id
-        get :show, id: record.id
+        get :show, id: record.id.to_s
       end
     end
   end

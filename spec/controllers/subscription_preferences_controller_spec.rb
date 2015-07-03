@@ -36,7 +36,7 @@ RSpec.describe SubscriptionPreferencesController, type: :controller do
       let(:current_user){ record.user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           subscription_preferences: {
             enabled: true,
             email_digest: 'weekly'

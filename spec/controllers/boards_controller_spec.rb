@@ -39,7 +39,7 @@ RSpec.describe BoardsController, type: :controller do
       let(:current_user){ user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           boards: {
             title: 'changed'
           }

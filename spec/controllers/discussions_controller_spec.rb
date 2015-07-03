@@ -29,7 +29,7 @@ RSpec.describe DiscussionsController, type: :controller do
         {
           discussions: {
             title: 'works',
-            board_id: create(:board).id,
+            board_id: create(:board).id.to_s,
             comments: [{
               body: 'works'
             }]
@@ -42,7 +42,7 @@ RSpec.describe DiscussionsController, type: :controller do
       let(:current_user){ user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           discussions: {
             title: 'changed'
           }

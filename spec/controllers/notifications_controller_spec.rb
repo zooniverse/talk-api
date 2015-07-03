@@ -36,7 +36,7 @@ RSpec.describe NotificationsController, type: :controller do
       let(:current_user){ record.user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           notifications: {
             delivered: true
           }

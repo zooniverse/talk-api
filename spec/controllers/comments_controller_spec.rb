@@ -37,7 +37,7 @@ RSpec.describe CommentsController, type: :controller do
         {
           comments: {
             body: 'works',
-            discussion_id: create(:discussion).id
+            discussion_id: create(:discussion).id.to_s
           }
         }
       end
@@ -47,7 +47,7 @@ RSpec.describe CommentsController, type: :controller do
       let(:current_user){ user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           comments: {
             body: 'changed'
           }
@@ -59,7 +59,7 @@ RSpec.describe CommentsController, type: :controller do
   context 'with a non-author user' do
     let(:record){ create :comment }
     let(:user){ create :user }
-    let(:send_request){ put upvote_method, id: record.id, format: :json }
+    let(:send_request){ put upvote_method, id: record.id.to_s, format: :json }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
     
     it_behaves_like 'a controller restricting',

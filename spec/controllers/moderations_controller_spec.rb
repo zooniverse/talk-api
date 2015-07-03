@@ -29,7 +29,7 @@ RSpec.describe ModerationsController, type: :controller do
         {
           moderations: {
             section: 'project-1',
-            target_id: target.id,
+            target_id: target.id.to_s,
             target_type: 'Comment',
             reports: [{
               message: 'works'
@@ -43,7 +43,7 @@ RSpec.describe ModerationsController, type: :controller do
       let(:current_user){ user }
       let(:request_params) do
         {
-          id: record.id,
+          id: record.id.to_s,
           moderations: {
             actions: [{
               message: 'closing',
