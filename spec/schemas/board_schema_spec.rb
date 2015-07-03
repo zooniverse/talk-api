@@ -12,7 +12,7 @@ RSpec.describe BoardSchema, type: :schema do
       with :properties do
         its(:title){ is_expected.to eql type: 'string' }
         its(:description){ is_expected.to eql type: 'string' }
-        its(:parent_id){ is_expected.to eql oneOf: [{ 'type' => 'integer' }, 'type' => 'null' ] }
+        its(:parent_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }, { 'type' => 'null' }] }
         its(:subject_default){ is_expected.to eql type: 'boolean' }
         
         with :permissions do

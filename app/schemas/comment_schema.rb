@@ -1,9 +1,9 @@
 class CommentSchema
   include JSON::SchemaBuilder
   attr_accessor :policy
-
+  
   root :comments
-
+  
   def create
     root do
       additional_properties false
@@ -13,14 +13,14 @@ class CommentSchema
       string  :category
       string  :body,          required: true
       entity  :focus_id do
-        one_of string, integer
+        one_of string, integer, null
       end
       entity  :discussion_id, required: true do
         one_of string, integer
       end
     end
   end
-
+  
   def update
     root do
       additional_properties false
@@ -32,7 +32,7 @@ class CommentSchema
         end
       end
       entity :focus_id do
-        one_of string, integer
+        one_of string, integer, null
       end
     end
   end

@@ -11,7 +11,7 @@ RSpec.describe ModerationSchema, type: :schema do
         its(:required){ is_expected.to eql ['user_id', 'message'] }
         
         with :properties do
-          its(:user_id){ is_expected.to eql type: 'integer' }
+          its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
           its(:message){ is_expected.to eql type: 'string' }
         end
       end
@@ -31,7 +31,7 @@ RSpec.describe ModerationSchema, type: :schema do
       with :properties do
         include_context 'moderation schema reports'
         its(:section){ is_expected.to eql type: 'string' }
-        its(:target_id){ is_expected.to eql type: 'integer' }
+        its(:target_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
         its(:target_type){ is_expected.to eql type: 'string' }
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe ModerationSchema, type: :schema do
             its(:required){ is_expected.to eql ['user_id', 'message'] }
             
             with :properties do
-              its(:user_id){ is_expected.to eql type: 'integer' }
+              its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
               its(:message){ is_expected.to eql type: 'string' }
               
               with :action do
