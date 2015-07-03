@@ -50,6 +50,9 @@ Then start everything up with
   open http://localhost:3000/
 ```
 
+If you're running outside of vagrant and just want to run the specs ensure you've created the foreign
+data tables not in the *schema.rb* file via `RACK_ENV=test bundle exec rake panoptes:db:create_tables`, see *.travis.yml* for more details.
+
 ## Layout
 
 The app is built to conform to the [JSON API spec](http://jsonapi.org/)
