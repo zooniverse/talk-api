@@ -1,27 +1,39 @@
 class CommentSchema
   include JSON::SchemaBuilder
   attr_accessor :policy
-  
+
   root :comments
-  
+
   def create
     root do
       additional_properties false
-      integer :user_id,       required: true
+      entity  :user_id,       required: true do
+        one_of string, integer
+      end
       string  :category
       string  :body,          required: true
-      integer :focus_id
-      integer :discussion_id, required: true
+      entity  :focus_id do
+        one_of string, integer
+      end
+      entity  :discussion_id, required: true do
+        one_of string, integer
+      end
     end
   end
-  
+
   def update
     root do
       additional_properties false
       string  :category
       string  :body
-      integer :discussion_id if policy.move?
-      integer :focus_id
+      if policy.move?
+        entity :discussion_id do
+          one_of string, integer
+        end
+      end
+      entity :focus_id do
+        one_of string, integer
+      end
     end
   end
 end
