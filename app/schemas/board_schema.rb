@@ -1,8 +1,8 @@
 class BoardSchema
   include JSON::SchemaBuilder
-  
+
   root :boards
-  
+
   def create
     root do |root_object|
       additional_properties false
@@ -11,12 +11,12 @@ class BoardSchema
       string  :section,     required: true
       boolean :subject_default
       entity  :parent_id do
-        one_of integer, null
+        one_of string, integer, null
       end
       permissions root_object, required: true
     end
   end
-  
+
   def update
     root do |root_object|
       additional_properties false
@@ -24,12 +24,12 @@ class BoardSchema
       string  :description
       boolean :subject_default
       entity  :parent_id do
-        one_of integer, null
+        one_of string, integer, null
       end
       permissions root_object
     end
   end
-  
+
   def permissions(obj, required: false)
     obj.required << :permissions if required
     obj.object :permissions do |permission_object|
@@ -37,7 +37,7 @@ class BoardSchema
       permission permission_object, :write
     end
   end
-  
+
   def permission(obj, name)
     obj.entity name, required: true do
       enum [:all, :team, :moderator, :admin]
