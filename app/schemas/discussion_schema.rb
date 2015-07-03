@@ -1,7 +1,7 @@
 class DiscussionSchema
   include JSON::SchemaBuilder
   root :discussions
-
+  
   def create
     root do |root_object|
       additional_properties false
@@ -9,31 +9,40 @@ class DiscussionSchema
       entity  :board_id,       required: true  do
         one_of string, integer
       end
-      integer :user_id,        required: true
+      entity :user_id,         required: true do
+        one_of string, integer
+      end
       boolean :subject_default
       sticky root_object
-
+      
       array :comments, required: true, min_items: 1 do
         items type: :object do
-          integer :user_id, required: true
+          entity :user_id, required: true do
+            one_of string, integer
+          end
+          
           string  :category
           string  :body,    required: true
-          integer :focus_id
+          entity :focus_id do
+            one_of string, integer, null
+          end
         end
       end
     end
   end
-
+  
   def update
     root do |root_object|
       additional_properties false
       string :title, min_length: 3, max_length: 140
-      integer :board_id
+      entity :board_id do
+        one_of string, integer
+      end
       boolean :locked
       sticky root_object
     end
   end
-
+  
   def sticky(obj)
     obj.boolean :sticky, default: false
     obj.entity  :sticky_position do
