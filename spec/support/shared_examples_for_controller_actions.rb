@@ -47,6 +47,7 @@ RSpec.shared_examples_for 'a controller action' do
     let!(:banned_ip){ create :user_ip_ban }
     before(:each) do
       allow(subject).to receive(:current_user).and_return user
+      allow(subject.request).to receive(:remote_ip).and_return '1.2.3.4'
       send_request
     end
     

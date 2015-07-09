@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :user_ip_ban do
-    ip '0.0.0.0/24'
+    ip '1.2.3.4/24'
   end
 end

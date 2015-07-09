@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get :popular
       end
     end
+    resources :user_ip_bans
     resources :users
     
     root 'application#root'

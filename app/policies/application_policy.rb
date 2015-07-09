@@ -56,6 +56,10 @@ class ApplicationPolicy
       has_role? 'scientist'
     end
     
+    def zooniverse_admin?
+      logged_in? && user.roles.where(section: 'zooniverse', name: 'admin').exists?
+    end
+    
     def team?
       moderator? || admin? || scientist?
     end

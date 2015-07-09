@@ -1,0 +1,3 @@
+class UserIpBanService < ApplicationService
+  
+end
