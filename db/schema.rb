@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150625215239) do
+ActiveRecord::Schema.define(version: 20150709212510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -243,5 +243,13 @@ ActiveRecord::Schema.define(version: 20150625215239) do
 
   add_index "user_conversations", ["conversation_id", "user_id", "is_unread"], name: "unread_user_conversations", using: :btree
   add_index "user_conversations", ["conversation_id", "user_id"], name: "index_user_conversations_on_conversation_id_and_user_id", using: :btree
+
+  create_table "user_ip_bans", force: :cascade do |t|
+    t.cidr     "ip",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_ip_bans", ["ip"], name: "index_user_ip_bans_on_ip", using: :btree
 
 end

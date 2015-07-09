@@ -41,4 +41,21 @@ RSpec.shared_examples_for 'a controller action' do
       expect(response.json[:error]).to eql 'You are banned'
     end
   end
+  
+  describe '#enforce_ip_ban' do
+    let(:user){ create :user }
+    let!(:banned_ip){ create :user_ip_ban }
+    before(:each) do
+      allow(subject).to receive(:current_user).and_return user
+      send_request
+    end
+    
+    it 'should be forbidden' do
+      expect(response.status).to eql 403
+    end
+    
+    it 'should respond with the correct error message' do
+      expect(response.json[:error]).to eql 'You are banned'
+    end
+  end
 end

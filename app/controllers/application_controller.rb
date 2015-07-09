@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include ActionRescuing
   
   before_action :enforce_ban, if: ->{ current_user }
+  before_action :enforce_ip_ban, if: ->{ current_user }
   
   def root
     authorize :application, :index?
@@ -49,6 +50,10 @@ class ApplicationController < ActionController::Base
     
     def enforce_ban
       raise Talk::BannedUserError if current_user.banned?
+    end
+    
+    def enforce_ip_ban
+      raise Talk::BannedUserError if UserIpBan.banned?(request)
     end
   end
 end
