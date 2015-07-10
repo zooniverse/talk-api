@@ -39,6 +39,40 @@ RSpec.describe ModerationsController, type: :controller do
       end
     end
     
+    context 'when the target is already reported' do
+      before(:each) do
+        create :reported_comment, target: target, message: 'first', user: first_user
+        post :create, request_params.merge(format: :json)
+      end
+      
+      let(:first_user){ create :user }
+      let(:request_params) do
+        {
+          moderations: {
+            section: 'project-1',
+            target_id: target.id.to_s,
+            target_type: 'Comment',
+            reports: [{
+              message: 'second'
+            }]
+          }
+        }
+      end
+      let(:reports){ response.json['moderations'].first['reports'] }
+      
+      it 'should have two reports' do
+        expect(reports.length).to eql 2
+      end
+      
+      it 'should set the first report' do
+        expect(reports.first).to eql 'message' => 'first', 'user_id' => first_user.id
+      end
+      
+      it 'should set the second report' do
+        expect(reports.second).to eql 'message' => 'second', 'user_id' => user.id
+      end
+    end
+    
     it_behaves_like 'a controller updating' do
       let(:current_user){ user }
       let(:request_params) do
