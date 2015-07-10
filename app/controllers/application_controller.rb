@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   include ActionRescuing
   
   before_action :enforce_ban, if: ->{ current_user }
-  before_action :enforce_ip_ban, if: ->{ current_user }
+  before_action :enforce_ip_ban
   
   def root
     authorize :application, :index?
