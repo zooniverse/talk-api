@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
       roles: { href: '/roles', type: 'roles' },
       subjects: { href: '/subjects', type: 'subjects' },
       tags: { href: '/tags', type: 'tags' },
+      user_ip_bans: { href: '/user_ip_bans', type: 'user_ip_bans' },
       users: { href: '/users', type: 'users' }
     }
   end
