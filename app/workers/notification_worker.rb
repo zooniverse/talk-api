@@ -1,3 +1,5 @@
+require 'sugar'
+
 class NotificationWorker
   include Sidekiq::Worker
   

@@ -1,3 +1,5 @@
+require 'panoptes_proxy'
+
 class ApplicationController < ActionController::Base
   include Pundit
   include ActionRendering

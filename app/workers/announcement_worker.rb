@@ -1,3 +1,5 @@
+require 'sugar'
+
 class AnnouncementWorker
   include Sidekiq::Worker
   
