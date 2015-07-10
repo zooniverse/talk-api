@@ -22,6 +22,9 @@ end
 
 RSpec.shared_examples_for 'a controller rescuing' do
   it_behaves_like 'ActionRescuing',
+    ActiveRecord::RecordInvalid.new(Board.new.tap(&:valid?)), with: 400
+  
+  it_behaves_like 'ActionRescuing',
     ActiveRecord::RecordNotFound.new, with: 404
   
   it_behaves_like 'ActionRescuing',
