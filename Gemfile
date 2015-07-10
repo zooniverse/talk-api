@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.1'
-gem 'rack-cors', '~> 0.3.1'
-gem 'pg', '~> 0.18.1'
+gem 'rails', '~> 4.2.3'
+gem 'rack-cors', '~> 0.4.0'
+gem 'pg', '~> 0.18.2'
 gem 'redis', '~> 3.2.1'
-gem 'sidekiq', '~> 3.3.3'
+gem 'sidekiq', '~> 3.4.1'
 gem 'sidekiq-congestion'
 gem 'sidetiq', '~> 0.6.3'
 gem 'sinatra', '~> 1.4'
@@ -17,8 +17,8 @@ gem 'faraday-http-cache', '~> 1.1.0'
 gem 'pundit', '~> 0.3.0'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
-gem 'newrelic_rpm', '~> 3.11'
-gem 'honeybadger', '~> 2.0.10'
+gem 'newrelic_rpm', '~> 3.12'
+gem 'honeybadger', '~> 2.1.0'
 
 group :production do
   gem 'puma', '~> 2.11.1'
