@@ -12,16 +12,16 @@ gem 'restpack_serializer', github: 'parrish/restpack_serializer', branch: 'dev',
 gem 'json-schema', '~> 2.5.0'
 gem 'json-schema_builder', '~> 0.0.5'
 gem 'faraday', '~> 0.9.1'
-gem 'faraday_middleware', '~> 0.9.1'
+gem 'faraday_middleware', '~> 0.10.0'
 gem 'faraday-http-cache', '~> 1.1.0'
-gem 'pundit', '~> 0.3.0'
+gem 'pundit', '~> 1.0.1'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 gem 'newrelic_rpm', '~> 3.12'
 gem 'honeybadger', '~> 2.1.0'
 
 group :production do
-  gem 'puma', '~> 2.11.1'
+  gem 'puma', '~> 2.11.3'
 end
 
 group :test, :development do
