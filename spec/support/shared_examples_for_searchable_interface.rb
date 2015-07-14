@@ -40,6 +40,28 @@ RSpec.shared_examples_for 'a search query parser' do
       end
     end
     
+    context 'with natural nots' do
+      it 'should not replace them at the start of terms' do
+        expect_parsed 'blah order', 'blah & order'
+      end
+      
+      it 'should not replace them at the end of terms' do
+        expect_parsed 'cannot login', 'cannot & login'
+      end
+      
+      it 'should not replace them inside terms' do
+        expect_parsed 'mordor gandalf', 'mordor & gandalf'
+      end
+      
+      it 'should not replace them at the start of the query' do
+        expect_parsed 'nothing here', 'nothing & here'
+      end
+      
+      it 'should not replace them at the end of the query' do
+        expect_parsed 'cellar door', 'cellar & door'
+      end
+    end
+    
     context 'with invalid logic' do
       it 'should repair x & & y' do
         expect_parsed 'x & & y', 'x & y'
