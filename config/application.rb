@@ -16,6 +16,19 @@ module Talk
     alias_method :to_s, :message
   end
   
+  class InvalidParameterError < StandardError
+    def initialize(param, expected, actual)
+      @param = param
+      @expected = expected
+      @actual = actual
+    end
+    
+    def message
+      "Expected #{ @param } to be #{ @expected }, but was #{ @actual }"
+    end
+    alias_method :to_s, :message
+  end
+  
   class Application < Rails::Application
     config.autoload_paths += [
       'lib',

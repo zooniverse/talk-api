@@ -24,6 +24,39 @@ RSpec.describe ModerationsController, type: :controller do
     before(:each){ allow(subject).to receive(:current_user).and_return user }
     
     it_behaves_like 'a controller rendering', :index, :show, :destroy
+    
+    context 'filtering by state' do
+      let(:state){ nil }
+      let(:response_state){ response.json[:moderations].first[:state] }
+      
+      before(:each) do
+        create :moderation, :closed
+        create :moderation, :watched
+        get :index, state: state, format: :json
+      end
+      
+      context 'with a valid state' do
+        let(:state){ 'watched' }
+        
+        it 'should filter' do
+          expect(response_state).to eql 'watched'
+        end
+      end
+      
+      context 'with an invalid state' do
+        let(:state){ 'foo' }
+        
+        it 'should be unprocessable' do
+          expect(response).to be_unprocessable
+        end
+        
+        it 'should list the expected states' do
+          message = response.json[:error]
+          expect(message).to eql "Expected state to be in #{ Moderation.states.keys }, but was foo"
+        end
+      end
+    end
+    
     it_behaves_like 'a controller creating' do
       let(:request_params) do
         {

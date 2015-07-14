@@ -71,5 +71,8 @@ RSpec.shared_examples_for 'a controller rescuing' do
     TalkService::ParameterError.new, with: 422
   
   it_behaves_like 'ActionRescuing',
+    Talk::InvalidParameterError.new('foo', 'bar', 'baz'), with: 422
+  
+  it_behaves_like 'ActionRescuing',
     Talk::BannedUserError.new, with: 403
 end

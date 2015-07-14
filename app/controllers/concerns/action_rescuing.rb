@@ -22,6 +22,7 @@ module ActionRescuing
     rescue_from RestPack::Serializer::InvalidInclude, with: :bad_request
     
     rescue_from TalkService::ParameterError, with: :unprocessable
+    rescue_from Talk::InvalidParameterError, with: :unprocessable
     rescue_from Talk::BannedUserError, with: :forbidden
   end
   
