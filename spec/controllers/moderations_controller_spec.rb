@@ -91,7 +91,8 @@ RSpec.describe ModerationsController, type: :controller do
           }
         }
       end
-      let(:reports){ response.json['moderations'].first['reports'] }
+      let(:create_response){ response.json['moderations'].first }
+      let(:reports){ Moderation.find(create_response['id']).reports }
       
       it 'should have two reports' do
         expect(reports.length).to eql 2
@@ -103,6 +104,10 @@ RSpec.describe ModerationsController, type: :controller do
       
       it 'should set the second report' do
         expect(reports.second).to eql 'message' => 'second', 'user_id' => user.id
+      end
+      
+      it 'should sanitize the response' do
+        expect(create_response.keys).to match_array %w(href id links section state target target_id target_type updated_at)
       end
     end
     
