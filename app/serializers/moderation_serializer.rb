@@ -1,6 +1,9 @@
 class ModerationSerializer
   include TalkSerializer
   all_attributes
+  can_filter_by :state
+  can_sort_by :updated_at
+  self.default_sort = 'state,-updated_at'
   
   def custom_attributes
     super.merge target: target
