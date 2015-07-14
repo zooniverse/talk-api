@@ -18,8 +18,8 @@ class Search < ActiveRecord::Base
   
   def self.serialize_search
     preload(:searchable).collect do |searchable|
-      searchable.serialize.merge type: searchable.searchable_type
-    end
+      searchable.serialize.try :merge, type: searchable.searchable_type
+    end.compact
   end
   
   def serialize
