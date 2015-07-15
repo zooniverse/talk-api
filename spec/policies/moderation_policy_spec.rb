@@ -13,8 +13,8 @@ RSpec.describe ModerationPolicy, type: :policy do
   
   context 'with a user' do
     let(:user){ create :user }
-    it_behaves_like 'a policy permitting', :create
-    it_behaves_like 'a policy forbidding', :index, :show, :update, :destroy
+    it_behaves_like 'a policy permitting', :index, :create
+    it_behaves_like 'a policy forbidding', :show, :update, :destroy
     its(:available_actions){ is_expected.to match_array [:report] }
   end
   

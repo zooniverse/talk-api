@@ -1,6 +1,6 @@
 class ModerationPolicy < ApplicationPolicy
   def index?
-    moderator? || admin?
+    logged_in?
   end
   
   def show?
@@ -41,13 +41,15 @@ class ModerationPolicy < ApplicationPolicy
     def resolve
       if user.roles.where(section: 'zooniverse', name: ['moderator', 'admin']).any?
         scope
-      else
+      elsif privileged_sections.any?
         scope.where 'section = any(array[:sections])', sections: privileged_sections
+      else
+        scope.none
       end
     end
     
     def privileged_sections
-      user.roles.where(name: ['moderator', 'admin']).distinct(:section).pluck :section
+      @_privileged_sections ||= user.roles.where(name: ['moderator', 'admin']).distinct(:section).pluck(:section)
     end
   end
 end
