@@ -5,7 +5,8 @@ RSpec.shared_context 'a serializer' do
   let(:model){ serializer.model_class }
   let(:instance){ FactoryGirl.create serializer.singular_key }
   let(:model_instance){ instance }
-  let(:json){ serializer.as_json model_instance }
+  let(:serializer_context){ { } }
+  let(:json){ serializer.as_json model_instance, serializer_context }
 end
 
 RSpec.shared_examples_for 'a talk serializer' do |exposing: nil, excluding: [], including: nil|

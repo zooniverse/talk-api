@@ -10,7 +10,7 @@ class ModerationSerializer
   end
   
   def target
-    target_serializer.as_json(model.target) if model.target
+    target_serializer.as_json(model.target, current_user: current_user) if model.target
   rescue
     nil
   end

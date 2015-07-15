@@ -4,11 +4,18 @@ RSpec.describe ModerationSerializer, type: :serializer do
   it_behaves_like 'a talk serializer', exposing: :all do
     let(:target){ create :comment }
     let(:model_instance){ create :moderation, target: target }
+    let(:current_user){ create :admin, section: target.section }
+    let(:serializer_context){ { current_user: current_user } }
     
     context 'with a target' do
       subject{ json }
       it{ is_expected.to include :target }
       its([:target]){ is_expected.to include :id => target.id.to_s }
+      
+      context 'with moderatable_actions' do
+        subject{ json[:target][:moderatable_actions] }
+        it{ is_expected.to match_array target.class.moderatable.keys }
+      end
     end
     
     context 'without a target' do
