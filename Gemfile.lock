@@ -49,6 +49,12 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (6.0.1)
+    aws-sdk (2.1.7)
+      aws-sdk-resources (= 2.1.7)
+    aws-sdk-core (2.1.7)
+      jmespath (~> 1.0)
+    aws-sdk-resources (2.1.7)
+      aws-sdk-core (= 2.1.7)
     builder (3.2.2)
     celluloid (0.16.0)
       timers (~> 4.0.0)
@@ -97,6 +103,8 @@ GEM
     honeybadger (2.1.0)
     i18n (0.7.0)
     ice_cube (0.11.1)
+    jmespath (1.0.2)
+      multi_json (~> 1.0)
     json (1.8.3)
     json-schema (2.5.1)
       addressable (~> 2.3.7)
@@ -249,6 +257,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk (~> 2.1.7)
   codeclimate-test-reporter (~> 0.4.7)
   factory_girl_rails (~> 4.5.0)
   faraday (~> 0.9.1)

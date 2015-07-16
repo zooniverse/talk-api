@@ -1,3 +1,5 @@
+require 'uploader'
+
 module DataExportWorker
   extend ::ActiveSupport::Concern
   
@@ -26,11 +28,9 @@ module DataExportWorker
     data_file = write_data
     gzip_file = compress data_file
     ::File.unlink data_file
-    # TO-DO:
-    #   upload
-    #   generate pre-signed key
-    #   email link
-    `cp #{ gzip_file.path } ./`
+    uploader = ::Uploader.new gzip_file
+    uploader.upload
+    # TO-DO: Notify user of uploader.url
     ::File.unlink gzip_file
   end
   
@@ -39,7 +39,7 @@ module DataExportWorker
   end
   
   def find_each
-    raise NotImplementedError.new 'find_each'
+    raise ::NotImplementedError.new 'find_each'
   end
   
   def each_row
