@@ -2,30 +2,50 @@ class CommentExportWorker
   include ::DataExportWorker
   self.name = 'comments'
   
-  def find_each(&block)
-    ::Board.where(section: section).find_each do |board|
-      board.discussions.find_each do |discussion|
-        discussion.comments.find_each do |comment|
-          yield board, discussion, comment
-        end
-      end
-    end
+  def perform(section)
+    self.section = section
+    @view_name = "#{ section.gsub /\-/, '_' }_comments"
+    create_view
+    super
   end
   
-  def row_from(board, discussion, comment)
-    {
-      board_id: board.id,
-      board_title: board.title,
-      board_description: board.description,
-      discussion_id: discussion.id,
-      discussion_title: discussion.title,
-      comment_id: comment.id,
-      comment_body: comment.body,
-      comment_focus_id: comment.focus_id,
-      comment_focus_type: comment.focus_type,
-      comment_user_id: comment.user_id,
-      comment_user_login: comment.user_login,
-      comment_created_at: comment.created_at
-    }
+  def find_each(&block)
+    view_model.find_each &block
+  end
+  
+  def row_from(row)
+    row.as_json
+  end
+  
+  def create_view
+    view_model.connection.query <<-SQL
+      create or replace view #{ @view_name } as
+      select
+        boards.id as board_id,
+        boards.title as board_title,
+        boards.description as board_description,
+        discussions.id as discussion_id,
+        discussions.title as discussion_title,
+        comments.id as comment_id,
+        comments.body as comment_body,
+        comments.focus_id as comment_focus_id,
+        comments.focus_type as comment_focus_type,
+        comments.user_id as comment_user_id,
+        comments.user_login as comment_user_login,
+        comments.created_at as comment_created_at
+      from boards
+      left join discussions on discussions.board_id = boards.id
+      left join comments on comments.discussion_id = discussions.id
+      where boards.section = '#{ section }';
+    SQL
+  end
+  
+  def view_model
+    return @_view_model if @_view_model
+    view_model_name = @view_name
+    @_view_model = Class.new ::ActiveRecord::Base do
+      self.table_name = view_model_name
+      self.primary_key = :comment_id
+    end
   end
 end

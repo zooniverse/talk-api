@@ -1,11 +1,11 @@
 require 'aws-sdk'
 
 class Uploader
-  delegate :s3, to: :class
+  delegate :initialize_s3, to: :class
   class_attribute :bucket, :bucket_path
   attr_accessor :local_file, :remote_file
   
-  def self.s3
+  def self.initialize_s3
     return @s3 if @s3
     yaml = ::YAML.load_file ::Rails.root.join('config/aws.yml')
     config = yaml[::Rails.env]
@@ -17,6 +17,7 @@ class Uploader
   end
   
   def initialize(file)
+    initialize_s3
     self.local_file = file
     self.remote_file = ::Aws::S3::Object.new bucket_name: bucket, key: upload_path
   end
