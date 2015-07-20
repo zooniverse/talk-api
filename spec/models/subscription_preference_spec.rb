@@ -60,6 +60,8 @@ RSpec.describe SubscriptionPreference, type: :model do
     its([:mentions]){ is_expected.to be_mentions  }
     its([:messages]){ is_expected.to be_a described_class }
     its([:messages]){ is_expected.to be_messages }
+    its([:system]){ is_expected.to be_a described_class }
+    its([:system]){ is_expected.to be_system }
     
     it 'should .find_or_default_for each category' do
       expect(described_class).to receive(:find_or_default_for)

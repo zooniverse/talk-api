@@ -21,6 +21,11 @@ RSpec.describe Notification, type: :model do
       without_section = build :notification, section: nil
       expect(without_section).to fail_validation section: "can't be blank"
     end
+    
+    it 'should require a subscription' do
+      without_subscription = build :notification, subscription: nil
+      expect(without_subscription).to fail_validation subscription: "can't be blank"
+    end
   end
   
   context 'creating' do
