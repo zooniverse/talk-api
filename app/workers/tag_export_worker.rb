@@ -7,6 +7,6 @@ class TagExportWorker
   end
   
   def row_from(tag)
-    tag.attributes.except :updated_at
+    tag.attributes.except 'updated_at'
   end
 end
