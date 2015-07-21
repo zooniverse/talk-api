@@ -5,16 +5,14 @@ class CommentSchema
   root :comments
   
   def create
-    root do
+    root do |root_object|
       additional_properties false
       entity  :user_id,       required: true do
         one_of string, integer
       end
       string  :category
       string  :body,          required: true
-      entity  :focus_id do
-        one_of string, integer, null
-      end
+      focus root_object
       entity  :discussion_id, required: true do
         one_of string, integer
       end
@@ -22,7 +20,7 @@ class CommentSchema
   end
   
   def update
-    root do
+    root do |root_object|
       additional_properties false
       string  :category
       string  :body
@@ -31,9 +29,17 @@ class CommentSchema
           one_of string, integer
         end
       end
-      entity :focus_id do
-        one_of string, integer, null
-      end
+      focus root_object
+    end
+  end
+  
+  def focus(obj)
+    obj.entity :focus_id do
+      one_of string, integer, null
+    end
+    
+    obj.entity :focus_type do
+      enum %w(Subject Collection)
     end
   end
 end

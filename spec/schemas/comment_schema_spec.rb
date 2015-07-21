@@ -14,6 +14,7 @@ RSpec.describe CommentSchema, type: :schema do
           its(:category){ is_expected.to eql type: 'string' }
           its(:body){ is_expected.to eql type: 'string' }
           its(:focus_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }, { 'type' => 'null' }] }
+          its(:focus_type){ is_expected.to eql enum: %w(Subject Collection) }
         end
       end
     end

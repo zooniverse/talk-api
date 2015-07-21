@@ -16,16 +16,14 @@ class DiscussionSchema
       sticky root_object
       
       array :comments, required: true, min_items: 1 do
-        items type: :object do
+        items type: :object do |comment_object|
           entity :user_id, required: true do
             one_of string, integer
           end
           
           string  :category
           string  :body,    required: true
-          entity :focus_id do
-            one_of string, integer, null
-          end
+          focus comment_object
         end
       end
     end
@@ -47,6 +45,16 @@ class DiscussionSchema
     obj.boolean :sticky, default: false
     obj.entity  :sticky_position do
       one_of number, null
+    end
+  end
+  
+  def focus(obj)
+    obj.entity :focus_id do
+      one_of string, integer, null
+    end
+    
+    obj.entity :focus_type do
+      enum %w(Subject Collection)
     end
   end
 end
