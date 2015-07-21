@@ -2,7 +2,7 @@ class CommentExportWorker
   include ::DataExportWorker
   self.name = 'comments'
   
-  def perform(section)
+  def perform(section, user_id)
     self.section = section
     @view_name = "#{ section.gsub /\-/, '_' }_comments"
     create_view

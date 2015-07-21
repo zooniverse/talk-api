@@ -8,7 +8,7 @@ module DataExportWorker
     class << self
       attr_accessor :name
     end
-    attr_accessor :section, :name
+    attr_accessor :section, :name, :user
     
     sidekiq_options retry: false, backtrace: true, congestion: {
       interval: 1.day,
@@ -18,9 +18,10 @@ module DataExportWorker
     }
   end
   
-  def perform(section)
+  def perform(section, user_id)
     self.section = section
     self.name = "#{ section }-#{ self.class.name }_#{ Time.now.utc.to_date.to_s }"
+    self.user = ::User.find user_id
     process_data
   end
   
@@ -30,7 +31,8 @@ module DataExportWorker
     ::File.unlink data_file
     uploader = ::Uploader.new gzip_file
     uploader.upload
-    # TO-DO: Notify user of uploader.url
+    project = ::Project.from_section section
+    project.create_system_notification user, message: "Your data export of #{ name } is ready", url: uploader.url
     ::File.unlink gzip_file
   end
   
