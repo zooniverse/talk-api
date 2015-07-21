@@ -17,13 +17,12 @@ RSpec.describe TagExportWorker, type: :worker do
     before(:each){ subject.section = 'project-1' }
     let!(:tag){ create :tag, section: subject.section }
     
-    it 'should tags to section' do
+    it 'should scope tags to section' do
       expect(Tag).to receive(:where).once.with(section: 'project-1').and_call_original
       subject.find_each{ }
     end
     
     it 'should iterate tags' do
-      block = Proc.new{ }
       scope = Tag.where section: 'project-1'
       expect(Tag).to receive(:where).and_return scope
       expect(scope).to receive(:find_each).and_call_original
