@@ -3,7 +3,8 @@ class Project < ActiveRecord::Base
   
   def self.from_section(section)
     find section.match(/project-(\d+)/)[1]
-  rescue nil
+  rescue
+    nil
   end
   
   def create_system_notification(user, notification)
