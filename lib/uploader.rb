@@ -39,6 +39,6 @@ class Uploader
   end
   
   def upload_path
-    "#{ bucket_path }/#{ local_file.path }".gsub /\/{2,}/, '/'
+    "#{ bucket_path }/#{ ::File.basename local_file }".gsub /\/{2,}/, '/'
   end
 end
