@@ -75,6 +75,19 @@ class ApplicationPolicy
       sections += [record.section] if record.respond_to?(:section)
       @_roles = user.roles.where(section: sections).collect(&:name).uniq
     end
+    
+    def privileged_sections(*roles)
+      return [] unless user
+      @privileged_sections ||= user.roles.where(name: roles).distinct(:section).pluck :section
+    end
+    
+    def accessible_section?(roles = ['admin'])
+      return true if zooniverse_admin?
+      Array.wrap(record).each do |r|
+        return false unless privileged_sections(*roles).include?(r.section)
+      end
+      true
+    end
   end
   
   def scope

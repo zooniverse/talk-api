@@ -42,12 +42,8 @@ class ModerationPolicy < ApplicationPolicy
       if user.roles.where(section: 'zooniverse', name: ['moderator', 'admin']).any?
         scope
       else
-        scope.where 'section = any(array[:sections])', sections: privileged_sections
+        scope.where 'section = any(array[:sections])', sections: privileged_sections('moderator', 'admin')
       end
-    end
-    
-    def privileged_sections
-      user.roles.where(name: ['moderator', 'admin']).distinct(:section).pluck :section
     end
   end
 end
