@@ -3,10 +3,6 @@ require 'spec_helper'
 RSpec.describe TagExportWorker, type: :worker do
   it_behaves_like 'a data export worker'
   
-  it 'should set the name' do
-    expect(TagExportWorker.name).to eql 'tags'
-  end
-  
   describe '#row_from' do
     let(:tag){ create :tag }
     subject{ described_class.new.row_from tag }
@@ -14,8 +10,8 @@ RSpec.describe TagExportWorker, type: :worker do
   end
   
   describe '#find_each' do
-    before(:each){ subject.section = 'project-1' }
-    let!(:tag){ create :tag, section: subject.section }
+    let!(:tag){ create :tag, section: 'project-1' }
+    before(:each){ subject.data_request = create :data_request, section: 'project-1' }
     
     it 'should scope tags to section' do
       expect(Tag).to receive(:where).once.with(section: 'project-1').and_call_original

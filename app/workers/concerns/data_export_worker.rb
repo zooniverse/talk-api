@@ -5,10 +5,7 @@ module DataExportWorker
   
   included do
     include Sidekiq::Worker
-    class << self
-      attr_accessor :name
-    end
-    attr_accessor :section, :name, :user
+    attr_accessor :data_request, :name
     
     sidekiq_options retry: false, backtrace: true, congestion: {
       interval: 1.day,
@@ -18,10 +15,9 @@ module DataExportWorker
     }
   end
   
-  def perform(section, user_id)
-    self.section = section
-    self.name = "#{ section }-#{ self.class.name }_#{ Time.now.utc.to_date.to_s }"
-    self.user = ::User.find user_id
+  def perform(data_request_id)
+    self.data_request = ::DataRequest.find data_request_id
+    self.name = "#{ data_request.section }-#{ data_request.kind }_#{ Time.now.utc.to_date.to_s }"
     process_data
   end
   
@@ -31,8 +27,7 @@ module DataExportWorker
     ::File.unlink data_file
     uploader = ::Uploader.new gzip_file
     uploader.upload
-    project = ::Project.from_section section
-    project.create_system_notification user, message: "Your data export of #{ name } is ready", url: uploader.url
+    data_request.notify_user message: "Your data export of #{ name } is ready", url: uploader.url
     ::File.unlink gzip_file
   end
   

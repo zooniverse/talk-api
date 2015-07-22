@@ -39,12 +39,12 @@ RSpec.describe CommentExportWorker, type: :worker do
   end
   
   describe '#create_view' do
-    let(:section){ 'project-1' }
-    let!(:comment1){ create :comment, section: section }
-    let!(:comment2){ create :comment, section: section }
+    let(:data_request){ create :comments_data_request }
+    let!(:comment1){ create :comment, section: data_request.section }
+    let!(:comment2){ create :comment, section: data_request.section }
     let(:data){ subject.view_model.all.collect(&:to_json) }
     before(:each) do
-      subject.section = section
+      subject.data_request = data_request
       subject.instance_variable_set :@view_name, 'project_1_comments'
       subject.create_view
     end
@@ -65,11 +65,12 @@ RSpec.describe CommentExportWorker, type: :worker do
   end
   
   describe '#find_each' do
-    let!(:comment){ create :comment, section: 'project-1' }
+    let(:data_request){ create :comments_data_request }
+    let!(:comment){ create :comment, section: data_request.section }
     
     before(:each) do
-      subject.section = 'project-1'
-      subject.instance_variable_set :@view_name, "project_1_comments"
+      subject.data_request = data_request
+      subject.instance_variable_set :@view_name, "#{ data_request.section.gsub('-', '_') }_comments"
       subject.create_view
     end
     
@@ -89,26 +90,25 @@ RSpec.describe CommentExportWorker, type: :worker do
   end
   
   describe '#perform' do
-    let(:section){ 'project-1' }
-    let(:user){ create :user }
+    let(:data_request){ create :comments_data_request }
     before(:each) do
       allow(subject).to receive :process_data
     end
     
-    it 'should set the section' do
-      subject.perform section, user.id
-      expect(subject.section).to eql section
+    it 'should set the data request' do
+      subject.perform data_request.id
+      expect(subject.data_request).to eql data_request
     end
     
     it 'should set the view name' do
-      subject.perform section, user.id
+      subject.perform data_request.id
       view_name = subject.instance_variable_get :@view_name
       expect(view_name).to eql 'project_1_comments'
     end
     
     it 'should create the view' do
       expect(subject).to receive :create_view
-      subject.perform section, user.id
+      subject.perform data_request.id
     end
   end
 end

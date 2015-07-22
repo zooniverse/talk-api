@@ -62,4 +62,36 @@ RSpec.describe DataRequest, type: :model do
       data_request.run_callbacks :commit
     end
   end
+  
+  describe '#notify_user' do
+    let(:subscribed_user){ create :user }
+    let(:unsubscribed_user){ create :user }
+    let(:data_request){ create :data_request, user: user }
+    
+    before :each do
+      unsubscribed_user.preference_for(:system).update_attributes enabled: false
+    end
+    
+    context 'with a subscribed user' do
+      let(:user){ subscribed_user }
+      subject{ data_request.notify_user url: 'foo', message: 'bar' }
+      
+      it{ is_expected.to be_a Notification }
+      its(:user){ is_expected.to eql user }
+      its(:section){ is_expected.to eql data_request.section }
+      
+      context 'with a subscription' do
+        subject{ data_request.notify_user(url: 'foo', message: 'bar').subscription }
+        
+        it{ is_expected.to be_system }
+        its(:source){ is_expected.to eql data_request }
+      end
+    end
+    
+    context 'without a subscribed user' do
+      let(:user){ unsubscribed_user }
+      subject{ data_request.notify_user url: 'foo', message: 'bar' }
+      it{ is_expected.to be nil }
+    end
+  end
 end

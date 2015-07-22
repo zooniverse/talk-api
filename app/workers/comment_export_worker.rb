@@ -1,10 +1,9 @@
 class CommentExportWorker
   include ::DataExportWorker
-  self.name = 'comments'
   
-  def perform(section, user_id)
-    self.section = section
-    @view_name = "#{ section.gsub /\-/, '_' }_comments"
+  def perform(data_request_id)
+    self.data_request = ::DataRequest.find data_request_id
+    @view_name = "#{ data_request.section.gsub /\-/, '_' }_comments"
     create_view
     super
   end
@@ -36,7 +35,7 @@ class CommentExportWorker
       from boards
       left join discussions on discussions.board_id = boards.id
       left join comments on comments.discussion_id = discussions.id
-      where boards.section = '#{ section }';
+      where boards.section = '#{ data_request.section }';
     SQL
   end
   

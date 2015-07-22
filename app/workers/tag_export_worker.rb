@@ -1,9 +1,8 @@
 class TagExportWorker
   include ::DataExportWorker
-  self.name = 'tags'
   
   def find_each(&block)
-    ::Tag.where(section: section).find_each &block
+    ::Tag.where(section: data_request.section).find_each &block
   end
   
   def row_from(tag)

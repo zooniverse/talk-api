@@ -17,6 +17,16 @@ class DataRequest < ActiveRecord::Base
     }
   end
   
+  def notify_user(notification)
+    subscription = user.subscribe_to self, :system
+    
+    Notification.create(notification.merge({
+      user_id: user.id,
+      section: section,
+      subscription: subscription
+    })) if subscription.try(:enabled?)
+  end
+  
   def worker
     self.class.kinds[self.kind.to_sym]
   end

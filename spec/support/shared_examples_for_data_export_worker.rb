@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.shared_examples_for 'a data export worker' do
   it{ is_expected.to be_a Sidekiq::Worker }
+  let!(:data_request){ create :data_request }
   
   describe 'congestion' do
     subject{ described_class.new.sidekiq_options_hash['congestion'] }
@@ -104,21 +105,16 @@ RSpec.shared_examples_for 'a data export worker' do
   end
   
   describe '#process_data' do
-    let(:project){ create :project }
-    let(:section){ "project-#{ project.id }" }
-    let(:user){ create :user }
     let(:written_data){ double }
     let(:gzipped_data){ double }
     let(:uploader){ double upload: true, url: 'location' }
     
     before(:each) do
       subject.name = 'some_name'
-      expect(subject).to receive(:section).and_return section
-      allow(subject).to receive(:user).and_return user
+      subject.data_request = data_request
       allow(subject).to receive(:write_data).and_return written_data
       allow(subject).to receive(:compress).and_return gzipped_data
       expect(Uploader).to receive(:new).with(gzipped_data).and_return uploader
-      allow(Project).to receive(:from_section).with(section).and_return project
       allow(File).to receive(:unlink)
     end
     
@@ -144,25 +140,22 @@ RSpec.shared_examples_for 'a data export worker' do
     end
     
     it 'should create the notification' do
-      expect(project).to receive(:create_system_notification).with user,
-        message: "Your data export of some_name is ready", url: uploader.url
+      expect(data_request).to receive(:notify_user)
+        .with message: "Your data export of some_name is ready", url: uploader.url
       subject.process_data
     end
   end
   
   describe '#perform' do
-    let(:section){ 'project-1' }
     let(:user){ create :user }
     
     before(:each) do
       expect(subject).to receive :process_data
-      allow(described_class).to receive(:name).and_return 'some_name'
       allow(Time).to receive_message_chain('now.utc.to_date.to_s'){ '2015-07-21' }
-      subject.perform section, user.id
+      subject.perform data_request.id
     end
     
-    its(:section){ is_expected.to eql section }
-    its(:name){ is_expected.to eql "#{ section }-some_name_2015-07-21" }
-    its(:user){ is_expected.to eql user }
+    its(:data_request){ is_expected.to eql data_request }
+    its(:name){ is_expected.to eql "#{ data_request.section }-#{ data_request.kind }_2015-07-21" }
   end
 end
