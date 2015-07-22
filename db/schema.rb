@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150721205004) do
+ActiveRecord::Schema.define(version: 20150722155255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 20150721205004) do
   end
 
   add_index "data_requests", ["expires_at"], name: "index_data_requests_on_expires_at", using: :btree
-  add_index "data_requests", ["section", "kind"], name: "index_data_requests_on_section_and_kind", unique: true, using: :btree
+  add_index "data_requests", ["section", "kind", "user_id"], name: "index_data_requests_on_section_and_kind_and_user_id", unique: true, using: :btree
 
   create_table "discussions", force: :cascade do |t|
     t.string   "title",                           null: false

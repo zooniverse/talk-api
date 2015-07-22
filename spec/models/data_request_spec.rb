@@ -26,7 +26,7 @@ RSpec.describe DataRequest, type: :model do
     
     it 'should be unique to a section and kind' do
       existing = create :data_request
-      duplicate = build :data_request
+      duplicate = build :data_request, user_id: existing.user_id
       expect(duplicate).to fail_validation kind: 'has already been created'
     end
   end

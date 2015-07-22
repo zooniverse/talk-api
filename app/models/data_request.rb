@@ -4,7 +4,7 @@ class DataRequest < ActiveRecord::Base
   belongs_to :user, required: true
   validates :section, presence: true
   validates :kind, presence: true,
-    uniqueness: { scope: [:section], message: 'has already been created' },
+    uniqueness: { scope: [:section, :user_id], message: 'has already been created' },
     inclusion: { in: %w(tags comments), message: 'must be "tags" or "comments"' }
   
   before_create :set_expiration
