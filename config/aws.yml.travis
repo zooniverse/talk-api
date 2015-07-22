@@ -1,4 +1,4 @@
 test:
-  region:
-  bucket:
-  bucket_path:
+  region: us-east-1
+  bucket: a-bucket
+  bucket_path: a/bucket/path

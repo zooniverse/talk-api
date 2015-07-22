@@ -6,14 +6,14 @@ class Uploader
   attr_accessor :local_file, :remote_file
   
   def self.initialize_s3
-    return @s3 if @s3
+    return if @_configured
     yaml = ::YAML.load_file ::Rails.root.join('config/aws.yml')
     config = yaml[::Rails.env]
     self.bucket = config.delete 'bucket'
     self.bucket_path = config.delete 'bucket_path'
     
     ::Aws.config.update config
-    @s3 = ::Aws::S3::Client.new
+    @_configured = true
   end
   
   def initialize(file)
