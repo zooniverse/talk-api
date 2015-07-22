@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :data_request do
-    user
+    user factory: :admin
     section 'project-1'
     kind 'comments'
     
