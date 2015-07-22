@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       end
     end
     resources :conversations
+    resources :data_requests
     resources :discussions
     resources :messages
     resources :moderations
