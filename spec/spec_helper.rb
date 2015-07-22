@@ -16,8 +16,6 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 Sidekiq::Testing.fake!
 
-Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
-
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include JSON::SchemaBuilder::RSpecHelper, type: :schema

@@ -38,14 +38,14 @@ RSpec.describe Uploader, type: :lib do
     end
     
     it 'should configure AWS' do
-      expect(Aws.config).to receive(:update).with 'region' => 'us-east-1'
+      expect(Aws.config).to receive(:update).with region: 'us-east-1'
       Uploader.initialize_s3
     end
   end
   
   describe '#initialize' do
     it 'should initialize s3' do
-      expect(Uploader).to receive(:initialize_s3)
+      expect(Uploader).to receive(:initialize_s3).and_return nil
       subject
     end
     
