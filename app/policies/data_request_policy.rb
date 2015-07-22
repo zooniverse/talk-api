@@ -1,10 +1,10 @@
-class RolePolicy < ApplicationPolicy
+class DataRequestPolicy < ApplicationPolicy
   def index?
-    true
+    logged_in?
   end
   
   def show?
-    true
+    zooniverse_admin? || owner?
   end
   
   def create?
@@ -12,16 +12,16 @@ class RolePolicy < ApplicationPolicy
   end
   
   def update?
-    accessible_section?
+    false
   end
   
   def destroy?
-    accessible_section?
+    false
   end
   
   class Scope < Scope
     def resolve
-      scope
+      zooniverse_admin? ? scope.all : scope.where(user_id: user.id)
     end
   end
 end

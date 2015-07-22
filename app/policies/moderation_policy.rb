@@ -47,9 +47,5 @@ class ModerationPolicy < ApplicationPolicy
         scope.none
       end
     end
-    
-    def privileged_sections
-      @_privileged_sections ||= user.roles.where(name: ['moderator', 'admin']).distinct(:section).pluck(:section)
-    end
   end
 end

@@ -36,6 +36,7 @@ module Talk
       'app/services/concerns',
       'app/serializers/concerns',
       'app/serializers',
+      'app/workers/concerns',
       'app/workers'
     ].collect{ |path| Rails.root.join path }
     
