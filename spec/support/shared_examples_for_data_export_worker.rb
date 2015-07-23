@@ -150,12 +150,44 @@ RSpec.shared_examples_for 'a data export worker' do
     let(:user){ create :user }
     
     before(:each) do
-      expect(subject).to receive :process_data
+      allow(DataRequest).to receive(:find).with(data_request.id).and_return data_request
+      allow(subject).to receive :process_data
       allow(Time).to receive_message_chain('now.utc.to_date.to_s'){ '2015-07-21' }
+    end
+    
+    it 'should set the data request' do
+      subject.perform data_request.id
+      expect(subject.data_request).to eql data_request
+    end
+    
+    it 'should set the name' do
+      subject.perform data_request.id
+      expect(subject.name).to eql "#{ data_request.section }-#{ data_request.kind }_2015-07-21"
+    end
+    
+    it 'should process the data' do
+      expect(subject).to receive :process_data
       subject.perform data_request.id
     end
     
-    its(:data_request){ is_expected.to eql data_request }
-    its(:name){ is_expected.to eql "#{ data_request.section }-#{ data_request.kind }_2015-07-21" }
+    it 'should set the data request started' do
+      expect(data_request).to receive :started!
+      subject.perform data_request.id
+    end
+    
+    it 'should set the data request finished' do
+      expect(data_request).to receive :finished!
+      subject.perform data_request.id
+    end
+    
+    it 'should indicate failure' do
+      allow(subject).to receive(:process_data).and_raise 'hell'
+      
+      expect{
+        subject.perform data_request.id
+      }.to raise_error 'hell'
+      
+      expect(data_request).to be_failed
+    end
   end
 end

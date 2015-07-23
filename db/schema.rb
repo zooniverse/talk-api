@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722155255) do
+ActiveRecord::Schema.define(version: 20150723185435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,12 +80,13 @@ ActiveRecord::Schema.define(version: 20150722155255) do
   add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at", using: :btree
 
   create_table "data_requests", force: :cascade do |t|
-    t.integer  "user_id",    null: false
-    t.string   "section",    null: false
-    t.string   "kind",       null: false
-    t.datetime "expires_at", null: false
+    t.integer  "user_id",                null: false
+    t.string   "section",                null: false
+    t.string   "kind",                   null: false
+    t.datetime "expires_at",             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "state",      default: 0, null: false
   end
 
   add_index "data_requests", ["expires_at"], name: "index_data_requests_on_expires_at", using: :btree

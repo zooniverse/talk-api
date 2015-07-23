@@ -11,6 +11,13 @@ class DataRequest < ActiveRecord::Base
   before_create :set_expiration
   after_commit :spawn_worker, on: :create
   
+  enum state: {
+    pending: 0,
+    started: 1,
+    finished: 2,
+    failed: 3
+  }
+  
   def self.kinds
     {
       tags: TagExportWorker,

@@ -18,7 +18,16 @@ module DataExportWorker
   def perform(data_request_id)
     self.data_request = ::DataRequest.find data_request_id
     self.name = "#{ data_request.section }-#{ data_request.kind }_#{ Time.now.utc.to_date.to_s }"
-    process_data
+    data_request.started!
+    
+    begin
+      process_data
+    rescue => e
+      data_request.failed!
+      raise e
+    end
+    
+    data_request.finished!
   end
   
   def process_data
