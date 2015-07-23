@@ -1,5 +1,6 @@
 class Announcement < ActiveRecord::Base
-  scope :expired, ->{ where 'expires_at < ?', Time.now.utc }
+  include Expirable
+  
   before_create :assign_default_expiration
   after_commit :publish, on: :create
   

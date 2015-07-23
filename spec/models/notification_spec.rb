@@ -35,4 +35,9 @@ RSpec.describe Notification, type: :model do
       notification.run_callbacks :commit
     end
   end
+  
+  it_behaves_like 'an expirable model' do
+    let!(:fresh){ create_list :notification, 2 }
+    let!(:stale){ create_list :notification, 2, created_at: 1.year.ago.utc }
+  end
 end

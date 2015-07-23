@@ -1,11 +1,14 @@
 class Notification < ActiveRecord::Base
+  include Expirable
+  
   belongs_to :user, required: true
   belongs_to :subscription, required: true
-  scope :expired, ->{ where 'created_at < ?', 3.months.ago.utc }
   after_commit :publish, on: :create
   validates :url, presence: true
   validates :message, presence: true
   validates :section, presence: true
+  
+  expires_in 3.months
   
   protected
   

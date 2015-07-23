@@ -1,5 +1,6 @@
 class DataRequest < ActiveRecord::Base
   include Subscribable
+  include Expirable
   
   belongs_to :user, required: true
   validates :section, presence: true

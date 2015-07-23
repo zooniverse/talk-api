@@ -13,4 +13,9 @@ RSpec.describe Announcement, type: :model do
       announcement.run_callbacks :commit
     end
   end
+  
+  it_behaves_like 'an expirable model' do
+    let!(:fresh){ create_list :announcement, 2 }
+    let!(:stale){ create_list :announcement, 2, expires_at: 1.year.ago.utc }
+  end
 end

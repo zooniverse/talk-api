@@ -31,6 +31,22 @@ RSpec.describe DataRequest, type: :model do
     end
   end
   
+  it_behaves_like 'an expirable model' do
+    let!(:fresh){[
+      create(:comments_data_request),
+      create(:tags_data_request)
+    ]}
+    
+    let!(:stale) do
+      Timecop.travel(1.month.ago) do
+        [
+          create(:comments_data_request),
+          create(:tags_data_request)
+        ]
+      end
+    end
+  end
+  
   describe '.kinds' do
     subject{ DataRequest.kinds }
     it{ is_expected.to eql tags: TagExportWorker, comments: CommentExportWorker }
