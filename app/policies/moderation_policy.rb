@@ -41,8 +41,8 @@ class ModerationPolicy < ApplicationPolicy
     def resolve
       if user.roles.where(section: 'zooniverse', name: ['moderator', 'admin']).any?
         scope
-      elsif privileged_sections.any?
-        scope.where 'section = any(array[:sections])', sections: privileged_sections
+      elsif privileged_sections('moderator', 'admin').any?
+        scope.where 'section = any(array[:sections])', sections: privileged_sections('moderator', 'admin')
       else
         scope.none
       end

@@ -61,8 +61,8 @@ RSpec.describe Uploader, type: :lib do
   describe '#upload' do
     let(:output){ double }
     before(:each) do
+      allow(subject.remote_file).to receive :upload_file
       allow(File).to receive(:open).and_yield output
-      allow(subject.remote_file).to receive(:upload_file)
     end
     
     it 'should read the input file' do

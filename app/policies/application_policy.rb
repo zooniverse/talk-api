@@ -78,7 +78,8 @@ class ApplicationPolicy
     
     def privileged_sections(*roles)
       return [] unless user
-      @privileged_sections ||= user.roles.where(name: roles).distinct(:section).pluck :section
+      @privileged_sections ||= { }
+      @privileged_sections[roles] ||= user.roles.where(name: roles).distinct(:section).pluck(:section)
     end
     
     def accessible_section?(roles = ['admin'])
