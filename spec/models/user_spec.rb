@@ -36,8 +36,8 @@ RSpec.describe User, type: :model do
     
     it 'should remove all user subscriptions for a source' do
       user.unsubscribe_from discussion
-      expect{ mention_subscription.reload }.to raise_error
-      expect{ participating_subscription.reload }.to raise_error
+      expect{ mention_subscription.reload }.to raise_error ActiveRecord::RecordNotFound
+      expect{ participating_subscription.reload }.to raise_error ActiveRecord::RecordNotFound
     end
     
     it 'should only remove user subscriptions' do
@@ -47,7 +47,7 @@ RSpec.describe User, type: :model do
     
     it 'should be limitable to a category' do
       user.unsubscribe_from discussion, :mentions
-      expect{ mention_subscription.reload }.to raise_error
+      expect{ mention_subscription.reload }.to raise_error ActiveRecord::RecordNotFound
       expect{ participating_subscription.reload }.to_not raise_error
     end
   end

@@ -50,7 +50,7 @@ RSpec.describe Subscription, type: :model do
       
       it 'should not create' do
         subscription.save
-        expect{ subscription.reload }.to raise_error
+        expect{ subscription.reload }.to raise_error ActiveRecord::RecordNotFound
       end
     end
   end
