@@ -5,34 +5,28 @@ class BoardSchema
   
   def create
     root do |root_object|
-      additional_properties false
-      string  :title,       required: true
-      string  :description, required: true
-      string  :section,     required: true
-      boolean :subject_default
-      entity  :parent_id do
-        one_of string, integer, null
-      end
-      permissions root_object, required: true
+      changes root_object, required: true
+      string :section, required: true
     end
   end
   
   def update
     root do |root_object|
-      additional_properties false
-      string  :title
-      string  :description
-      boolean :subject_default
-      entity  :parent_id do
-        one_of string, integer, null
-      end
-      permissions root_object
+      changes root_object
     end
   end
   
-  def permissions(obj, required: false)
-    obj.required << :permissions if required
-    obj.object :permissions do |permission_object|
+  def changes(obj, required = { })
+    obj.additional_properties false
+    obj.string :title, **required
+    obj.string :description, **required
+    obj.boolean :subject_default
+    obj.id :parent_id, null: true
+    obj.permissions obj, required
+  end
+  
+  def permissions(obj, required = { })
+    obj.object :permissions, **required do |permission_object|
       permission permission_object, :read
       permission permission_object, :write
     end

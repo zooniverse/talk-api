@@ -1,45 +1,29 @@
 class CommentSchema
   include JSON::SchemaBuilder
+  include FocusSchema
   attr_accessor :policy
   
   root :comments
   
   def create
     root do |root_object|
-      additional_properties false
-      entity  :user_id,       required: true do
-        one_of string, integer
-      end
-      string  :category
-      string  :body,          required: true
-      focus root_object
-      entity  :discussion_id, required: true do
-        one_of string, integer
-      end
+      changes root_object, required: true
+      id :user_id, required: true
+      id :discussion_id, required: true
     end
   end
   
   def update
     root do |root_object|
-      additional_properties false
-      string  :category
-      string  :body
-      if policy.move?
-        entity :discussion_id do
-          one_of string, integer
-        end
-      end
-      focus root_object
+      changes root_object
+      id :discussion_id if policy.move?
     end
   end
   
-  def focus(obj)
-    obj.entity :focus_id do
-      one_of string, integer, null
-    end
-    
-    obj.entity :focus_type do
-      enum %w(Subject Collection)
-    end
+  def changes(obj, required = { })
+    obj.additional_properties false
+    obj.string :category
+    obj.string :body, **required
+    focus obj
   end
 end

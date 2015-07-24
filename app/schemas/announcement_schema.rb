@@ -4,20 +4,19 @@ class AnnouncementSchema
   root :announcements
   
   def create
-    root do
-      additional_properties false
-      string  :message,    required: true
-      string  :section,    required: true
-      string  :expires_at
-    end
+    changes required: true
   end
   
   def update
+    changes
+  end
+  
+  def changes(required = { })
     root do
       additional_properties false
-      string  :message
-      string  :section
-      string  :expires_at
+      string :message, **required
+      string :section, **required
+      string :expires_at
     end
   end
 end

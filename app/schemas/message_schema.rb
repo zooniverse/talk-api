@@ -6,12 +6,8 @@ class MessageSchema
   def create
     root do
       additional_properties false
-      entity  :user_id,         required: true  do
-        one_of string, integer
-      end
-      entity  :conversation_id, required: true  do
-        one_of string, integer
-      end
+      id :user_id, required: true
+      id :conversation_id, required: true
       string :body, required: true
     end
   end

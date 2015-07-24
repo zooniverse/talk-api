@@ -12,7 +12,7 @@ RSpec.describe DataRequestSchema, type: :schema do
       its(:additionalProperties){ is_expected.to be false }
       
       with :properties do
-        its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+        its(:user_id){ is_expected.to eql id_schema }
         its(:section){ is_expected.to eql type: 'string' }
         its(:kind){ is_expected.to eql type: 'string', enum: %w(tags comments) }
       end

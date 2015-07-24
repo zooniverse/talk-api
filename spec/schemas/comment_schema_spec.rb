@@ -13,8 +13,7 @@ RSpec.describe CommentSchema, type: :schema do
         with :properties do
           its(:category){ is_expected.to eql type: 'string' }
           its(:body){ is_expected.to eql type: 'string' }
-          its(:focus_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }, { 'type' => 'null' }] }
-          its(:focus_type){ is_expected.to eql enum: %w(Subject Collection) }
+          it_behaves_like 'a focus schema'
         end
       end
     end
@@ -25,11 +24,11 @@ RSpec.describe CommentSchema, type: :schema do
     it_behaves_like 'a comment schema'
     
     with 'properties .comments' do
-      its(:required){ is_expected.to eql %w(user_id body discussion_id) }
+      its(:required){ is_expected.to match_array %w(user_id body discussion_id) }
       
       with 'properties' do
-        its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
-        its(:discussion_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+        its(:user_id){ is_expected.to eql id_schema }
+        its(:discussion_id){ is_expected.to eql id_schema }
       end
     end
   end
@@ -44,7 +43,7 @@ RSpec.describe CommentSchema, type: :schema do
       
       with 'properties .comments' do
         with 'properties' do
-          its(:discussion_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+          its(:discussion_id){ is_expected.to eql id_schema }
         end
       end
     end

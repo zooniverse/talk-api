@@ -12,7 +12,7 @@ RSpec.describe BoardSchema, type: :schema do
       with :properties do
         its(:title){ is_expected.to eql type: 'string' }
         its(:description){ is_expected.to eql type: 'string' }
-        its(:parent_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }, { 'type' => 'null' }] }
+        its(:parent_id){ is_expected.to eql nullable_id_schema }
         its(:subject_default){ is_expected.to eql type: 'boolean' }
         
         with :permissions do
@@ -33,7 +33,7 @@ RSpec.describe BoardSchema, type: :schema do
     it_behaves_like 'a board schema'
     
     with 'properties .boards' do
-      its(:required){ is_expected.to eql %w(title description section permissions) }
+      its(:required){ is_expected.to match_array %w(title description section permissions) }
       
       with :properties do
         its(:section){ is_expected.to eql type: 'string' }

@@ -16,10 +16,10 @@ RSpec.describe DiscussionSchema, type: :schema do
           its(:maxLength){ is_expected.to eql 140 }
         end
         
-        its(:board_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+        its(:board_id){ is_expected.to eql id_schema }
         
         its(:sticky){ is_expected.to eql type: 'boolean', default: false }
-        its(:sticky_position){ is_expected.to eql oneOf:[ { 'type' => 'number' }, { 'type' => 'null' }] }
+        its(:sticky_position){ is_expected.to eql oneOf: [{ 'type' => 'number' }, { 'type' => 'null' }] }
       end
     end
   end
@@ -44,11 +44,10 @@ RSpec.describe DiscussionSchema, type: :schema do
           its(:required){ is_expected.to eql %w(user_id body) }
           
           with :properties do
-            its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+            its(:user_id){ is_expected.to eql id_schema }
             its(:category){ is_expected.to eql type: 'string' }
             its(:body){ is_expected.to eql type: 'string' }
-            its(:focus_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }, { 'type' => 'null' }] }
-            its(:focus_type){ is_expected.to eql enum: %w(Subject Collection) }
+            it_behaves_like 'a focus schema'
           end
         end
       end

@@ -32,8 +32,10 @@ module Talk
   class Application < Rails::Application
     config.autoload_paths += [
       'lib',
-      'app/services',
+      'app/schemas/concerns',
+      'app/schemas',
       'app/services/concerns',
+      'app/services',
       'app/serializers/concerns',
       'app/serializers',
       'app/workers/concerns',

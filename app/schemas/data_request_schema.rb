@@ -6,11 +6,9 @@ class DataRequestSchema
   def create
     root do
       additional_properties false
-      entity :user_id, required: true  do
-        one_of string, integer
-      end
+      id :user_id, required: true
       string :section, required: true
-      string :kind,    required: true do
+      string :kind, required: true do
         enum DataRequest.kinds.keys
       end
     end

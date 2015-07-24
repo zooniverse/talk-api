@@ -27,7 +27,7 @@ RSpec.describe RoleSchema, type: :schema do
       its(:required){ is_expected.to eql %w(user_id section name) }
       
       with :properties do
-        its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+        its(:user_id){ is_expected.to eql id_schema }
         its(:section){ is_expected.to eql type: 'string' }
       end
     end

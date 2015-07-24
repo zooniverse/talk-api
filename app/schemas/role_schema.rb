@@ -6,10 +6,8 @@ class RoleSchema
   def create
     root do |root_object|
       additional_properties false
-      entity  :user_id, required: true  do
-        one_of string, integer
-      end
-      string  :section, required: true
+      id :user_id, required: true
+      string :section, required: true
       boolean :is_shown, default: true
       role_names root_object
     end

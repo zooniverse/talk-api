@@ -12,8 +12,8 @@ RSpec.describe MessageSchema, type: :schema do
       its(:additionalProperties){ is_expected.to be false }
       
       with :properties do
-        its(:user_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
-        its(:conversation_id){ is_expected.to eql oneOf: [{ 'type' => 'string' }, { 'type' => 'integer' }] }
+        its(:user_id){ is_expected.to eql id_schema }
+        its(:conversation_id){ is_expected.to eql id_schema }
         its(:body){ is_expected.to eql type: 'string' }
       end
     end
