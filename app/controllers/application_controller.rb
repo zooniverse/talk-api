@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
       comments: { href: '/comments', type: 'comments' },
       collections: { href: '/collections', type: 'collections' },
       conversations: { href: '/conversations', type: 'conversations' },
+      data_requests: { href: '/data_requests', type: 'data_requests' },
       discussions: { href: '/discussions', type: 'discussions' },
       messages: { href: '/messages', type: 'messages' },
       moderations: { href: '/moderations', type: 'moderations' },
