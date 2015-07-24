@@ -4,14 +4,6 @@ RSpec.shared_examples_for 'a data export worker' do
   it{ is_expected.to be_a Sidekiq::Worker }
   let!(:data_request){ create :data_request }
   
-  describe 'congestion' do
-    subject{ described_class.new.sidekiq_options_hash['congestion'] }
-    its([:interval]){ is_expected.to eql 1.day }
-    its([:max_in_interval]){ is_expected.to eql 1 }
-    its([:min_delay]){ is_expected.to eql 1.day }
-    its([:reject_with]){ is_expected.to eql :cancel }
-  end
-  
   describe '#compress' do
     let!(:in_file){ File.new __FILE__ }
     let(:out_file){ '/tmp/some_name.tar.gz' }

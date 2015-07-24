@@ -39,12 +39,8 @@ class DataRequest < ActiveRecord::Base
     self.class.kinds[self.kind.to_sym]
   end
   
-  def worker_interval
-    worker.sidekiq_options['congestion'][:interval]
-  end
-  
   def set_expiration
-    self.expires_at = worker_interval.from_now.utc
+    self.expires_at = 1.day.from_now.utc
   end
   
   def spawn_worker

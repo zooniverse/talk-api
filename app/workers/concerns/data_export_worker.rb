@@ -6,13 +6,7 @@ module DataExportWorker
   included do
     include Sidekiq::Worker
     attr_accessor :data_request, :name
-    
-    sidekiq_options retry: false, backtrace: true, congestion: {
-      interval: 1.day,
-      max_in_interval: 1,
-      min_delay: 1.day,
-      reject_with: :cancel
-    }
+    sidekiq_options retry: false, backtrace: true
   end
   
   def perform(data_request_id)
