@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     resources :user_ip_bans
     resources :users
     
-    root 'application#root'
+    root 'application#root', defaults: { format: 'html' }
   end
   
   get '/searches' => 'searches#index'

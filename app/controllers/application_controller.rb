@@ -10,7 +10,14 @@ class ApplicationController < ActionController::Base
   
   def root
     authorize :application, :index?
-    render json: {
+    respond_to do |format|
+      format.html{ redirect_to FrontEnd.zooniverse_talk }
+      format.json{ render json: resources }
+    end
+  end
+  
+  def resources
+    {
       announcements: { href: '/announcements', type: 'announcements' },
       boards: { href: '/boards', type: 'boards' },
       comments: { href: '/comments', type: 'comments' },
