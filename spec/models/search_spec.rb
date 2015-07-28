@@ -49,40 +49,17 @@ RSpec.describe Search, type: :model do
   end
   
   describe '.serialize_search' do
-    it 'should preload searchables' do
-      expect(Search).to receive(:preload).with(:searchable).and_call_original
-      Search.with_content('foo').serialize_search
-    end
+    let!(:comment){ create :comment }
+    let!(:board){ create :board }
+    let!(:discussion){ create :discussion }
+    let!(:collection){ create :collection }
+    let(:scope){ Search.order('searchable_id desc') }
+    let(:list){ scope.all.to_a.collect{ |s| "#{ s.searchable_type }-#{ s.searchable_id }" } }
+    let(:serialized){ scope.serialize_search.collect{ |h| "#{ h[:type] }-#{ h[:id] }" } }
+    before(:each){ Collection.refresh! }
     
-    it 'should return serialized searchables' do
-      board = create :board
-      expect_any_instance_of(Search).to receive(:serialize).and_call_original
-      Search.serialize_search
-    end
-    
-    it 'should add the searchable type to the results' do
-      board = create :board
-      discussion = create :discussion, board: board
-      comment = create :comment, discussion: discussion
-      
-      allow(Search).to receive(:with_content).and_return Search.all
-      results = Search.with_content.serialize_search
-      expect(results.collect{ |h| h[:type] }).to match_array %w(Board Discussion Comment)
-    end
-  end
-  
-  describe '#serialize' do
-    let(:board){ create :board }
-    let(:search){ Search.where(searchable_id: board.id, searchable_type: 'Board').first }
-    
-    it 'should use the serializer' do
-      expect(BoardSerializer).to receive(:as_json).with an_instance_of(Board)
-      search.serialize
-    end
-    
-    it 'should memoize the serializer class' do
-      search.serialize
-      expect(Search.serializers['Board']).to eql BoardSerializer
+    it 'find all results' do
+      expect(serialized).to eql list
     end
   end
 end
