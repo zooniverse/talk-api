@@ -15,7 +15,8 @@ module TalkSerializer
     self.eager_loads ||= []
     is_sectioned = model_class.columns_hash.has_key?('section') rescue false
     can_filter_by(:section) if is_sectioned
-    stringify_primary_and_foreign_keys
+    stringify_primary_key
+    stringify_foreign_keys
   end
   
   module ClassMethods
@@ -25,12 +26,14 @@ module TalkSerializer
       attributes *(attrs.sort - except)
     end
     
-    def stringify_primary_and_foreign_keys
+    def stringify_primary_key
       primary_key = model_class.primary_key
       define_method primary_key do
         model[primary_key].to_s
       end
-      
+    end
+    
+    def stringify_foreign_keys
       belong_tos = model_class.reflect_on_all_associations.select{ |a| a.macro == :belongs_to }
       belong_tos.each do |association|
         foreign_key = association.foreign_key
