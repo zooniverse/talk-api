@@ -6,6 +6,7 @@ class CommentSerializer
   can_sort_by :created_at
   can_filter_by :user_id, :focus_id, :focus_type
   self.default_sort = 'created_at'
+  self.eager_loads = [:discussion, :user, :focus]
   
   def custom_attributes
     super.merge focus: focus, user_display_name: model.user.display_name

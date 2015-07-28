@@ -4,7 +4,7 @@ module Focusable
   included do
     include Moderatable
     has_many :mentions, as: :mentionable, dependent: :destroy
-    has_many :comments, through: :mentions
+    has_many :comments, as: :focus
     belongs_to :user
     
     validates :section, presence: true
