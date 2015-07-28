@@ -1,6 +1,6 @@
 class MediumSerializer
   include TalkSerializer
-  attributes :id, :href, :src, :content_type, :media_type, :external_link
+  attributes :id, :src, :content_type, :media_type, :external_link
   
   def media_type
     model.type
