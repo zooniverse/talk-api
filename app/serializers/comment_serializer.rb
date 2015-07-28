@@ -3,6 +3,7 @@ class CommentSerializer
   include ModerationActions
   
   all_attributes
+  can_include :discussion
   can_sort_by :created_at
   can_filter_by :user_id, :focus_id, :focus_type
   self.default_sort = 'created_at'

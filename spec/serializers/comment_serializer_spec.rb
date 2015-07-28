@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe CommentSerializer, type: :serializer do
-  it_behaves_like 'a talk serializer', exposing: :all do
+  it_behaves_like 'a talk serializer', exposing: :all, including: [:discussion] do
     let(:focus){ create :subject }
     let(:model_instance){ create :comment_for_focus, focus: focus }
     let(:json){ CommentSerializer.resource(id: model_instance.id)[:comments].first }
@@ -9,7 +9,7 @@ RSpec.describe CommentSerializer, type: :serializer do
     
     its([:user_display_name]){ is_expected.to eql model_instance.user.display_name }
     it{ is_expected.to include :focus }
-    its([:links]){ is_expected.to eql focus: focus.id.to_s, focus_type: 'Subject' }
+    its([:links]){ is_expected.to eql focus: focus.id.to_s, focus_type: 'Subject', discussion: model_instance.discussion_id.to_s }
     
     context 'with a focus' do
       subject{ json[:focus] }
