@@ -1,9 +1,19 @@
 def panoptes_config
-  return @config if @config
-  key = "panoptes_#{ Rails.env }"
-  config = YAML.load_file Rails.root.join('config/database.yml')
+  @panoptes_config ||= db_config("panoptes_#{ Rails.env }")
+end
+
+def talk_config
+  @talk_config ||= db_config(Rails.env)
+end
+
+def db_config(key)
+  config = YAML.load_file(Rails.root.join('config/database.yml'))[key]
   raise "database.yml does not configure #{ key }\n\n" unless config
-  @config = config[key]
+  config
+end
+
+def local_environment!
+  raise 'This is only meant for test or development' unless Rails.env.test? || Rails.env.development?
 end
 
 namespace :panoptes do
@@ -11,6 +21,7 @@ namespace :panoptes do
     desc 'Setup postgres_fdw'
     task :setup_fdw => :environment do
       # Setup foreign data wrappers on Talk
+      ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
         do language plpgsql $$
           begin
@@ -38,6 +49,7 @@ namespace :panoptes do
     
     desc 'Creates foreign tables from Panoptes'
     task :create_foreign_tables => :environment do
+      ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
         create foreign table if not exists projects (
           id int4,
@@ -101,6 +113,7 @@ namespace :panoptes do
     
     desc 'Creates the search view'
     task :create_search_view => :environment do
+      ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
         do language plpgsql $$
           begin
@@ -145,7 +158,7 @@ namespace :panoptes do
     
     desc 'Create Panoptes tables for testing'
     task :create_tables => :environment do
-      raise 'This is only meant for test or development' unless Rails.env.test? || Rails.env.development?
+      local_environment!
       ActiveRecord::Base.establish_connection panoptes_config
       ActiveRecord::Base.connection.execute <<-SQL
         drop table if exists users;
@@ -260,5 +273,31 @@ namespace :panoptes do
     
     desc 'Loads Panoptes database'
     task :setup => [:setup_fdw, :create_foreign_tables, :create_search_view]
+  end
+end
+
+namespace :db do
+  desc 'Loads development data'
+  task :seed_dev => :environment do
+    local_environment!
+    
+    print "This will clear all data in the #{ Rails.env } environment, continue? (y/n): "
+    unless STDIN.gets =~ /y/i
+      puts 'aborting'
+      exit
+    end
+    
+    ActiveRecord::Base.establish_connection talk_config
+    Rake::Task['db:resync'].invoke
+    load Rails.root.join('db/dev_seeds.rb')
+  end
+  
+  desc 'Reloads and setups the database'
+  task :resync => :environment do
+    local_environment!
+    ActiveRecord::Base.establish_connection talk_config
+    Rake::Task['db:schema:load'].invoke
+    Rake::Task['panoptes:db:create_tables'].invoke
+    Rake::Task['panoptes:db:setup'].invoke
   end
 end
