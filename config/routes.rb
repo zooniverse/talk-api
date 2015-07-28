@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   defaults format: 'json' do
     resources :announcements
     resources :boards
-    resources :collections
     resources :comments do
       member do
         put :upvote
@@ -18,7 +17,6 @@ Rails.application.routes.draw do
     resources :moderations
     resources :notifications
     resources :roles
-    resources :subjects
     resources :subscription_preferences
     resources :subscriptions
     resources :tags do

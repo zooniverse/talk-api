@@ -21,7 +21,6 @@ class ApplicationController < ActionController::Base
       announcements: { href: '/announcements', type: 'announcements' },
       boards: { href: '/boards', type: 'boards' },
       comments: { href: '/comments', type: 'comments' },
-      collections: { href: '/collections', type: 'collections' },
       conversations: { href: '/conversations', type: 'conversations' },
       data_requests: { href: '/data_requests', type: 'data_requests' },
       discussions: { href: '/discussions', type: 'discussions' },
@@ -29,7 +28,6 @@ class ApplicationController < ActionController::Base
       moderations: { href: '/moderations', type: 'moderations' },
       notifications: { href: '/notifications', type: 'notifications' },
       roles: { href: '/roles', type: 'roles' },
-      subjects: { href: '/subjects', type: 'subjects' },
       tags: { href: '/tags', type: 'tags' },
       user_ip_bans: { href: '/user_ip_bans', type: 'user_ip_bans' },
       users: { href: '/users', type: 'users' }
