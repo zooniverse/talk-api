@@ -39,7 +39,7 @@ RSpec.describe CommentSerializer, type: :serializer do
       its([:discussion_comments_count]){ is_expected.to eql model_instance.discussion.comments_count }
       its([:discussion_subject_default]){ is_expected.to eql model_instance.discussion.subject_default }
       its([:discussion_title]){ is_expected.to eql model_instance.discussion.title }
-      its([:discussion_updated_at]){ is_expected.to eql model_instance.discussion.updated_at }
+      its([:discussion_updated_at]){ is_expected.to be_within(1.second).of model_instance.discussion.updated_at }
       its([:discussion_users_count]){ is_expected.to eql model_instance.discussion.users_count }
     end
   end
