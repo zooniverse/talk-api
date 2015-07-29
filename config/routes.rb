@@ -26,10 +26,9 @@ Rails.application.routes.draw do
     end
     resources :user_ip_bans
     resources :users
-    
-    root 'application#root', defaults: { format: 'html' }
   end
   
+  root 'application#root'
   get '/searches' => 'searches#index'
   mount Sidekiq::Web => '/sidekiq'
   match "*path", to: "application#sinkhole", via: :all
