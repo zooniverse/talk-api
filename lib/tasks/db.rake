@@ -53,13 +53,15 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         create foreign table if not exists projects (
           id int4,
-          name varchar(255),
+          display_name varchar(255),
+          slug varchar(255),
           private bool
         ) server panoptes;
         
         create foreign table if not exists collections (
           id int4,
           name varchar(255),
+          slug varchar(255),
           project_id int4,
           created_at timestamp(6),
           updated_at timestamp(6),
@@ -136,7 +138,7 @@ namespace :panoptes do
               where
                 collections.private is not true and projects.private is not true
               group by
-                collections.id, collections.name, collections.display_name, projects.id, projects.name;
+                collections.id, collections.name, collections.display_name, projects.id;
               
               create unique index search_collections_id_index on searchable_collections using btree(searchable_id);
               create index search_collections_index on searchable_collections using gin(content);
@@ -200,6 +202,7 @@ namespace :panoptes do
           id serial not null,
           name character varying,
           display_name character varying,
+          slug character varying,
           user_count integer,
           created_at timestamp without time zone,
           updated_at timestamp without time zone,
@@ -222,6 +225,7 @@ namespace :panoptes do
           id serial not null,
           name character varying,
           project_id integer,
+          slug character varying,
           created_at timestamp without time zone,
           updated_at timestamp without time zone,
           activated_state integer default 0 not null,
@@ -296,6 +300,7 @@ namespace :db do
   task :resync => :environment do
     local_environment!
     ActiveRecord::Base.establish_connection talk_config
+    ActiveRecord::Base.connection.execute 'drop extension postgres_fdw cascade;'
     Rake::Task['db:schema:load'].invoke
     Rake::Task['panoptes:db:create_tables'].invoke
     Rake::Task['panoptes:db:setup'].invoke

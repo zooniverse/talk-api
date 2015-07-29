@@ -14,7 +14,7 @@ module Focusable
   end
   
   def section
-    "#{ project.id }-#{ project.name }"
+    "#{ project.id }-#{ project.display_name }"
   end
   
   def mentioned_by(comment)
