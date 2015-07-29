@@ -1,5 +1,6 @@
 class Board < ActiveRecord::Base
   include Searchable
+  include Sectioned
   
   has_many :discussions, dependent: :restrict_with_error
   has_many :comments, through: :discussions

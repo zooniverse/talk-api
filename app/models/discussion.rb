@@ -2,6 +2,7 @@ class Discussion < ActiveRecord::Base
   include Moderatable
   include Searchable
   include Subscribable
+  include Sectioned
   
   belongs_to :user, required: true
   belongs_to :board, required: true, counter_cache: true

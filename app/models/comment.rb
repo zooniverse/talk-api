@@ -3,6 +3,7 @@ class Comment < ActiveRecord::Base
   include HashChanges
   include HstoreUpdate
   include Searchable
+  include Sectioned
   
   include Comment::Tagging
   include Comment::Mentioning

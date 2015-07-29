@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723185435) do
+ActiveRecord::Schema.define(version: 20150729203853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20150723185435) do
     t.datetime "expires_at", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "project_id"
   end
 
   add_index "announcements", ["created_at"], name: "index_announcements_on_created_at", using: :btree
@@ -42,6 +43,7 @@ ActiveRecord::Schema.define(version: 20150723185435) do
     t.datetime "updated_at"
     t.integer  "parent_id"
     t.boolean  "subject_default",   default: false, null: false
+    t.integer  "project_id"
   end
 
   add_index "boards", ["parent_id", "created_at"], name: "index_boards_on_parent_id_and_created_at", using: :btree
@@ -64,6 +66,7 @@ ActiveRecord::Schema.define(version: 20150723185435) do
     t.json     "mentioning",    default: {},    null: false
     t.json     "tagging",       default: {}
     t.hstore   "upvotes",       default: {}
+    t.integer  "project_id"
   end
 
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
@@ -106,6 +109,7 @@ ActiveRecord::Schema.define(version: 20150723185435) do
     t.datetime "updated_at"
     t.float    "sticky_position"
     t.boolean  "subject_default", default: false, null: false
+    t.integer  "project_id"
   end
 
   add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", where: "(sticky = true)", using: :btree
@@ -159,6 +163,7 @@ ActiveRecord::Schema.define(version: 20150723185435) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "subscription_id",                 null: false
+    t.integer  "project_id"
   end
 
   add_index "notifications", ["created_at"], name: "expiring_index", using: :btree
@@ -240,6 +245,7 @@ ActiveRecord::Schema.define(version: 20150723185435) do
     t.integer  "comment_id",    null: false
     t.integer  "taggable_id"
     t.string   "taggable_type"
+    t.integer  "project_id"
   end
 
   add_index "tags", ["section", "taggable_type", "name"], name: "index_tags_on_section_and_taggable_type_and_name", using: :btree

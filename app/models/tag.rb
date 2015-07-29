@@ -1,4 +1,6 @@
 class Tag < ActiveRecord::Base
+  include Sectioned
+  
   belongs_to :user, required: true
   belongs_to :comment, required: true
   belongs_to :taggable, polymorphic: true
