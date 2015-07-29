@@ -7,12 +7,13 @@ class CommentSerializer
   can_sort_by :created_at
   can_filter_by :user_id, :focus_id, :focus_type
   self.default_sort = 'created_at'
-  self.eager_loads = [:user, :focus, :discussion, :board]
+  self.eager_loads = [:user, :focus, :discussion, :board, :project]
   
   def custom_attributes
     super
       .merge(attributes_from(:discussion))
       .merge(attributes_from(:board))
+      .merge(attributes_from(:project))
       .merge focus: focus, user_display_name: model.user.display_name
   end
   
@@ -24,9 +25,13 @@ class CommentSerializer
     %w(comments_count description discussions_count id parent_id subject_default title users_count)
   end
   
+  def project_attributes
+    %w(slug)
+  end
+  
   def attributes_from(relation)
     { }.tap do |attrs|
-      record_attributes = model.send(relation).attributes
+      record_attributes = model.send(relation).attributes rescue { }
       send("#{ relation }_attributes").each do |attr|
         value = record_attributes[attr]
         value = value.to_s if attr =~ /(_id)|(^id$)$/

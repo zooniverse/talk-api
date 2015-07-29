@@ -5,6 +5,10 @@ RSpec.describe CommentSerializer, type: :serializer do
     let(:focus){ create :subject }
     let(:model_instance){ create :comment_for_focus, focus: focus }
     let(:json){ CommentSerializer.resource(id: model_instance.id)[:comments].first }
+    let!(:project) do
+      Project.find_by_id(model_instance.project_id) ||
+      create(:project, id: model_instance.project_id)
+    end
     subject{ json }
     
     its([:user_display_name]){ is_expected.to eql model_instance.user.display_name }
@@ -41,6 +45,10 @@ RSpec.describe CommentSerializer, type: :serializer do
       its([:discussion_title]){ is_expected.to eql model_instance.discussion.title }
       its([:discussion_updated_at]){ is_expected.to be_within(1.second).of model_instance.discussion.updated_at }
       its([:discussion_users_count]){ is_expected.to eql model_instance.discussion.users_count }
+    end
+    
+    describe '#project_attributes' do
+      its([:project_slug]){ is_expected.to eql model_instance.project.slug }
     end
   end
   
