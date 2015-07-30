@@ -124,7 +124,7 @@ namespace :panoptes do
     end
     
     desc 'Recreates Panoptes foreign tables'
-    task :recreate_foreign_tables => [:drop_foreign_tables, :create_foreign_tables, :create_search_view]
+    task :recreate_foreign_tables => [:drop_foreign_tables, :create_foreign_tables, :create_search_view, :create_popular_tags_view]
     
     desc 'Creates the search view'
     task :create_search_view => :environment do
