@@ -17,6 +17,18 @@ RSpec.describe ApplicationController, type: :controller do
       end
     end
     
+    context 'with application/vnd.api+json' do
+      before(:each){ get :root, format: :json_api }
+      
+      it 'should render json' do
+        expect(response.content_type).to eql 'application/json'
+      end
+      
+      it 'should list resources' do
+        expect(response.json).to include users: { href: '/users', type: 'users' }
+      end
+    end
+    
     context 'with html' do
       before(:each) do
         allow(FrontEnd).to receive(:zooniverse_talk).and_return 'http://talkhost'

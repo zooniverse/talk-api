@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   include ActionRendering
   include ActionRescuing
   
+  before_action :set_format
   before_action :enforce_ban, if: ->{ current_user }
   before_action :enforce_ip_ban
   
@@ -32,6 +33,10 @@ class ApplicationController < ActionController::Base
       user_ip_bans: { href: '/user_ip_bans', type: 'user_ip_bans' },
       users: { href: '/users', type: 'users' }
     }
+  end
+  
+  def set_format
+    request.format = :json if request.format == :json_api
   end
   
   def sinkhole
