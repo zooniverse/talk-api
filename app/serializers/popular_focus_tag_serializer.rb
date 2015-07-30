@@ -1,7 +1,7 @@
 class PopularFocusTagSerializer
   include TalkSerializer
   all_attributes
-  can_filter_by :taggable_id, :taggable_type
+  can_filter_by :name, :taggable_id, :taggable_type
   
   def self.key
     'popular'
