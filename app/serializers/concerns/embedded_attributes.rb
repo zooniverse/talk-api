@@ -1,6 +1,18 @@
 module EmbeddedAttributes
   extend ActiveSupport::Concern
   
+  included do
+    class_attribute :_embedded_attributes
+    self._embedded_attributes = []
+  end
+  
+  module ClassMethods
+    def embed_attributes_from(*list)
+      self._embedded_attributes += list.map(&:to_sym)
+      self._embedded_attributes.uniq!
+    end
+  end
+  
   def discussion_attributes
     %w(comments_count subject_default title updated_at users_count)
   end
@@ -11,6 +23,14 @@ module EmbeddedAttributes
   
   def project_attributes
     %w(slug)
+  end
+  
+  def custom_attributes
+    super.tap do |custom_attrs|
+      self._embedded_attributes.each do |relation|
+        custom_attrs.merge! attributes_from relation
+      end
+    end
   end
   
   def attributes_from(relation)

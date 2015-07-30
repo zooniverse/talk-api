@@ -6,10 +6,7 @@ class NotificationSerializer
   can_sort_by :created_at
   can_filter_by :section, :delivered
   can_include :subscription
+  embed_attributes_from :project
   self.default_sort = 'created_at'
   self.eager_loads = [:project]
-  
-  def custom_attributes
-    super.merge attributes_from :project
-  end
 end
