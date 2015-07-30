@@ -158,6 +158,40 @@ namespace :panoptes do
       SQL
     end
     
+    desc 'Creates the popular tags view'
+    task :create_popular_tags_view => :environment do
+      ActiveRecord::Base.establish_connection talk_config
+      ActiveRecord::Base.connection.execute <<-SQL
+        create or replace view popular_tags as
+          select
+            name || '-' || section as id,
+            name,
+            count(name) as usages,
+            section,
+            project_id
+          from tags
+          where taggable_type is not null
+          group by section, project_id, name
+          order by usages desc
+      SQL
+      
+      ActiveRecord::Base.connection.execute <<-SQL
+        create or replace view popular_focus_tags as
+          select
+            name || '-' || section as id,
+            name,
+            count(name) as usages,
+            taggable_type,
+            taggable_id,
+            section,
+            project_id
+          from tags
+          where taggable_type is not null
+          group by section, project_id, taggable_type, taggable_id, name
+          order by usages desc
+      SQL
+    end
+    
     desc 'Create Panoptes tables for testing'
     task :create_tables => :environment do
       local_environment!
@@ -276,7 +310,7 @@ namespace :panoptes do
     end
     
     desc 'Loads Panoptes database'
-    task :setup => [:setup_fdw, :create_foreign_tables, :create_search_view]
+    task :setup => [:setup_fdw, :create_foreign_tables, :create_search_view, :create_popular_tags_view]
   end
 end
 

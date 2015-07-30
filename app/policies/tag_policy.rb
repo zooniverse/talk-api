@@ -3,6 +3,10 @@ class TagPolicy < ApplicationPolicy
     true
   end
   
+  def popular?
+    true
+  end
+  
   def show?
     comment_policy.show?
   end
