@@ -62,6 +62,24 @@ RSpec.shared_examples_for 'a search query parser' do
       end
     end
     
+    context 'with unusual characters' do
+      it 'should handle quotes' do
+        expect_parsed 'likely planet candidates"', 'likely & planet & candidates'
+      end
+      
+      it 'should handle excess spaces' do
+        expect_parsed "  a  \n b ", 'a & b'
+      end
+      
+      it 'should handle insane syntax' do
+        expect_parsed '$_={/^r/&&<$_>};print;', '_r& _print'
+      end
+      
+      it 'should handle utf-8' do
+        expect_parsed 'papier-mâché lobster head', 'papier-mâché & lobster & head'
+      end
+    end
+    
     context 'with invalid logic' do
       it 'should repair x & & y' do
         expect_parsed 'x & & y', 'x & y'
