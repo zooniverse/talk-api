@@ -113,6 +113,19 @@ namespace :panoptes do
       SQL
     end
     
+    desc 'Drops Panoptes foreign tables'
+    task :drop_foreign_tables => :environment do
+      ActiveRecord::Base.establish_connection talk_config
+      ActiveRecord::Base.connection.execute <<-SQL
+        drop view if exists searches;
+        drop materialized view if exists searchable_collections cascade;
+        drop foreign table if exists projects, collections, collection_subjects, media, subjects, users;
+      SQL
+    end
+    
+    desc 'Recreates Panoptes foreign tables'
+    task :recreate_foreign_tables => [:drop_foreign_tables, :create_foreign_tables, :create_search_view]
+    
     desc 'Creates the search view'
     task :create_search_view => :environment do
       ActiveRecord::Base.establish_connection talk_config
