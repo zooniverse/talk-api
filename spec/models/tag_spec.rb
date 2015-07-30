@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe Tag, type: :model do
+  it_behaves_like 'a sectioned model'
+  
   describe '.in_section' do
     let!(:section_a){ create :tag, taggable_section: 'project-1' }
     let!(:section_b){ create :tag, taggable_section: 'project-2' }

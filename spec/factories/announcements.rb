@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :announcement do
     message 'testing'
-    section 'zooniverse'
+    section 'project-1'
   end
 end

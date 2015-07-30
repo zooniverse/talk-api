@@ -1,5 +1,6 @@
 class Announcement < ActiveRecord::Base
   include Expirable
+  include Sectioned
   
   before_create :assign_default_expiration
   after_commit :publish, on: :create

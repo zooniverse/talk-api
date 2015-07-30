@@ -1,5 +1,6 @@
 class Notification < ActiveRecord::Base
   include Expirable
+  include Sectioned
   
   belongs_to :user, required: true
   belongs_to :subscription, required: true

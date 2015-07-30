@@ -3,11 +3,14 @@ require 'spec_helper'
 RSpec.describe DiscussionSerializer, type: :serializer do
   it_behaves_like 'a talk serializer', exposing: :all, including: [:comments, :board, :user] do
     subject{ json }
+    it_behaves_like 'a serializer with embedded attributes', relations: [:project, :board]
+    
     its([:user_display_name]){ is_expected.to eql model_instance.user.display_name }
     
     describe '.default_sort' do
       let(:board){ create :board }
-      let!(:discussion1){ create :discussion, board: board, updated_at: 1.minute.ago.utc }
+      let!(:model_instance){ create :discussion, board: board, updated_at: 1.minute.ago.utc }
+      let(:discussion1){ model_instance }
       let!(:discussion2){ create :discussion, board: board, updated_at: 2.minutes.ago.utc }
       let!(:sticky1){ create :discussion, board: board, updated_at: 2.minute.ago.utc, sticky: true, sticky_position: 1 }
       let!(:sticky2){ create :discussion, board: board, updated_at: 1.minutes.ago.utc, sticky: true, sticky_position: 2 }

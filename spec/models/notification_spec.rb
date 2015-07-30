@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Notification, type: :model do
+  it_behaves_like 'a sectioned model'
   context 'validating' do
     it 'should require a user' do
       without_target = build :notification, user: nil

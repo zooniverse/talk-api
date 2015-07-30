@@ -12,7 +12,7 @@ RSpec.describe TagsController, type: :controller do
     update: { status: 401, response: :error }
   
   describe '#popular' do
-    let(:project){ create :project, name: 'tagged' }
+    let(:project){ create :project, display_name: 'tagged' }
     let(:section){ "project-#{ project.id }" }
     let(:tagged_subject){ create :subject }
     let(:tagged_collection){ create :collection }

@@ -3,7 +3,7 @@ FactoryGirl.define do
     user
     message 'testing'
     url 'http://www.example.com'
-    section 'zooniverse'
+    section 'project-1'
     subscription
   end
 end
