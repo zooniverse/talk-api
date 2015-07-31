@@ -110,6 +110,18 @@ namespace :panoptes do
           admin bool,
           banned bool
         ) server panoptes;
+        
+        create foreign table if not exists oauth_access_tokens (
+          id int4,
+          resource_owner_id int4,
+          application_id int4,
+          token varchar(255),
+          refresh_token varchar(255),
+          expires_in int4,
+          revoked_at timestamp(6),
+          created_at timestamp(6),
+          scopes varchar
+        ) server panoptes;
       SQL
     end
     
@@ -242,6 +254,19 @@ namespace :panoptes do
           valid_email boolean default true not null,
           uploaded_subjects_count integer default 0,
           constraint users_pkey primary key (id)
+        );
+        
+        drop table if exists oauth_access_tokens;
+        create table oauth_access_tokens (
+          id serial not null,
+          resource_owner_id int4 default null,
+          application_id int4 default null,
+          token varchar not null default null,
+          refresh_token varchar default null,
+          expires_in int4 default null,
+          revoked_at timestamp(6) null default null,
+          created_at timestamp(6) not null default null,
+          scopes varchar default null
         );
         
         drop table if exists projects;

@@ -36,7 +36,6 @@ group :test, :development do
 end
 
 group :test do
-  gem 'webmock', '~> 1.21.0'
   gem 'codeclimate-test-reporter', '~> 0.4.7'
   gem 'simplecov', '~> 0.10.0'
 end

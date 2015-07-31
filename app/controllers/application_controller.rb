@@ -1,5 +1,3 @@
-require 'panoptes_proxy'
-
 class ApplicationController < ActionController::Base
   include Pundit
   include ActionRendering
@@ -50,16 +48,12 @@ class ApplicationController < ActionController::Base
       _, @bearer_token = *auth.match(/^Bearer (\w+)$/i)
       @bearer_token
     end
-    
-    def panoptes
-      @panoptes ||= PanoptesProxy.new bearer_token
-    end
   end
   
   concerning :CurrentUser do
     def current_user
       return unless bearer_token
-      @current_user ||= User.from_panoptes panoptes.get 'me'
+      @current_user ||= User.from_panoptes bearer_token
     end
     
     def enforce_ban

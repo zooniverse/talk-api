@@ -4,6 +4,14 @@ RSpec.describe User, type: :model do
   it_behaves_like 'moderatable'
   let(:user){ create :user }
   
+  describe '.from_panoptes' do
+    let!(:access_token){ create :oauth_access_token, resource_owner: user }
+    
+    it 'should find a user' do
+      expect(User.from_panoptes(access_token.token)).to eql user
+    end
+  end
+  
   describe '#preference_for' do
     it 'should find the subscription preference' do
       expect(SubscriptionPreference).to receive(:find_or_default_for).with user, :mentions
