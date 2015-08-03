@@ -29,6 +29,16 @@ RSpec.describe Board, type: :model do
     end
   end
   
+  describe '#latest_discussion' do
+    let(:board){ create :board }
+    let!(:older){ create :discussion, board: board, created_at: 3.hours.ago.utc }
+    let!(:newer){ create :discussion, board: board, created_at: 2.hours.ago.utc }
+    
+    it 'should find the newest comment' do
+      expect(board.latest_discussion).to eql newer
+    end
+  end
+  
   describe '#subject_default' do
     let!(:default_board){ create :board, section: 'project-1', subject_default: true }
     
