@@ -4,5 +4,5 @@ class TagSerializer
   all_attributes
   can_filter_by :taggable_id, :taggable_type
   embed_attributes_from :project
-  self.eager_loads = [:project]
+  self.includes = [:project]
 end

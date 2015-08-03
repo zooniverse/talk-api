@@ -8,11 +8,13 @@ module TalkSerializer
     attributes :href, :links
     
     class << self
-      attr_accessor :eager_loads
+      attr_accessor :eager_loads, :preloads, :includes
       attr_accessor :default_sort
     end
     
     self.eager_loads ||= []
+    self.preloads ||= []
+    self.includes ||= []
     is_sectioned = model_class.columns_hash.has_key?('section') rescue false
     can_filter_by(:section) if is_sectioned
     stringify_primary_key
@@ -46,16 +48,18 @@ module TalkSerializer
   
   module ClassMethodOverrides
     def resource(params = { }, scope = nil, context = { })
-      super params, scope_eager_loads_for(scope), context
+      super params, scope_preloading_for(scope), context
     end
     
     def page(params = { }, scope = nil, context = { })
-      super params, scope_eager_loads_for(scope), context
+      super params, scope_preloading_for(scope), context
     end
     
-    def scope_eager_loads_for(scope)
+    def scope_preloading_for(scope)
       scope ||= model_class.all
-      scope = scope.includes(*eager_loads) if eager_loads.any?
+      scope = scope.includes(*includes) if includes.any?
+      scope = scope.preload(*preloads) if preloads.any?
+      scope = scope.eager_load(*eager_loads) if eager_loads.any?
       scope
     end
   end

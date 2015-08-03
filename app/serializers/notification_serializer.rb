@@ -8,5 +8,5 @@ class NotificationSerializer
   can_include :subscription
   embed_attributes_from :project
   self.default_sort = 'created_at'
-  self.eager_loads = [:project]
+  self.includes = [:project]
 end

@@ -9,7 +9,7 @@ class CommentSerializer
   can_filter_by :user_id, :focus_id, :focus_type
   embed_attributes_from :discussion, :board, :project
   self.default_sort = 'created_at'
-  self.eager_loads = [:user, :focus, :discussion, :board, :project]
+  self.includes = [:user, :focus, :discussion, :board, :project]
   
   def custom_attributes
     super.merge focus: focus, user_display_name: model.user.display_name

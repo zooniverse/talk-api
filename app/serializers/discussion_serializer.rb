@@ -9,7 +9,7 @@ class DiscussionSerializer
   can_sort_by :updated_at, :sticky, :sticky_position
   embed_attributes_from :project, :board
   self.default_sort = '-sticky,sticky_position,-updated_at'
-  self.eager_loads = [:user, :board, :project]
+  self.includes = [:user, :board, :project]
   
   def custom_attributes
     super.merge user_display_name: model.user.display_name
