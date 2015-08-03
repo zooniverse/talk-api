@@ -9,7 +9,8 @@ class BoardSerializer
   can_sort_by :created_at
   embed_attributes_from :project
   self.default_sort = 'created_at'
-  self.eager_loads = [:latest_discussion, :project, :parent]
+  self.preloads = [:latest_discussion]
+  self.eager_loads = [:project, :parent]
   
   def latest_discussion
     DiscussionSerializer.as_json model.latest_discussion
