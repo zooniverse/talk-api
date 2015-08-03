@@ -142,6 +142,16 @@ RSpec.describe Discussion, type: :model do
     end
   end
   
+  describe '#latest_comment' do
+    let(:discussion){ create :discussion }
+    let!(:older){ create :comment, discussion: discussion, created_at: 3.hours.ago.utc }
+    let!(:newer){ create :comment, discussion: discussion, created_at: 2.hours.ago.utc }
+    
+    it 'should find the newest comment' do
+      expect(discussion.latest_comment).to eql newer
+    end
+  end
+  
   describe '#clear_sticky' do
     let(:discussion){ create :discussion, sticky: true, sticky_position: 1 }
     
