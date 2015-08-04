@@ -3,7 +3,7 @@ class Board < ActiveRecord::Base
   include Sectioned
   
   has_many :discussions, dependent: :restrict_with_error
-  has_one :latest_discussion, ->{ includes(DiscussionSerializer.includes).reorder created_at: :desc }, class_name: 'Discussion'
+  has_one :latest_discussion, ->{ includes(DiscussionSerializer.includes).reorder updated_at: :desc }, class_name: 'Discussion'
   has_many :comments, through: :discussions
   has_many :users, through: :comments
   has_many :sub_boards, class_name: 'Board', foreign_key: 'parent_id'
