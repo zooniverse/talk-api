@@ -75,20 +75,6 @@ namespace :panoptes do
           collection_id int4
         ) server panoptes;
         
-        create foreign table if not exists media (
-          id int4,
-          type varchar(255),
-          linked_id int4,
-          linked_type varchar(255),
-          content_type varchar(255),
-          src text,
-          path_opts text[],
-          private bool,
-          external_link bool,
-          created_at timestamp(6),
-          updated_at timestamp(6)
-        ) server panoptes;
-        
         create foreign table if not exists subjects (
           id int4,
           zooniverse_id varchar(255),
@@ -131,7 +117,7 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         drop view if exists searches;
         drop materialized view if exists searchable_collections cascade;
-        drop foreign table if exists projects, collections, collection_subjects, media, subjects, users;
+        drop foreign table if exists projects, collections, collection_subjects, subjects, users;
       SQL
     end
     
@@ -327,22 +313,6 @@ namespace :panoptes do
           subject_id int4 not null,
           collection_id int4 not null,
           constraint collection_subjects_pkey primary key (id)
-        );
-        
-        drop table if exists media;
-        create table media (
-          id serial not null,
-          type character varying,
-          linked_id integer,
-          linked_type character varying,
-          content_type character varying,
-          src text,
-          path_opts text[] default '{}'::text[],
-          private boolean default false,
-          external_link boolean default false,
-          created_at timestamp without time zone not null,
-          updated_at timestamp without time zone not null,
-          constraint media_pkey primary key (id)
         );
       SQL
     end
