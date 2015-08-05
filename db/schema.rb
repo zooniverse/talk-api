@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150729203853) do
+ActiveRecord::Schema.define(version: 20150805175513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 20150729203853) do
   end
 
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
+  add_index "comments", ["discussion_id", "created_at"], name: "index_comments_on_discussion_id_and_created_at", using: :btree
   add_index "comments", ["discussion_id"], name: "index_comments_on_discussion_id", using: :btree
   add_index "comments", ["focus_id", "focus_type"], name: "index_comments_on_focus_id_and_focus_type", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
@@ -112,10 +113,12 @@ ActiveRecord::Schema.define(version: 20150729203853) do
     t.integer  "project_id"
   end
 
+  add_index "discussions", ["board_id", "sticky", "sticky_position", "updated_at"], name: "index_discussions_on_sticky_board_id_updated_at", using: :btree
   add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", where: "(sticky = true)", using: :btree
   add_index "discussions", ["board_id", "sticky", "updated_at"], name: "index_discussions_on_board_id_and_sticky_and_updated_at", using: :btree
   add_index "discussions", ["board_id", "title", "subject_default"], name: "index_discussions_on_board_id_and_title_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
   add_index "discussions", ["board_id", "updated_at"], name: "index_discussions_on_board_id_and_updated_at", using: :btree
+  add_index "discussions", ["sticky", "sticky_position", "updated_at"], name: "index_discussions_on_sticky_and_sticky_position_and_updated_at", using: :btree
 
   create_table "mentions", force: :cascade do |t|
     t.integer  "mentionable_id",   null: false
@@ -248,6 +251,7 @@ ActiveRecord::Schema.define(version: 20150729203853) do
     t.integer  "project_id"
   end
 
+  add_index "tags", ["comment_id"], name: "index_tags_on_comment_id", using: :btree
   add_index "tags", ["section", "taggable_type", "name"], name: "index_tags_on_section_and_taggable_type_and_name", using: :btree
   add_index "tags", ["section", "taggable_type"], name: "index_tags_on_section_and_taggable_type", using: :btree
   add_index "tags", ["taggable_id", "taggable_type"], name: "index_tags_on_taggable_id_and_taggable_type", using: :btree
