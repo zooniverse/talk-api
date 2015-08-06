@@ -40,7 +40,7 @@ class Discussion < ActiveRecord::Base
   end
   
   def count_users!
-    self.users_count = comments.reload.select(:user_id).distinct.count
+    self.users_count = Comment.where(discussion_id: id).select(:user_id).distinct.count
     save if changed?
   end
   

@@ -117,7 +117,7 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         drop view if exists searches;
         drop materialized view if exists searchable_collections cascade;
-        drop foreign table if exists projects, collections, collection_subjects, subjects, users;
+        drop foreign table if exists projects, collections, collection_subjects, oauth_access_tokens, subjects, users;
       SQL
     end
     
