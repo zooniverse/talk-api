@@ -86,11 +86,11 @@ RSpec.shared_examples_for 'a search query parser' do
       end
       
       it 'should repair x & | y' do
-        expect_parsed 'x & | y', 'x & y'
+        expect_parsed 'x & | y', 'x | y'
       end
       
       it 'should repair x | & y' do
-        expect_parsed 'x | & y', 'x | y'
+        expect_parsed 'x | & y', 'x & y'
       end
       
       it 'should repair x | | y' do
@@ -128,11 +128,41 @@ RSpec.shared_examples_for 'a search query parser' do
       it 'should repair    & x' do
         expect_parsed '   & x', 'x'
       end
+      
+      it 'should repair x & | & & & ! & | y' do
+        expect_parsed 'x & | & & & ! & | y', 'x & ! y'
+      end
     end
     
     context 'with uncombined NOTs' do
       it 'should default to an ANDed NOT' do
         expect_parsed 'a & b !c', 'a & b & ! c'
+      end
+    end
+    
+    context 'with invalid leading and trailing booleans' do
+      it 'should repair &x y' do
+        expect_parsed '&x y', 'x & y'
+      end
+      
+      it 'should repair |x y' do
+        expect_parsed '|x y', 'x & y'
+      end
+      
+      it 'should repair x y!' do
+        expect_parsed 'x y!', 'x & y'
+      end
+      
+      it 'should repair x y&' do
+        expect_parsed 'x y&', 'x & y'
+      end
+      
+      it 'should repair x y &' do
+        expect_parsed 'x y &', 'x & y'
+      end
+      
+      it 'should repair x & ! & & & ' do
+        expect_parsed 'x & ! & & & ', 'x'
       end
     end
   end
