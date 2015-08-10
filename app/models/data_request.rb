@@ -1,5 +1,6 @@
 class DataRequest < ActiveRecord::Base
   include Subscribable
+  include Notifiable
   include Expirable
   
   belongs_to :user, required: true
@@ -29,6 +30,7 @@ class DataRequest < ActiveRecord::Base
     subscription = user.subscribe_to self, :system
     
     Notification.create(notification.merge({
+      source: self,
       user_id: user.id,
       section: section,
       subscription: subscription

@@ -2,6 +2,7 @@ class Notification < ActiveRecord::Base
   include Expirable
   include Sectioned
   
+  belongs_to :source, polymorphic: true
   belongs_to :user, required: true
   belongs_to :subscription, required: true
   after_commit :publish, on: :create

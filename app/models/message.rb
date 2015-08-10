@@ -1,4 +1,6 @@
 class Message < ActiveRecord::Base
+  include Notifiable
+  
   belongs_to :user, required: true
   belongs_to :conversation, required: true
   has_many :user_conversations, through: :conversation
@@ -34,6 +36,7 @@ class Message < ActiveRecord::Base
     def notify_subscribers
       Subscription.messages.where(source: recipient_conversations, user: recipients).each do |subscription|
         Notification.create({
+          source: self,
           user_id: subscription.user_id,
           message: "#{ user.display_name } has sent you a message",
           url: FrontEnd.link_to(self),

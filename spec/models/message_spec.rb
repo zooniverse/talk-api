@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe Message, type: :model do
+  it_behaves_like 'a notifiable model'
+  
   context 'validating' do
     it 'should require a body' do
       without_body = build :message, body: nil
@@ -130,6 +132,7 @@ RSpec.describe Message, type: :model do
       its(:user){ is_expected.to be_in recipients }
       its(:message){ is_expected.to eql "#{ user.display_name } has sent you a message" }
       its(:url){ is_expected.to eql FrontEnd.link_to(conversation.messages.first) }
+      its(:source){ is_expected.to be_in conversation.messages }
       its(:section){ is_expected.to eql 'zooniverse' }
     end
   end

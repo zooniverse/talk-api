@@ -4,6 +4,7 @@ class Comment < ActiveRecord::Base
   include HstoreUpdate
   include Searchable
   include Sectioned
+  include Notifiable
   
   include Comment::Tagging
   include Comment::Mentioning

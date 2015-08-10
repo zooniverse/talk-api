@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
     subscription = subscribe_to comment.discussion, :mentions
     
     Notification.create({
+      source: comment,
       user_id: id,
       message: "You were mentioned by #{ comment.user.display_name } in #{ comment.discussion.title }",
       url: FrontEnd.link_to(comment),

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe DataRequest, type: :model do
   it_behaves_like 'a subscribable model'
+  it_behaves_like 'a notifiable model'
   
   context 'validating' do
     it 'should require a user' do
@@ -97,6 +98,7 @@ RSpec.describe DataRequest, type: :model do
       its(:section){ is_expected.to eql data_request.section }
       its(:message){ is_expected.to eql 'bar' }
       its(:url){ is_expected.to eql 'foo' }
+      its(:source){ is_expected.to eql data_request }
       
       context 'with a subscription' do
         subject{ data_request.notify_user(url: 'foo', message: 'bar').subscription }

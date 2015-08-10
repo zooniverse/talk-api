@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Comment, type: :model do
+  it_behaves_like 'a notifiable model'
   it_behaves_like 'a sectioned model'
   it_behaves_like 'moderatable'
   it_behaves_like 'a searchable interface'

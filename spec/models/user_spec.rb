@@ -79,6 +79,7 @@ RSpec.describe User, type: :model do
       its(:message){ is_expected.to eql "You were mentioned by #{ comment.user.display_name } in #{ comment.discussion.title }" }
       its(:url){ is_expected.to eql FrontEnd.link_to(comment) }
       its(:section){ is_expected.to eql comment.section }
+      its(:source){ is_expected.to eql comment }
     end
     
     context 'when preference is disabled' do

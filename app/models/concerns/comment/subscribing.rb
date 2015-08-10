@@ -15,6 +15,7 @@ class Comment
       discussion.subscriptions.participating_discussions.each do |subscription|
         next if subscription.user == user
         Notification.create({
+          source: self,
           user_id: subscription.user.id,
           message: "#{ user.display_name } commented on #{ discussion.title }",
           url: FrontEnd.link_to(self),
