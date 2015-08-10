@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
     
     Notification.create({
       user_id: id,
-      message: "You were mentioned by #{ comment.user.display_name }",
-      url: Rails.application.routes.url_helpers.comment_url(comment.id),
+      message: "You were mentioned by #{ comment.user.display_name } in #{ comment.discussion.title }",
+      url: FrontEnd.link_to(comment),
       section: comment.section,
       subscription: subscription
     }) if subscription.try(:enabled?)

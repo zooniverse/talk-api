@@ -35,7 +35,7 @@ class FrontEnd
       "#{ host }/#/projects/#{ object.slug }"
     when User
       "#{ host }/#/users/#{ object.login }"
-    when UserConversation
+    when UserConversation, Message
       "#{ host }/#/inbox/#{ object.conversation_id }"
     end
   end

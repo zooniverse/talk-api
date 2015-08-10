@@ -35,8 +35,8 @@ class Message < ActiveRecord::Base
       Subscription.messages.where(source: recipient_conversations, user: recipients).each do |subscription|
         Notification.create({
           user_id: subscription.user_id,
-          message: "#{ user.display_name } has sent you a message: #{ body }",
-          url: Rails.application.routes.url_helpers.message_url(id),
+          message: "#{ user.display_name } has sent you a message",
+          url: FrontEnd.link_to(self),
           section: 'zooniverse',
           subscription: subscription
         }) if subscription.try(:enabled?)

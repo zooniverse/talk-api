@@ -16,8 +16,8 @@ class Comment
         next if subscription.user == user
         Notification.create({
           user_id: subscription.user.id,
-          message: "#{ user.display_name } commented on #{ discussion.title }: #{ body }",
-          url: Rails.application.routes.url_helpers.comment_url(id),
+          message: "#{ user.display_name } commented on #{ discussion.title }",
+          url: FrontEnd.link_to(self),
           section: section,
           subscription: subscription
         }) if subscription.try(:enabled?)

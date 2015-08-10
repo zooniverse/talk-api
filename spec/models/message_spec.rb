@@ -123,5 +123,14 @@ RSpec.describe Message, type: :model do
       message.notify_subscribers
       expect(Notification.where(user: sender).exists?).to be false
     end
+    
+    context 'notification' do
+      before(:each){ conversation.messages.each &:notify_subscribers }
+      subject{ recipient_notifications.first }
+      its(:user){ is_expected.to be_in recipients }
+      its(:message){ is_expected.to eql "#{ user.display_name } has sent you a message" }
+      its(:url){ is_expected.to eql FrontEnd.link_to(conversation.messages.first) }
+      its(:section){ is_expected.to eql 'zooniverse' }
+    end
   end
 end

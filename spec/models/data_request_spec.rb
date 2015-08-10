@@ -95,6 +95,8 @@ RSpec.describe DataRequest, type: :model do
       it{ is_expected.to be_a Notification }
       its(:user){ is_expected.to eql user }
       its(:section){ is_expected.to eql data_request.section }
+      its(:message){ is_expected.to eql 'bar' }
+      its(:url){ is_expected.to eql 'foo' }
       
       context 'with a subscription' do
         subject{ data_request.notify_user(url: 'foo', message: 'bar').subscription }

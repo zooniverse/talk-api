@@ -80,6 +80,11 @@ RSpec.describe FrontEnd, type: :lib do
       let(:object){ create :discussion, id: 2, board: board }
     end
     
+    it_behaves_like 'FrontEnd.link_to', Message, 'host/#/inbox/123' do
+      let(:conversation){ create :conversation_with_messages, id: 123 }
+      let(:object){ create :message, conversation: conversation }
+    end
+    
     it_behaves_like 'FrontEnd.link_to', Project, 'host/#/projects/foo/bar' do
       let(:object){ create :project, slug: 'foo/bar' }
     end
