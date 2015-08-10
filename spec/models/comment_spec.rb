@@ -346,6 +346,15 @@ RSpec.describe Comment, type: :model do
     end
   end
   
+  describe '#notify_subscribers_later' do
+    let(:comment){ create :comment }
+    
+    it 'should queue the notification' do
+      expect(CommentSubscriptionWorker).to receive(:perform_async).with comment.id
+      comment.run_callbacks :commit
+    end
+  end
+  
   describe '#notify_subscribers' do
     let(:users){ create_list :user, 2 }
     let(:user_subscriptions){ Subscription.participating_discussions.where source: discussion, user: users }
@@ -360,18 +369,21 @@ RSpec.describe Comment, type: :model do
     end
     
     it 'should create notifications for subscribed users' do
-      create :comment, discussion: discussion
+      comment = create :comment, discussion: discussion
+      comment.notify_subscribers
       expect(notified_users).to match_array users
     end
     
     it 'should not create notifications for unsubscribed users' do
-      create :comment, discussion: discussion
+      comment = create :comment, discussion: discussion
+      comment.notify_subscribers
       expect(notified_users).to_not include unsubscribed_user
     end
     
     it 'should not create a notification for the commenting user' do
       user = users.first
-      create :comment, discussion: discussion, user: user
+      comment = create :comment, discussion: discussion, user: user
+      comment.notify_subscribers
       expect(user.notifications).to be_empty
     end
   end
