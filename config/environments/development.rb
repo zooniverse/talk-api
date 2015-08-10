@@ -8,6 +8,7 @@ Rails.application.configure do
   config.active_support.deprecation = :log
   config.active_record.migration_error = :page_load
   config.active_record.raise_in_transactional_callbacks = true
+  config.action_mailer.smtp_settings = YAML.load_file('config/mailer.yml')[Rails.env].symbolize_keys
   config.action_mailer.default_url_options = {
     protocol: 'http',
     host: 'localhost',

@@ -1,0 +1,8 @@
+test:
+  enable_starttls_auto: true
+  address:
+  port:
+  domain:
+  authentication:
+  user_name:
+  password:
