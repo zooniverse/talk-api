@@ -23,7 +23,12 @@ class Message < ActiveRecord::Base
   
   concerning :Subscribing do
     included do
-      after_create :notify_subscribers, :subscribe_user
+      after_create :subscribe_user
+      after_commit :notify_subscribers_later, on: :create
+    end
+    
+    def notify_subscribers_later
+      MessageNotificationWorker.perform_async id
     end
     
     def notify_subscribers

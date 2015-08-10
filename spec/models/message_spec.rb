@@ -107,18 +107,20 @@ RSpec.describe Message, type: :model do
     end
     
     it 'should create notifications for subscribed users' do
+      conversation.messages.each &:notify_subscribers
       notified_users = recipient_notifications.reload.collect &:user
-      expect(notified_users).to match_array recipients
+      expect(notified_users.uniq).to match_array recipients
     end
     
     it 'should not create notifications for unsubscribed users' do
+      conversation.messages.each &:notify_subscribers
       expect(Notification.where(user: user).exists?).to be false
     end
     
     it 'should not create a notification for the messaging user' do
-      Notification.destroy_all
       sender = recipients.first
-      create :message, user: sender, conversation: conversation
+      message = create :message, user: sender, conversation: conversation
+      message.notify_subscribers
       expect(Notification.where(user: sender).exists?).to be false
     end
   end
