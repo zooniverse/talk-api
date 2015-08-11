@@ -12,7 +12,9 @@ class UserPolicy < ApplicationPolicy
   end
   
   def update?
-    logged_in? && user.id == record.id
+    records = Array.wrap record
+    return false if records.length > 1
+    logged_in? && user.id == records.first.id
   end
   
   def destroy?

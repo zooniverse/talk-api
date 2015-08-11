@@ -65,15 +65,36 @@ class ApplicationPolicy
     end
     
     def has_role?(role)
-      logged_in? && role.in?(user_roles)
+      return false unless logged_in?
+      return true if roles_in('zooniverse').include?(role)
+      record_sections.each do |section|
+        roles = roles_in section
+        return false if roles.empty? || !roles.include?(role)
+      end
+      true
+    end
+    
+    def roles_in(section)
+      user_roles.fetch section, []
     end
     
     def user_roles
       return @_roles if @_roles
-      return [] unless logged_in?
-      sections = ['zooniverse']
-      sections += [record.section] if record.respond_to?(:section)
-      @_roles = user.roles.where(section: sections).collect(&:name).uniq
+      return { } unless logged_in?
+      @_roles = { }
+      sections = (record_sections + ['zooniverse']).uniq
+      user.roles.where(section: sections).each do |role|
+        @_roles[role.section] ||= []
+        @_roles[role.section] << role.name
+      end
+      @_roles
+    end
+    
+    def record_sections
+      sections = Array.wrap(record).collect do |r|
+        r.section if r.respond_to?(:section)
+      end.compact.uniq
+      sections.empty? ? ['zooniverse'] : sections
     end
     
     def privileged_sections(*roles)
@@ -92,7 +113,7 @@ class ApplicationPolicy
   end
   
   def scope
-    Pundit.policy_scope!(user, record.class)
+    Pundit.policy_scope!(user, Array.wrap(record).first.class)
   end
   
   class Scope
