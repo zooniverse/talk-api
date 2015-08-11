@@ -65,17 +65,36 @@ class ApplicationPolicy
     end
     
     def has_role?(role)
-      logged_in? && role.in?(user_roles)
+      return false unless logged_in?
+      return true if roles_in('zooniverse').include?(role)
+      record_sections.each do |section|
+        roles = roles_in section
+        return false if roles.empty? || !roles.include?(role)
+      end
+      true
+    end
+    
+    def roles_in(section)
+      user_roles.fetch section, []
     end
     
     def user_roles
       return @_roles if @_roles
-      return [] unless logged_in?
-      sections = ['zooniverse']
-      Array.wrap(record).each do |r|
-        sections << r.section if r.respond_to?(:section)
+      return { } unless logged_in?
+      @_roles = { }
+      sections = (record_sections + ['zooniverse']).uniq
+      user.roles.where(section: sections).each do |role|
+        @_roles[role.section] ||= []
+        @_roles[role.section] << role.name
       end
-      @_roles = user.roles.where(section: sections.uniq).collect(&:name).uniq
+      @_roles
+    end
+    
+    def record_sections
+      sections = Array.wrap(record).collect do |r|
+        r.section if r.respond_to?(:section)
+      end.compact.uniq
+      sections.empty? ? ['zooniverse'] : sections
     end
     
     def privileged_sections(*roles)

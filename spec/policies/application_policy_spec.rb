@@ -16,7 +16,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to_not be_team }
-    it{ is_expected.to have_attributes user_roles: [] }
+    it{ is_expected.to have_attributes user_roles: { } }
   end
   
   context 'with a user' do
@@ -28,7 +28,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to_not be_team }
-    it{ is_expected.to have_attributes user_roles: [] }
+    it{ is_expected.to have_attributes user_roles: { } }
   end
   
   context 'with a owner' do
@@ -40,7 +40,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to_not be_team }
-    it{ is_expected.to have_attributes user_roles: [] }
+    it{ is_expected.to have_attributes user_roles: { } }
   end
   
   context 'with a section moderator' do
@@ -52,7 +52,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to be_team }
-    it{ is_expected.to have_attributes user_roles: ['moderator'] }
+    it{ is_expected.to have_attributes user_roles: { 'project-1' => ['moderator'] } }
   end
   
   context 'with a non-section moderator' do
@@ -64,7 +64,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to_not be_team }
-    it{ is_expected.to have_attributes user_roles: [] }
+    it{ is_expected.to have_attributes user_roles: { } }
   end
   
   context 'with a zooniverse moderator' do
@@ -76,7 +76,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to be_team }
-    it{ is_expected.to have_attributes user_roles: ['moderator'] }
+    it{ is_expected.to have_attributes user_roles: { 'zooniverse' => ['moderator'] } }
   end
   
   context 'with a section admin' do
@@ -88,7 +88,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to be_admin }
     it{ is_expected.to be_team }
-    it{ is_expected.to have_attributes user_roles: ['admin'] }
+    it{ is_expected.to have_attributes user_roles: { 'project-1' => ['admin'] } }
   end
   
   context 'with a non-section admin' do
@@ -100,7 +100,7 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to_not be_team }
-    it{ is_expected.to have_attributes user_roles: [] }
+    it{ is_expected.to have_attributes user_roles: { } }
   end
   
   context 'with a zooniverse admin' do
@@ -112,6 +112,22 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to be_admin }
     it{ is_expected.to be_team }
-    it{ is_expected.to have_attributes user_roles: ['admin'] }
+    it{ is_expected.to have_attributes user_roles: {'zooniverse' => ['admin'] } }
+  end
+  
+  context 'with a mix of roles and records' do
+    let(:user){ create :moderator, section: 'zooniverse' }
+    let!(:role1){ create :role, user: user, name: 'admin', section: 'project-2' }
+    let!(:role2){ create :role, user: user, name: 'team', section: 'project-2' }
+    let(:record1){ OpenStruct.new user_id: user.id + 1, section: 'project-2' }
+    let(:record2){ OpenStruct.new user_id: user.id + 2, section: 'project-3' }
+    let(:record){ [record1, record2] }
+    
+    it{ is_expected.to be_logged_in }
+    it{ is_expected.to_not be_owner }
+    it{ is_expected.to be_moderator }
+    it{ is_expected.to_not be_admin }
+    it{ is_expected.to be_team }
+    it{ is_expected.to have_attributes user_roles: {'zooniverse' => ['moderator'], 'project-2' => ['admin', 'team'] } }
   end
 end
