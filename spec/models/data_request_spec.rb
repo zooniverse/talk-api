@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe DataRequest, type: :model do
+  it_behaves_like 'a sectioned model'
   it_behaves_like 'a subscribable model'
   it_behaves_like 'a notifiable model'
   

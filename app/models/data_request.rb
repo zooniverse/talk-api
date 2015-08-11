@@ -1,4 +1,5 @@
 class DataRequest < ActiveRecord::Base
+  include Sectioned
   include Subscribable
   include Notifiable
   include Expirable
