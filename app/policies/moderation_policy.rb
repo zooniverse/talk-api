@@ -34,7 +34,7 @@ class ModerationPolicy < ApplicationPolicy
   end
   
   def target
-    record.target || (raise ActiveRecord::RecordNotFound.new("Couldn't find target"))
+    Array.wrap(record).first.target || (raise ActiveRecord::RecordNotFound.new("Couldn't find target"))
   end
   
   class Scope < Scope

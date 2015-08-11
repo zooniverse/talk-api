@@ -72,8 +72,10 @@ class ApplicationPolicy
       return @_roles if @_roles
       return [] unless logged_in?
       sections = ['zooniverse']
-      sections += [record.section] if record.respond_to?(:section)
-      @_roles = user.roles.where(section: sections).collect(&:name).uniq
+      Array.wrap(record).each do |r|
+        sections << r.section if r.respond_to?(:section)
+      end
+      @_roles = user.roles.where(section: sections.uniq).collect(&:name).uniq
     end
     
     def privileged_sections(*roles)
@@ -92,7 +94,7 @@ class ApplicationPolicy
   end
   
   def scope
-    Pundit.policy_scope!(user, record.class)
+    Pundit.policy_scope!(user, Array.wrap(record).first.class)
   end
   
   class Scope
