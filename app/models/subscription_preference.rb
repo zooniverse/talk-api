@@ -7,7 +7,8 @@ class SubscriptionPreference < ActiveRecord::Base
   enum email_digest: {
     immediate: 0,
     daily: 1,
-    weekly: 2
+    weekly: 2,
+    never: 3
   }
   
   def self.defaults

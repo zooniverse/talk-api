@@ -16,7 +16,7 @@ RSpec.describe SubscriptionPreferenceSchema, type: :schema do
         
         with :email_digest do
           its(:type){ is_expected.to eql 'string' }
-          its(:enum){ is_expected.to match_array %w(immediate daily weekly) }
+          its(:enum){ is_expected.to match_array %w(immediate daily weekly never) }
         end
       end
     end
