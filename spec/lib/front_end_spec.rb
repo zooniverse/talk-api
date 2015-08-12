@@ -75,6 +75,10 @@ RSpec.describe FrontEnd, type: :lib do
       let(:object){ create :comment, id: 3, discussion: discussion }
     end
     
+    it_behaves_like 'FrontEnd.link_to', Conversation, 'host/#/inbox/123' do
+      let(:object){ create :conversation, id: 123 }
+    end
+    
     it_behaves_like 'FrontEnd.link_to', Discussion, 'host/#/talk/1/2' do
       let(:board){ create :board, id: 1 }
       let(:object){ create :discussion, id: 2, board: board }
