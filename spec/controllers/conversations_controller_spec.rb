@@ -44,8 +44,43 @@ RSpec.describe ConversationsController, type: :controller do
     end
     
     it_behaves_like 'a controller restricting',
-      update: { status: 401, response: :error },
-      destroy: { status: 401, response: :error }
+      update: { status: 401, response: :error }
+    
+    context 'destroying' do
+      let!(:record){ create :conversation_with_messages, user: user }
+      
+      def destroy_conversation
+        delete :destroy, id: record.id, format: :json
+      end
+      
+      it 'should set the status' do
+        destroy_conversation
+        expect(response.status).to eql 204
+      end
+      
+      it 'should destroy the user conversation' do
+        destroy_conversation
+        expect(record.user_conversations.where(user: user)).to_not exist
+      end
+      
+      context 'when destroying the last user conversation' do
+        it 'should destroy the conversation' do
+          record.user_conversations.where('user_id != ?', user.id).destroy_all
+          destroy_conversation
+          expect {
+            record.reload
+          }.to raise_error ActiveRecord::RecordNotFound
+        end
+      end
+      
+      context 'when the user conversation is already destroyed' do
+        it 'should not be permitted' do
+          record.user_conversations.where(user: user).destroy_all
+          destroy_conversation
+          expect(response.status).to eql 401
+        end
+      end
+    end
   end
   
   describe '#index' do
