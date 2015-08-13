@@ -41,6 +41,13 @@ RSpec.describe ConversationsController, type: :controller do
           }
         }
       end
+      
+      it 'should have the correct participant ids' do
+        post :create, request_params.merge(format: :json)
+        conversation = Conversation.first
+        user_ids = [current_user.id] + recipients.map(&:id)
+        expect(conversation.participant_ids).to match_array user_ids
+      end
     end
     
     it_behaves_like 'a controller restricting',
@@ -61,6 +68,14 @@ RSpec.describe ConversationsController, type: :controller do
       it 'should destroy the user conversation' do
         destroy_conversation
         expect(record.user_conversations.where(user: user)).to_not exist
+      end
+      
+      it 'should not modify the participant ids' do
+        expect {
+          destroy_conversation
+        }.to_not change {
+          record.reload.participant_ids
+        }
       end
       
       context 'when destroying the last user conversation' do

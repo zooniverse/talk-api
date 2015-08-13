@@ -27,4 +27,17 @@ RSpec.describe UserConversation, type: :model do
       }.to raise_exception ActiveRecord::RecordNotFound
     end
   end
+  
+  context 'creating' do
+    let(:conversation){ create :conversation }
+    let(:user){ create :user }
+    
+    it 'should update the conversation partcipants' do
+      expect {
+        create :user_conversation, conversation: conversation, user: user
+      }.to change {
+        conversation.reload.participant_ids
+      }.from([]).to [user.id]
+    end
+  end
 end

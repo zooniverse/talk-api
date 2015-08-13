@@ -3,6 +3,7 @@ class ConversationService < ApplicationService
     set_user
     @resource = model_class.new(conversation_params).tap do |conversation|
       build_user_conversations_for conversation
+      conversation.save
       conversation.messages << build_message
     end
   end

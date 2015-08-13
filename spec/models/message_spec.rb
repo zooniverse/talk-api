@@ -36,6 +36,37 @@ RSpec.describe Message, type: :model do
         user_conversation.reload.is_unread
       }
     end
+    
+    context 'when a participant conversation exists' do
+      it 'should not create another user conversation' do
+        expect {
+          create :message, conversation: conversation, user: user
+        }.to_not change {
+          UserConversation.count
+        }
+      end
+    end
+    
+    context 'when a participant conversation does not exist' do
+      let(:destroyed_conversation){ recipient_conversations.first }
+      before(:each){ destroyed_conversation.destroy }
+      
+      it 'should create a user conversation' do
+        expect {
+          create :message, conversation: conversation, user: destroyed_conversation.user
+        }.to change {
+          UserConversation.count
+        }.by 1
+      end
+      
+      it 'should recreate a destroyed user conversation' do
+        expect {
+          create :message, conversation: conversation, user: destroyed_conversation.user
+        }.to change {
+          conversation.user_conversations(true).where(user: destroyed_conversation.user).exists?
+        }.from(false).to true
+      end
+    end
   end
   
   describe '#subscribe_user' do
