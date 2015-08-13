@@ -12,7 +12,7 @@ class ModerationsController < ApplicationController
   
   def sanitize_resource
     { }.tap do |list|
-      %w(actioned_at actions created_at reports).each do |attr|
+      %w(actioned_at actions created_at reports destroyed_target).each do |attr|
         list[:"include_#{ attr }?"] = false
       end
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150805181826) do
+ActiveRecord::Schema.define(version: 20150813144147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20150805181826) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "state",      default: 0, null: false
+    t.integer  "project_id"
   end
 
   add_index "data_requests", ["expires_at"], name: "index_data_requests_on_expires_at", using: :btree
@@ -146,13 +147,14 @@ ActiveRecord::Schema.define(version: 20150805181826) do
   create_table "moderations", force: :cascade do |t|
     t.integer  "target_id"
     t.string   "target_type"
-    t.integer  "state",       default: 0
-    t.json     "reports",     default: []
-    t.json     "actions",     default: []
+    t.integer  "state",            default: 0
+    t.json     "reports",          default: []
+    t.json     "actions",          default: []
     t.datetime "actioned_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "section",                  null: false
+    t.string   "section",                       null: false
+    t.json     "destroyed_target"
   end
 
   add_index "moderations", ["section", "state", "updated_at"], name: "index_moderations_on_section_and_state_and_updated_at", using: :btree
@@ -168,9 +170,12 @@ ActiveRecord::Schema.define(version: 20150805181826) do
     t.datetime "updated_at"
     t.integer  "subscription_id",                 null: false
     t.integer  "project_id"
+    t.integer  "source_id"
+    t.string   "source_type"
   end
 
   add_index "notifications", ["created_at"], name: "expiring_index", using: :btree
+  add_index "notifications", ["source_id", "source_type"], name: "index_notifications_on_source_id_and_source_type", using: :btree
   add_index "notifications", ["subscription_id"], name: "index_notifications_on_subscription_id", using: :btree
   add_index "notifications", ["user_id", "delivered", "created_at"], name: "unread_index", using: :btree
   add_index "notifications", ["user_id", "section", "delivered", "created_at"], name: "unread_section_index", using: :btree
