@@ -6,6 +6,7 @@ class Discussion < ActiveRecord::Base
   
   belongs_to :user, required: true
   belongs_to :board, required: true, counter_cache: true
+  belongs_to :focus, polymorphic: true
   has_many :comments, dependent: :destroy
   has_one :latest_comment, ->{ includes(CommentSerializer.includes).reorder created_at: :desc }, class_name: 'Comment'
   

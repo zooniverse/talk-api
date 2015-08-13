@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813165610) do
+ActiveRecord::Schema.define(version: 20150813203527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,8 @@ ActiveRecord::Schema.define(version: 20150813165610) do
     t.float    "sticky_position"
     t.boolean  "subject_default", default: false, null: false
     t.integer  "project_id"
+    t.integer  "focus_id"
+    t.string   "focus_type"
   end
 
   add_index "discussions", ["board_id", "sticky", "sticky_position", "updated_at"], name: "index_discussions_on_sticky_board_id_updated_at", using: :btree

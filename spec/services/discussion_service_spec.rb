@@ -33,6 +33,29 @@ RSpec.describe DiscussionService, type: :service do
       end
     end
     
+    context 'with a focused comment' do
+      let(:focus){ create :subject }
+      let(:create_params) do
+        {
+          discussions: {
+            title: 'works',
+            board_id: board.id,
+            comments: [{
+              body: 'works',
+              focus_id: focus.id,
+              focus_type: 'Subject'
+            }]
+          }
+        }
+      end
+      
+      before(:each){ service.create }
+      subject{ service.resource }
+      
+      its(:focus){ is_expected.to eql focus }
+      its('comments.first.focus'){ is_expected.to eql focus }
+    end
+    
     it_behaves_like 'a service updating', Discussion do
       let(:update_params) do
         {
