@@ -1,3 +1,6 @@
+require 'pundit'
+require 'pundit/not_authorized_error'
+
 class ApplicationPolicy
   attr_reader :user, :record
   
