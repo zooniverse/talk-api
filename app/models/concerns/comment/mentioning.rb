@@ -5,7 +5,7 @@ class Comment
     MATCH_MENTIONS = /
       (?:^|\s)            # match the beginning of the word
       ( \^([SC])(\d+) ) | # match mentioned focuses
-      ( @([-\w\d]{3,}) )  # match mentioned users
+      ( @([-\w\d]+) )     # match mentioned users
     /imx
     
     included do
