@@ -44,6 +44,22 @@ RSpec.describe DiscussionsController, type: :controller do
         {
           id: record.id.to_s,
           discussions: {
+            title: 'changed',
+            sticky: true
+          }
+        }
+      end
+    end
+  end
+  
+  context 'with the owner' do
+    it_behaves_like 'a controller updating' do
+      let(:current_user){ record.user }
+      let(:schema_method){ :owner_update }
+      let(:request_params) do
+        {
+          id: record.id.to_s,
+          discussions: {
             title: 'changed'
           }
         }

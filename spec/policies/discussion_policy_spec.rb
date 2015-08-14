@@ -19,6 +19,12 @@ RSpec.describe DiscussionPolicy, type: :policy do
       it_behaves_like 'a policy forbidding', :update, :destroy
     end
     
+    context 'with the owner' do
+      let(:user){ record.user }
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update
+      it_behaves_like 'a policy forbidding', :destroy
+    end
+    
     context 'with a moderator' do
       let(:user){ create :moderator }
       it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
@@ -32,6 +38,7 @@ RSpec.describe DiscussionPolicy, type: :policy do
   
   context 'with permissions read:team write:team' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'team', write: 'team' } }
+    let!(:role){ record.user.roles.create section: 'project-1', name: 'team' }
     
     context 'without a user' do
       it_behaves_like 'a policy excluding'
@@ -42,6 +49,12 @@ RSpec.describe DiscussionPolicy, type: :policy do
       let(:user){ create :user }
       it_behaves_like 'a policy excluding'
       it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
+    end
+    
+    context 'with the owner' do
+      let(:user){ record.user }
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update
+      it_behaves_like 'a policy forbidding', :destroy
     end
     
     context 'with a team member' do
@@ -63,6 +76,7 @@ RSpec.describe DiscussionPolicy, type: :policy do
   
   context 'with permissions read:moderator write:moderator' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'moderator', write: 'moderator' } }
+    let!(:role){ record.user.roles.create section: 'project-1', name: 'moderator' }
     
     context 'without a user' do
       it_behaves_like 'a policy excluding'
@@ -73,6 +87,11 @@ RSpec.describe DiscussionPolicy, type: :policy do
       let(:user){ create :user }
       it_behaves_like 'a policy excluding'
       it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
+    end
+    
+    context 'with the owner' do
+      let(:user){ record.user }
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
     end
     
     context 'with a team member' do
@@ -94,6 +113,7 @@ RSpec.describe DiscussionPolicy, type: :policy do
   
   context 'with permissions read:admin write:admin' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'admin', write: 'admin' } }
+    let!(:role){ record.user.roles.create section: 'project-1', name: 'admin' }
     
     context 'without a user' do
       it_behaves_like 'a policy excluding'
@@ -104,6 +124,11 @@ RSpec.describe DiscussionPolicy, type: :policy do
       let(:user){ create :user }
       it_behaves_like 'a policy excluding'
       it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
+    end
+    
+    context 'with the owner' do
+      let(:user){ record.user }
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
     end
     
     context 'with a team member' do

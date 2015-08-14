@@ -12,6 +12,12 @@ class DiscussionService < ApplicationService
     end
   end
   
+  def update
+    find_resource unless resource
+    self.action = :owner_update if !policy.admin? && !policy.moderator? && policy.owner?
+    super
+  end
+  
   def discussion_params
     unrooted_params.except :comments
   end

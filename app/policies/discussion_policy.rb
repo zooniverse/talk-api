@@ -14,8 +14,9 @@ class DiscussionPolicy < ApplicationPolicy
   end
   
   def update?
-    (moderator? || admin?) && writable?
+    (owner? || moderator? || admin?) && writable?
   end
+  alias_method :owner_update?, :update?
   
   def destroy?
     (moderator? || admin?) && writable?
