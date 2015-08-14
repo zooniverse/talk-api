@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   def self.from_panoptes(bearer_token)
     token = OauthAccessToken.find_by_token bearer_token
     token.resource_owner
+  rescue
+    nil
   end
   
   def mentioned_by(comment)
