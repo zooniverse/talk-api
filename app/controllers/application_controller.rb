@@ -41,6 +41,12 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new 'Not found'
   end
   
+  def log_event!(payload)
+    EventLog.create user_id: current_user.try(:id), payload: payload
+  rescue
+    nil
+  end
+  
   concerning :Authentication do
     def bearer_token
       return @bearer_token if @bearer_token
