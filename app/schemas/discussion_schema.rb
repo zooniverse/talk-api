@@ -15,6 +15,13 @@ class DiscussionSchema
     end
   end
   
+  def owner_update
+    root do |root_object|
+      additional_properties false
+      string :title, min_length: 3, max_length: 140
+    end
+  end
+  
   def update
     root do |root_object|
       additional_properties false

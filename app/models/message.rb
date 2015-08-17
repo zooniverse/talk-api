@@ -21,6 +21,7 @@ class Message < ActiveRecord::Base
   
   validates :body, presence: true
   
+  before_create :ensure_user_conversations
   after_create :set_conversations_unread!
   
   concerning :Subscribing do
@@ -53,7 +54,11 @@ class Message < ActiveRecord::Base
     end
   end
   
-  protected
+  def ensure_user_conversations
+    conversation.participant_ids.each do |participant_id|
+      conversation.user_conversations.where(user_id: participant_id).first_or_create
+    end
+  end
   
   def set_conversations_unread!
     recipient_conversations.update_all is_unread: true

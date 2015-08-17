@@ -61,4 +61,23 @@ RSpec.describe DiscussionSchema, type: :schema do
       its(:locked){ is_expected.to eql type: 'boolean' }
     end
   end
+  
+  describe '#update' do
+    let(:schema_method){ :owner_update }
+    its(:type){ is_expected.to eql 'object' }
+    its(:required){ is_expected.to eql ['discussions'] }
+    
+    with 'properties .discussions' do
+      its(:type){ is_expected.to eql 'object' }
+      its(:additionalProperties){ is_expected.to be false }
+      
+      with :properties do
+        with :title do
+          its(:type){ is_expected.to eql 'string' }
+          its(:minLength){ is_expected.to eql 3 }
+          its(:maxLength){ is_expected.to eql 140 }
+        end
+      end
+    end
+  end
 end

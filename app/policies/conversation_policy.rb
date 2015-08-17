@@ -16,7 +16,7 @@ class ConversationPolicy < ApplicationPolicy
   end
   
   def destroy?
-    false
+    participant?
   end
   
   class Scope < Scope

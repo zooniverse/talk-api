@@ -3,6 +3,7 @@ require 'spec_helper'
 RSpec.shared_examples_for 'a controller updating' do
   let(:current_user){ create :user }
   let(:request_params){ raise 'No request params set' }
+  let(:schema_method){ :update }
   let(:record){ create resource }
   
   before :each do
@@ -17,14 +18,14 @@ RSpec.shared_examples_for 'a controller updating' do
       send_request
     end
     
-    it "should use schema#update" do
-      expect_any_instance_of(subject.schema_class).to receive(:update).and_call_original
+    it 'should use schema#update' do
+      expect_any_instance_of(subject.schema_class).to receive(schema_method).and_call_original
       send_request
     end
     
     it 'should validate the params' do
       schema = double
-      expect(subject.schema_class).to receive_message_chain(:new, :update).and_return schema
+      expect(subject.schema_class).to receive_message_chain(:new, schema_method).and_return schema
       expect(schema).to receive :validate!
       send_request
     end

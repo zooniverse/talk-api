@@ -17,13 +17,16 @@ RSpec.describe ConversationSerializer, type: :serializer do
     let!(:unread_conversation){ create :conversation_with_messages, updated_at: 1.minute.ago.utc }
     let(:recipient){ unread_conversation.user_conversations.where(is_unread: true).first.user }
     let(:sender){ unread_conversation.user_conversations.where(is_unread: false ).first.user }
-    let!(:read_conversation){ create :read_conversation, user: sender, recipients: [recipient], updated_at: 2.minutes.ago.utc }
-    let!(:old_read_conversation){ create :read_conversation, user: sender, recipients: [recipient], updated_at: 10.minutes.ago.utc }
+    let!(:read_conversation){ create :read_conversation, user: sender, recipients: [recipient] }
+    let!(:old_read_conversation){ create :read_conversation, user: sender, recipients: [recipient] }
     let(:policy_scope){ ConversationPolicy::Scope.new recipient, Conversation }
     let(:json){ ConversationSerializer.page({ sort: ConversationSerializer.default_sort }, policy_scope.resolve, current_user: recipient) }
     let(:conversation_ids){ json[:conversations].collect{ |h| h[:id] } }
     
     it 'should order by unread first and updated at' do
+      unread_conversation.update_attribute 'updated_at', 1.minute.ago.utc
+      read_conversation.update_attribute 'updated_at', 2.minutes.ago.utc
+      old_read_conversation.update_attribute 'updated_at', 10.minute.ago.utc
       expect(conversation_ids).to eql [
         unread_conversation.id.to_s,
         read_conversation.id.to_s,

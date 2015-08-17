@@ -13,4 +13,12 @@ class ConversationsController < ApplicationController
     super
     Conversation.mark_as_read_by resource_ids, current_user.id
   end
+  
+  def destroy
+    conversation = Conversation.find params[:id]
+    authorize conversation
+    user_conversation = UserConversation.where(conversation: conversation, user: current_user).first!
+    user_conversation.destroy!
+    render json: { }, status: :no_content
+  end
 end

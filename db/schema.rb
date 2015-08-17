@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150811202545) do
+ActiveRecord::Schema.define(version: 20150813203527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,9 +77,10 @@ ActiveRecord::Schema.define(version: 20150811202545) do
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "conversations", force: :cascade do |t|
-    t.string   "title",      null: false
+    t.string   "title",                        null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "participant_ids", default: [],              array: true
   end
 
   add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at", using: :btree
@@ -113,6 +114,8 @@ ActiveRecord::Schema.define(version: 20150811202545) do
     t.float    "sticky_position"
     t.boolean  "subject_default", default: false, null: false
     t.integer  "project_id"
+    t.integer  "focus_id"
+    t.string   "focus_type"
   end
 
   add_index "discussions", ["board_id", "sticky", "sticky_position", "updated_at"], name: "index_discussions_on_sticky_board_id_updated_at", using: :btree
@@ -147,13 +150,14 @@ ActiveRecord::Schema.define(version: 20150811202545) do
   create_table "moderations", force: :cascade do |t|
     t.integer  "target_id"
     t.string   "target_type"
-    t.integer  "state",       default: 0
-    t.json     "reports",     default: []
-    t.json     "actions",     default: []
+    t.integer  "state",            default: 0
+    t.json     "reports",          default: []
+    t.json     "actions",          default: []
     t.datetime "actioned_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "section",                  null: false
+    t.string   "section",                       null: false
+    t.json     "destroyed_target"
   end
 
   add_index "moderations", ["section", "state", "updated_at"], name: "index_moderations_on_section_and_state_and_updated_at", using: :btree

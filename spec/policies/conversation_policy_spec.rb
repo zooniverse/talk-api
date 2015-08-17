@@ -17,8 +17,8 @@ RSpec.describe ConversationPolicy, type: :policy do
   
   context 'with a participant' do
     let(:user){ record.users.first }
-    it_behaves_like 'a policy permitting', :index, :show, :create
-    it_behaves_like 'a policy forbidding', :update, :destroy
+    it_behaves_like 'a policy permitting', :index, :show, :create, :destroy
+    it_behaves_like 'a policy forbidding', :update
   end
   
   context 'with a moderator' do
