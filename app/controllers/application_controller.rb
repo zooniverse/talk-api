@@ -41,8 +41,8 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new 'Not found'
   end
   
-  def log_event!(payload)
-    EventLog.create user_id: current_user.try(:id), payload: payload
+  def log_event!(label, payload)
+    EventLog.create label: label, user_id: current_user.try(:id), payload: payload
   rescue
     nil
   end

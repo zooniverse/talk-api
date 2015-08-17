@@ -79,6 +79,6 @@ class SearchesController < ApplicationController
   end
   
   def log_search
-    log_event! params.except(:controller, :action, :format)
+    log_event! 'search', params.except(:controller, :action, :format)
   end
 end
