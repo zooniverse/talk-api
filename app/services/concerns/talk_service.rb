@@ -7,14 +7,15 @@ module TalkService
     class_attribute :model_class
     class_attribute :schema_class
     
-    attr_accessor :params, :action, :current_user, :model_class, :schema_class
+    attr_accessor :params, :action, :current_user, :model_class, :schema_class, :user_ip
     attr_accessor :resource
   end
   
-  def initialize(params:, action:, current_user:, model_class: nil, schema_class: nil)
+  def initialize(params:, action:, current_user:, model_class: nil, schema_class: nil, user_ip: nil)
     @params = params
     @action = action.to_sym
     @current_user = current_user
+    @user_ip = user_ip
     @model_class = model_class || self.class.model_class
     @schema_class = schema_class || self.class.schema_class
   end
