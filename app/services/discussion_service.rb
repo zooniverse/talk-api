@@ -5,7 +5,8 @@ class DiscussionService < ApplicationService
       new_comment = CommentService.new({
         params: comment_params,
         action: :create,
-        current_user: current_user
+        current_user: current_user,
+        user_ip: user_ip
       }).build
       discussion.focus = new_comment.focus
       discussion.comments << new_comment

@@ -48,6 +48,13 @@ RSpec.describe ConversationsController, type: :controller do
         user_ids = [current_user.id] + recipients.map(&:id)
         expect(conversation.participant_ids).to match_array user_ids
       end
+      
+      it 'should set the user ip' do
+        post :create, request_params.merge(format: :json)
+        conversation_id = response.json['conversations'].first['id']
+        message = Message.where(conversation_id: conversation_id).first
+        expect(message.user_ip).to eql request.remote_ip
+      end
     end
     
     it_behaves_like 'a controller restricting',

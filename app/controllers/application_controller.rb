@@ -56,6 +56,10 @@ class ApplicationController < ActionController::Base
       @current_user ||= User.from_panoptes bearer_token
     end
     
+    def current_user_ip
+      request.remote_ip
+    end
+    
     def enforce_ban
       raise Talk::BannedUserError if current_user.banned?
     end

@@ -17,7 +17,11 @@ RSpec.describe CommentService, type: :service do
       its(:user){ is_expected.to eql current_user }
     end
     
-    it_behaves_like 'a service creating', 'Comment'
+    it_behaves_like 'a service creating', 'Comment' do
+      it 'should set the user ip' do
+        expect(service.build.user_ip).to eql '1.2.3.4'
+      end
+    end
     it_behaves_like 'a service updating', Comment do
       let(:record){ create :comment, user: current_user }
       let(:update_params) do

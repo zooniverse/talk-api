@@ -20,7 +20,8 @@ class ConversationService < ApplicationService
     MessageService.new({
       params: message_params,
       action: :create,
-      current_user: current_user
+      current_user: current_user,
+      user_ip: user_ip
     }).build
   end
   

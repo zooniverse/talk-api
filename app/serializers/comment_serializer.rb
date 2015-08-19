@@ -3,7 +3,7 @@ class CommentSerializer
   include EmbeddedAttributes
   include ModerationActions
   
-  all_attributes
+  all_attributes except: [:user_ip]
   can_include :discussion
   can_sort_by :created_at
   can_filter_by :user_id, :focus_id, :focus_type
