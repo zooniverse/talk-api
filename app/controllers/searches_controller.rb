@@ -1,6 +1,7 @@
 class SearchesController < ApplicationController
   before_action :permit_params
   rescue_from InvalidSearchTypeError, with: :unprocessable
+  after_action :log_search, only: [:index]
   
   def index
     render json: {
@@ -75,5 +76,9 @@ class SearchesController < ApplicationController
   
   def permit_params
     params.permit :page, :page_size, :section, :query, types: []
+  end
+  
+  def log_search
+    log_event! 'search', params.except(:controller, :action, :format)
   end
 end

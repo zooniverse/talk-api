@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813203527) do
+ActiveRecord::Schema.define(version: 20150817202734) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,14 @@ ActiveRecord::Schema.define(version: 20150813203527) do
   add_index "discussions", ["board_id", "title", "subject_default"], name: "index_discussions_on_board_id_and_title_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
   add_index "discussions", ["board_id", "updated_at"], name: "index_discussions_on_board_id_and_updated_at", using: :btree
   add_index "discussions", ["sticky", "sticky_position", "updated_at"], name: "index_discussions_on_sticky_and_sticky_position_and_updated_at", using: :btree
+
+  create_table "event_logs", force: :cascade do |t|
+    t.integer  "user_id"
+    t.json     "payload"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "label"
+  end
 
   create_table "mentions", force: :cascade do |t|
     t.integer  "mentionable_id",   null: false
