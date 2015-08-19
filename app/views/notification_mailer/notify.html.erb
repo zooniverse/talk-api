@@ -1,0 +1,125 @@
+<p>Notifications:</p>
+
+<% if @system.any? %>
+  <h2>System</h2>
+  
+  <% @system.each_pair do |section, notifications| %>
+    <div class="section">
+      <h2>
+        <% if project = notifications.first.project %>
+          <%= link_to project.display_name, FrontEnd.project_talk(project) %>
+        <% elsif section == 'zooniverse' %>
+          <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk %>
+        <% end %>
+      </h2>
+      
+      <div class="data-requests">
+        <% notifications.each do |notification| %>
+          <div class="data-request">
+            <div class="message"><% notification.message %></div>
+            <%= link_to 'Download', notification.url %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% if @messages.any? %>
+  <h2>Messages</h2>
+  
+  <% @messages.each_pair do |conversation, notifications| %>
+    <div class="conversation">
+      <h3>
+        <%= link_to conversation.title, FrontEnd.link_to(conversation) %>
+      </h3>
+      
+      <h4>
+        You have
+        <%= pluralize notifications.length, 'New message' %>
+        in conversation
+        <%= link_to conversation.title, FrontEnd.link_to(conversation) %>
+      </h4>
+      
+      <div class="messages">
+        <% notifications.each do |notification| %>
+          <div class="message">
+            <div class="body">
+              <%= notification.source.body %>
+            </div>
+            <%= link_to 'View on talk', notification.url %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% if @mentions.any? %>
+  <h2>Mentions</h2>
+  
+  <% @mentions.each_pair do |section, notifications| %>
+    <div class="section">
+      <h3>
+        <% if project = notifications.first.project %>
+          <%= link_to project.display_name, FrontEnd.project_talk(project) %>
+        <% elsif section == 'zooniverse' %>
+          <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk %>
+        <% end %>
+      </h3>
+      
+      <div class="comments">
+        <% notifications.each do |notification| %>
+          <div class="comment">
+            <div class="message"><% notification.message %></div>
+            <div class="body">
+              <%= notification.source.body %>
+            </div>
+            <%= link_to 'View on talk', notification.url %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% if @participating.any? %>
+  <h2>Discussions you're following</h2>
+  
+  <% @participating.each_pair do |section, discussions| %>
+    <div class="section">
+      <h3>
+        <% project = discussions.first.last.first.project %>
+        <% if project %>
+          <%= link_to project.display_name, FrontEnd.project_talk(project) %>
+        <% elsif section == 'zooniverse' %>
+          <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk %>
+        <% end %>
+      </h3>
+      
+      <div class="sources">
+        <% discussions.each_pair do |discussion, notifications| %>
+          <div class="source">
+            <h4>
+              <%= pluralize notifications.length, 'New comment' %>
+              on
+              <%= link_to discussion.title, FrontEnd.link_to(discussion, project) %>
+            </h4>
+            
+            <div class="comments">
+              <% notifications.each do |notification| %>
+                <div class="comment">
+                  <div class="message"><% notification.message %></div>
+                  <div class="body">
+                    <%= notification.source.body %>
+                  </div>
+                  <%= link_to 'View on talk', notification.url %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

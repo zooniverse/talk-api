@@ -10,6 +10,8 @@ class Notification < ActiveRecord::Base
   validates :message, presence: true
   validates :section, presence: true
   
+  scope :undelivered, ->{ where delivered: false }
+  
   expires_in 3.months
   
   protected
