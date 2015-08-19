@@ -16,7 +16,8 @@ module TalkResource
       action: params[:action],
       current_user: current_user,
       model_class: model_class,
-      schema_class: schema_class
+      schema_class: schema_class,
+      user_ip: current_user_ip
     })
   end
   

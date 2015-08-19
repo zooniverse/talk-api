@@ -13,7 +13,12 @@ RSpec.describe MessageService, type: :service do
       }
     end
     
-    it_behaves_like 'a service creating', Message
+    it_behaves_like 'a service creating', Message do
+      it 'should set the user ip' do
+        expect(service.build.user_ip).to eql '1.2.3.4'
+      end
+    end
+    
     context 'creating the message' do
       before(:each){ service.create }
       subject{ service.resource }

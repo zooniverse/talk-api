@@ -13,7 +13,8 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
     {
       params: ActionController::Parameters.new(update_params),
       action: :update,
-      current_user: current_user
+      current_user: current_user,
+      user_ip: '1.2.3.4'
     }
   end
   
@@ -21,7 +22,8 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
     {
       params: ActionController::Parameters.new(create_params),
       action: :create,
-      current_user: current_user
+      current_user: current_user,
+      user_ip: '1.2.3.4'
     }
   end
   

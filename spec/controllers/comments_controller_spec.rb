@@ -41,6 +41,13 @@ RSpec.describe CommentsController, type: :controller do
           }
         }
       end
+      
+      it 'should set the user ip' do
+        post :create, request_params.merge(format: :json)
+        id = response.json['comments'].first['id']
+        comment = Comment.find id
+        expect(comment.user_ip).to eql request.remote_ip
+      end
     end
     
     it_behaves_like 'a controller updating' do

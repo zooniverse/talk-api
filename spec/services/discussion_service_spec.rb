@@ -30,6 +30,7 @@ RSpec.describe DiscussionService, type: :service do
         its(:body){ is_expected.to eql 'works' }
         its(:discussion){ is_expected.to eql service.resource }
         its(:user){ is_expected.to eql current_user }
+        its(:user_ip){ is_expected.to eql '1.2.3.4' }
       end
     end
     
