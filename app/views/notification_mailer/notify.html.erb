@@ -1,125 +1,127 @@
-<p>Notifications:</p>
+<div style="font-family: 'Open Sans', 'Gill Sans', Arial, sans-serif; font-size: 15px; font-weight: 400; color: #404040; line-height: 22px;">
+  <%= h1 'Zooniverse Talk Notifications' %>
+  <% if @system.any? %>
+    <%= h2 'System' %>
 
-<% if @system.any? %>
-  <h2>System</h2>
-  
-  <% @system.each_pair do |section, notifications| %>
-    <div class="section">
-      <h2>
-        <% if project = notifications.first.project %>
-          <%= link_to project.display_name, FrontEnd.project_talk(project) %>
-        <% elsif section == 'zooniverse' %>
-          <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk %>
+    <% @system.each_pair do |section, notifications| %>
+      <%= container do %>
+        <%= h2 do %>
+          <% if project = notifications.first.project %>
+            <%= link_to project.display_name, FrontEnd.project_talk(project), style: link_style %>
+          <% elsif section == 'zooniverse' %>
+            <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
+          <% end %>
         <% end %>
-      </h2>
-      
-      <div class="data-requests">
-        <% notifications.each do |notification| %>
-          <div class="data-request">
-            <div class="message"><% notification.message %></div>
-            <%= link_to 'Download', notification.url %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
-<% end %>
 
-<% if @messages.any? %>
-  <h2>Messages</h2>
-  
-  <% @messages.each_pair do |conversation, notifications| %>
-    <div class="conversation">
-      <h3>
-        <%= link_to conversation.title, FrontEnd.link_to(conversation) %>
-      </h3>
-      
-      <h4>
-        You have
-        <%= pluralize notifications.length, 'New message' %>
-        in conversation
-        <%= link_to conversation.title, FrontEnd.link_to(conversation) %>
-      </h4>
-      
-      <div class="messages">
-        <% notifications.each do |notification| %>
-          <div class="message">
-            <div class="body">
-              <%= notification.source.body %>
-            </div>
-            <%= link_to 'View on talk', notification.url %>
-          </div>
-        <% end %>
-      </div>
-    </div>
+        <div>
+          <% notifications.each do |notification| %>
+            <%= container do %>
+              <%= notification.message %>:
+              <%= link_to 'Download', notification.url, style: link_style %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
-<% end %>
 
-<% if @mentions.any? %>
-  <h2>Mentions</h2>
-  
-  <% @mentions.each_pair do |section, notifications| %>
-    <div class="section">
-      <h3>
-        <% if project = notifications.first.project %>
-          <%= link_to project.display_name, FrontEnd.project_talk(project) %>
-        <% elsif section == 'zooniverse' %>
-          <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk %>
-        <% end %>
-      </h3>
-      
-      <div class="comments">
-        <% notifications.each do |notification| %>
-          <div class="comment">
-            <div class="message"><% notification.message %></div>
-            <div class="body">
-              <%= notification.source.body %>
-            </div>
-            <%= link_to 'View on talk', notification.url %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
-<% end %>
+  <% if @messages.any? %>
+    <%= h2 'Messages' %>
 
-<% if @participating.any? %>
-  <h2>Discussions you're following</h2>
-  
-  <% @participating.each_pair do |section, discussions| %>
-    <div class="section">
-      <h3>
-        <% project = discussions.first.last.first.project %>
-        <% if project %>
-          <%= link_to project.display_name, FrontEnd.project_talk(project) %>
-        <% elsif section == 'zooniverse' %>
-          <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk %>
+    <% @messages.each_pair do |conversation, notifications| %>
+      <%= container do %>
+        <%= h3 do %>
+          <%= link_to conversation.title, FrontEnd.link_to(conversation), style: link_style %>
         <% end %>
-      </h3>
-      
-      <div class="sources">
-        <% discussions.each_pair do |discussion, notifications| %>
-          <div class="source">
-            <h4>
-              <%= pluralize notifications.length, 'New comment' %>
-              on
-              <%= link_to discussion.title, FrontEnd.link_to(discussion, project) %>
-            </h4>
-            
-            <div class="comments">
-              <% notifications.each do |notification| %>
-                <div class="comment">
-                  <div class="message"><% notification.message %></div>
-                  <div class="body">
-                    <%= notification.source.body %>
-                  </div>
-                  <%= link_to 'View on talk', notification.url %>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
+
+        <h4>
+          You have
+          <%= pluralize notifications.length, 'New message' %>
+          in conversation
+          <%= link_to conversation.title, FrontEnd.link_to(conversation), style: link_style %>
+        </h4>
+
+        <div>
+          <% notifications.each do |notification| %>
+            <%= container do %>
+              <div>
+                <%= MarkdownApi.markdown(notification.source.body).html_safe %>
+              </div>
+              <%= link_to 'View on talk', notification.url, style: link_style %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
-<% end %>
+
+  <% if @mentions.any? %>
+    <%= h2 'Mentions' %>
+
+    <% @mentions.each_pair do |section, notifications| %>
+      <div>
+        <% project = notifications.first.project %>
+        <%= h3 do %>
+          <% if project %>
+            <%= link_to project.display_name, FrontEnd.project_talk(project), style: link_style %>
+          <% elsif section == 'zooniverse' %>
+            <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
+          <% end %>
+        <% end %>
+
+        <div>
+          <% notifications.each do |notification| %>
+            <%= container do %>
+              <div><%= notification.message %></div>
+              <div>
+                <%= MarkdownApi.markdown(notification.source.body, slug: project.slug).html_safe %>
+              </div>
+              <%= link_to 'View on talk', notification.url, style: link_style %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if @participating.any? %>
+    <%= h2 "Discussions you're following" %>
+
+    <% @participating.each_pair do |section, discussions| %>
+      <% project = discussions.first.last.first.project %>
+      <div>
+        <%= h3 do %>
+          <% if project %>
+            <%= link_to project.display_name, FrontEnd.project_talk(project), style: link_style %>
+          <% elsif section == 'zooniverse' %>
+            <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
+          <% end %>
+        <% end %>
+
+        <div>
+          <% discussions.each_pair do |discussion, notifications| %>
+            <%= container do %>
+              <h4>
+                <%= pluralize notifications.length, 'New comment' %>
+                on
+                <%= link_to discussion.title, FrontEnd.link_to(discussion, project), style: link_style %>
+              </h4>
+
+              <div>
+                <% notifications.each do |notification| %>
+                  <%= container do %>
+                    <div><%= notification.message %></div>
+                    <div>
+                      <%= MarkdownApi.markdown(notification.source.body, slug: project.slug).html_safe %>
+                    </div>
+                    <%= link_to 'View on talk', notification.url, style: link_style %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
