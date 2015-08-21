@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819163445) do
+ActiveRecord::Schema.define(version: 20150821172624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -274,6 +274,16 @@ ActiveRecord::Schema.define(version: 20150819163445) do
   add_index "tags", ["section", "taggable_type", "name"], name: "index_tags_on_section_and_taggable_type_and_name", using: :btree
   add_index "tags", ["section", "taggable_type"], name: "index_tags_on_section_and_taggable_type", using: :btree
   add_index "tags", ["taggable_id", "taggable_type"], name: "index_tags_on_taggable_id_and_taggable_type", using: :btree
+
+  create_table "unsubscribe_tokens", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.string   "token",      null: false
+    t.datetime "expires_at", null: false
+  end
+
+  add_index "unsubscribe_tokens", ["expires_at"], name: "index_unsubscribe_tokens_on_expires_at", using: :btree
+  add_index "unsubscribe_tokens", ["token"], name: "index_unsubscribe_tokens_on_token", unique: true, using: :btree
+  add_index "unsubscribe_tokens", ["user_id"], name: "index_unsubscribe_tokens_on_user_id", unique: true, using: :btree
 
   create_table "user_conversations", force: :cascade do |t|
     t.integer  "user_id",                        null: false
