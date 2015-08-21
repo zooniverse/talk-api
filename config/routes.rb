@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   
   root 'application#root'
   get '/searches' => 'searches#index'
+  get '/unsubscribe' => 'unsubscribe#index'
   mount Sidekiq::Web => '/sidekiq'
   match "*path", to: "application#sinkhole", via: :all
 end

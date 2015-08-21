@@ -1,0 +1,16 @@
+<header>
+  <h1>Zooniverse Talk Notifications</h1>
+</header>
+
+<div class="centering">
+  <% if @current_user %>
+    <h3>Hi <%= @current_user.display_name %>,</h3>
+    <p class="indented">You've unsubscribed <%= @current_user.email %> from all Talk notification emails</p>
+  <% else %>
+    <h3>Sorry, but it looks like something went wrong.</h3>
+  <% end %>
+</div>
+
+<footer>
+  <p>You can <a href="<%= FrontEnd.host %>/#/settings/email">manage your email preferences here</a>.</p>
+</footer>

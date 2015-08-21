@@ -124,4 +124,9 @@
       </div>
     <% end %>
   <% end %>
+  
+  <footer style="margin-top: 30px">
+    <p>You can <%= link_to 'manage your email preferences here', "#{ FrontEnd.host }/#/settings/email", style: link_style %></p>
+    <p>Or <%= link_to 'click here to unsubscribe', unsubscribe_url(token: UnsubscribeToken.for_user(@user).token) %>
+  </footer>
 </div>
