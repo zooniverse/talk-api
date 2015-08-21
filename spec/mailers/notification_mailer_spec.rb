@@ -41,10 +41,11 @@ RSpec.describe NotificationMailer, type: :mailer do
       let(:mail){ mailer.notify user1, frequency }
       
       before(:each) do
+        stub_request(:post, 'http://markdown.localhost/html').to_return status: 200, body: 'some markdown', headers: { }
         mailer.instance_variable_set :@notifications, Notification.where(user: user1).all.to_a
         expect(mailer).to receive(:normalize_frequency).with(frequency).and_call_original
-        expect(mailer).to receive(:find_categories_for).with(user1, frequency_int).and_return categories
-        expect(mailer).to receive(:find_notifications_for).with user1, categories
+        expect(mailer).to receive(:find_categories_for).with(frequency_int).and_return categories
+        expect(mailer).to receive(:find_notifications_for).with categories
         expect(mailer).to receive(:organize).and_call_original
       end
       
@@ -85,7 +86,8 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
   
   describe '#find_categories_for' do
-    subject{ mailer.find_categories_for user1, SubscriptionPreference.email_digests[frequency] }
+    before(:each){ mailer.instance_variable_set :@user, user1 }
+    subject{ mailer.find_categories_for SubscriptionPreference.email_digests[frequency] }
     
     context 'with immediate' do
       let(:frequency){ :immediate }
@@ -104,7 +106,8 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
   
   describe '#find_notifications_for' do
-    let(:notifications){ mailer.find_notifications_for user1, categories }
+    before(:each){ mailer.instance_variable_set :@user, user1 }
+    let(:notifications){ mailer.find_notifications_for categories }
     let(:subscriptions){ notifications.map &:subscription }
     let(:notification_categories){ subscriptions.map &:category }
     

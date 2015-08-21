@@ -2,7 +2,7 @@
   <%= h1 'Zooniverse Talk Notifications' %>
   <% if @system.any? %>
     <%= h2 'System' %>
-
+    
     <% @system.each_pair do |section, notifications| %>
       <%= container do %>
         <%= h2 do %>
@@ -12,7 +12,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-
+        
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
@@ -24,23 +24,23 @@
       <% end %>
     <% end %>
   <% end %>
-
+  
   <% if @messages.any? %>
     <%= h2 'Messages' %>
-
+    
     <% @messages.each_pair do |conversation, notifications| %>
       <%= container do %>
         <%= h3 do %>
           <%= link_to conversation.title, FrontEnd.link_to(conversation), style: link_style %>
         <% end %>
-
+        
         <h4>
           You have
           <%= pluralize notifications.length, 'New message' %>
           in conversation
           <%= link_to conversation.title, FrontEnd.link_to(conversation), style: link_style %>
         </h4>
-
+        
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
@@ -54,10 +54,10 @@
       <% end %>
     <% end %>
   <% end %>
-
+  
   <% if @mentions.any? %>
     <%= h2 'Mentions' %>
-
+    
     <% @mentions.each_pair do |section, notifications| %>
       <div>
         <% project = notifications.first.project %>
@@ -68,13 +68,13 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-
+        
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
               <div><%= notification.message %></div>
               <div>
-                <%= MarkdownApi.markdown(notification.source.body, slug: project.slug).html_safe %>
+                <%= MarkdownApi.markdown(notification.source.body, slug: project.try(:slug)).html_safe %>
               </div>
               <%= link_to 'View on talk', notification.url, style: link_style %>
             <% end %>
@@ -83,10 +83,10 @@
       </div>
     <% end %>
   <% end %>
-
+  
   <% if @participating.any? %>
     <%= h2 "Discussions you're following" %>
-
+    
     <% @participating.each_pair do |section, discussions| %>
       <% project = discussions.first.last.first.project %>
       <div>
@@ -97,7 +97,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-
+        
         <div>
           <% discussions.each_pair do |discussion, notifications| %>
             <%= container do %>
@@ -106,13 +106,13 @@
                 on
                 <%= link_to discussion.title, FrontEnd.link_to(discussion, project), style: link_style %>
               </h4>
-
+              
               <div>
                 <% notifications.each do |notification| %>
                   <%= container do %>
                     <div><%= notification.message %></div>
                     <div>
-                      <%= MarkdownApi.markdown(notification.source.body, slug: project.slug).html_safe %>
+                      <%= MarkdownApi.markdown(notification.source.body, slug: project.try(:slug)).html_safe %>
                     </div>
                     <%= link_to 'View on talk', notification.url, style: link_style %>
                   <% end %>

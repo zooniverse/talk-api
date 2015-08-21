@@ -5,20 +5,21 @@ class NotificationMailer < ApplicationMailer
   after_action :set_delivered
   
   def notify(user, digest_frequency)
+    @user = user
     frequency_enum = normalize_frequency digest_frequency
-    categories = find_categories_for user, frequency_enum
-    find_notifications_for user, categories
+    categories = find_categories_for frequency_enum
+    find_notifications_for categories
     organize
     
-    mail to: user.email, subject: subject(digest_frequency)
+    mail to: @user.email, subject: subject(digest_frequency)
   end
   
-  def find_categories_for(user, digest_frequency)
-    user.subscription_preferences.where(email_digest: digest_frequency).pluck :category
+  def find_categories_for(digest_frequency)
+    @user.subscription_preferences.where(email_digest: digest_frequency).pluck :category
   end
   
-  def find_notifications_for(user, categories)
-    @notifications = user.notifications
+  def find_notifications_for(categories)
+    @notifications = @user.notifications
       .undelivered
       .joins(:subscription).where(subscriptions: { category: categories })
       .preload(:project)
