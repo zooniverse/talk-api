@@ -1,3 +1,7 @@
+require 'markdown_api'
+require 'front_end'
+require 'unsubscribe_token'
+
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::DateHelper
   add_template_helper MailerHelper
