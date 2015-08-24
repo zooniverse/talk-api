@@ -5,6 +5,7 @@ class Notification < ActiveRecord::Base
   belongs_to :source, polymorphic: true
   belongs_to :user, required: true
   belongs_to :subscription, required: true
+  
   after_commit :publish, on: :create
   validates :url, presence: true
   validates :message, presence: true
@@ -13,6 +14,7 @@ class Notification < ActiveRecord::Base
   scope :undelivered, ->{ where delivered: false }
   
   expires_in 3.months
+  delegate :immediate?, to: :'subscription.preference'
   
   protected
   

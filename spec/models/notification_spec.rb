@@ -41,4 +41,15 @@ RSpec.describe Notification, type: :model do
     let!(:fresh){ create_list :notification, 2 }
     let!(:stale){ create_list :notification, 2, created_at: 1.year.ago.utc }
   end
+  
+  describe '#immediate?' do
+    let(:notification){ create :notification }
+    
+    it 'should delegate to the preference' do
+      expect(notification).to receive(:subscription).at_least(:once).and_call_original
+      expect(notification.subscription).to receive(:preference).at_least(:once).and_call_original
+      expect(notification.subscription.preference).to receive(:immediate?)
+      notification.immediate?
+    end
+  end
 end
