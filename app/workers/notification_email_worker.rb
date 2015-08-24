@@ -6,6 +6,7 @@ class NotificationEmailWorker
     max_in_interval: 10,
     min_delay: 5.minutes,
     reject_with: :reschedule,
+    track_rejected: false,
     key: ->(user_id, digest) {
       "user_#{ user_id }_notification_emails"
     }
