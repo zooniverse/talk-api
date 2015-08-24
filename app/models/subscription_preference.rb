@@ -3,6 +3,7 @@ class SubscriptionPreference < ActiveRecord::Base
   belongs_to :user, required: true
   
   validates :enabled, inclusion: { in: [true, false] }
+  scope :enabled, ->{ where enabled: true }
   
   enum email_digest: {
     immediate: 0,

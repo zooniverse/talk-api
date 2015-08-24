@@ -69,4 +69,13 @@ RSpec.describe SubscriptionPreference, type: :model do
       subject
     end
   end
+  
+  describe '.enabled' do
+    let!(:enabled){ create_list :subscription_preference, 2 }
+    let!(:disabled){ create_list :subscription_preference, 2, enabled: false }
+    
+    it 'should filter' do
+      expect(SubscriptionPreference.enabled).to match_array enabled
+    end
+  end
 end
