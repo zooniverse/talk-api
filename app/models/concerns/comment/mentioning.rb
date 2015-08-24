@@ -35,6 +35,7 @@ class Comment
     
     def mentioned(mention, mentionable)
       return unless mentionable
+      return if mentioning[mention]
       self.mentioning[mention] = { 'id' => mentionable.id, 'type' => mentionable.class.name }
       mentions.build(user: user, mentionable: mentionable) if added_to(:mentioning)[mention]
     end
