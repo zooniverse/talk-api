@@ -9,6 +9,7 @@ RSpec.describe NotificationEmailWorker, type: :worker do
     its([:max_in_interval]){ is_expected.to eql 10 }
     its([:min_delay]){ is_expected.to eql 5.minutes }
     its([:reject_with]){ is_expected.to eql :reschedule }
+    its([:track_rejected]){ is_expected.to eql false }
     
     it 'should scope the key to be per-user' do
       key = subject[:key].call 123, 'foo'
