@@ -87,21 +87,31 @@ RSpec.describe NotificationMailer, type: :mailer do
   
   describe '#find_categories_for' do
     before(:each){ mailer.instance_variable_set :@user, user1 }
-    subject{ mailer.find_categories_for SubscriptionPreference.email_digests[frequency] }
+    let(:categories){ mailer.find_categories_for SubscriptionPreference.email_digests[frequency] }
     
     context 'with immediate' do
       let(:frequency){ :immediate }
+      subject{ categories }
       it{ is_expected.to match_array Subscription.categories.values_at(:mentions, :system) }
     end
     
     context 'with daily' do
       let(:frequency){ :daily }
+      subject{ categories }
       it{ is_expected.to match_array Subscription.categories.values_at(:participating_discussions) }
     end
     
     context 'with weekly' do
       let(:frequency){ :weekly }
+      subject{ categories }
       it{ is_expected.to match_array Subscription.categories.values_at(:messages) }
+    end
+    
+    context 'with disabled preferences' do
+      let(:frequency){ :daily }
+      before(:each){ user1.preference_for(:participating_discussions).update enabled: false }
+      subject{ categories }
+      it{ is_expected.to be_empty }
     end
   end
   

@@ -15,7 +15,7 @@ class NotificationMailer < ApplicationMailer
   end
   
   def find_categories_for(digest_frequency)
-    @user.subscription_preferences.where(email_digest: digest_frequency).pluck :category
+    @user.subscription_preferences.enabled.where(email_digest: digest_frequency).pluck :category
   end
   
   def find_notifications_for(categories)
