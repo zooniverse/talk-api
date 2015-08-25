@@ -42,6 +42,8 @@ class User < ActiveRecord::Base
     return unless preference.enabled?
     category = Subscription.categories[category]
     Subscription.where(user: self, category: category, source: source).first_or_create
+  rescue
+    nil
   end
   
   def unsubscribe_from(source, category = nil)

@@ -19,6 +19,40 @@ RSpec.describe Subscription, type: :model do
       expect(without_source).to_not be_valid
       expect(without_source).to fail_validation source: "can't be blank"
     end
+    
+    describe SubscriptionUniquenessValidator do
+      let(:discussion){ create :discussion }
+      let(:user){ create :user }
+      let(:followed){ create :subscription, user: user, source: discussion, category: :followed_discussions }
+      let(:participating){ create :subscription, user: user, source: discussion, category: :participating_discussions }
+      
+      it 'should prevent followed_discussions when a participating_discussion exists' do
+        participating
+        expect{ followed }.to raise_error ActiveRecord::RecordInvalid
+      end
+      
+      it 'should prevent participating_discussions when a followed_discussion exists' do
+        followed
+        expect{ participating }.to raise_error ActiveRecord::RecordInvalid
+      end
+      
+      it 'should prevent duplicates on followed_discussions' do
+        duplicate = Subscription.new followed.attributes.except('id')
+        expect{ duplicate.save! }.to raise_error ActiveRecord::RecordInvalid
+      end
+      
+      it 'should prevent duplicates on participating_discussions' do
+        duplicate = Subscription.new participating.attributes.except('id')
+        expect{ duplicate.save! }.to raise_error ActiveRecord::RecordInvalid
+      end
+      
+      it 'should prevent duplicates on others' do
+        source = create :user_conversation
+        messages = create :subscription, user: user, category: :messages, source: source
+        duplicate = Subscription.new participating.attributes.except('id')
+        expect{ duplicate.save! }.to raise_error ActiveRecord::RecordInvalid
+      end
+    end
   end
   
   describe '#preference' do
