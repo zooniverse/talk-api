@@ -27,6 +27,11 @@ RSpec.describe User, type: :model do
     it{ is_expected.to be_mentions }
     its(:user){ is_expected.to eql user }
     its(:source){ is_expected.to eql discussion }
+    
+    context 'when the preference is disabled' do
+      before(:each){ create :subscription_preference, category: :mentions, user: user, enabled: false }
+      it{ is_expected.to be_nil }
+    end
   end
   
   describe '#unsubscribe_from' do

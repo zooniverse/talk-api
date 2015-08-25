@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
   end
   
   def subscribe_to(source, category)
+    preference = preference_for category
+    return unless preference.enabled?
     category = Subscription.categories[category]
     Subscription.where(user: self, category: category, source: source).first_or_create
   end
