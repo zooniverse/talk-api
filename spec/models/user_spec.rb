@@ -42,21 +42,21 @@ RSpec.describe User, type: :model do
       user.subscriptions.create source: discussion, category: :participating_discussions
     end
     
-    it 'should remove all user subscriptions for a source' do
+    it 'should disable all user subscriptions for a source' do
       user.unsubscribe_from discussion
-      expect{ mention_subscription.reload }.to raise_error ActiveRecord::RecordNotFound
-      expect{ participating_subscription.reload }.to raise_error ActiveRecord::RecordNotFound
+      expect(mention_subscription.reload).to_not be_enabled
+      expect(participating_subscription.reload).to_not be_enabled
     end
     
     it 'should only remove user subscriptions' do
       user.unsubscribe_from discussion
-      expect{ other_subscription.reload }.to_not raise_error
+      expect(other_subscription.reload).to be_enabled
     end
     
     it 'should be limitable to a category' do
       user.unsubscribe_from discussion, :mentions
-      expect{ mention_subscription.reload }.to raise_error ActiveRecord::RecordNotFound
-      expect{ participating_subscription.reload }.to_not raise_error
+      expect(mention_subscription.reload).to_not be_enabled
+      expect(participating_subscription.reload).to be_enabled
     end
   end
   

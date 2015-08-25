@@ -45,6 +45,6 @@ class User < ActiveRecord::Base
   def unsubscribe_from(source, category = nil)
     query = { user: self, source: source }
     query[:category] = Subscription.categories[category] if category
-    Subscription.where(query).destroy_all
+    Subscription.where(query).update_all enabled: false
   end
 end
