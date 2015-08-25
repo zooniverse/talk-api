@@ -4,6 +4,7 @@ class SubscriptionPreference < ActiveRecord::Base
   
   validates :enabled, inclusion: { in: [true, false] }
   scope :enabled, ->{ where enabled: true }
+  after_update :unsubscribe_user, if: ->{ enabled_change == [true, false] }
   
   enum email_digest: {
     immediate: 0,
@@ -33,6 +34,12 @@ class SubscriptionPreference < ActiveRecord::Base
   def self.find_or_default_for(user, category)
     where(user_id: user.id, category: categories[category]).first_or_create do |preference|
       preference.email_digest = email_digests[defaults[category]]
+    end
+  end
+  
+  def unsubscribe_user
+    user.subscriptions.where(category: category).each do |subscription|
+      subscription.update enabled: false
     end
   end
 end

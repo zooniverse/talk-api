@@ -78,4 +78,37 @@ RSpec.describe SubscriptionPreference, type: :model do
       expect(SubscriptionPreference.enabled).to match_array enabled
     end
   end
+  
+  describe 'updating' do
+    let(:preference){ create :subscription_preference }
+    
+    context 'when disabling' do
+      it 'should unsubscribe the user' do
+        expect(preference).to receive :unsubscribe_user
+        preference.update enabled: false
+      end
+    end
+    
+    context 'when not disabling' do
+      it 'should not unsubscribe the user' do
+        expect(preference).to_not receive :unsubscribe_user
+        preference.update email_digest: :never, enabled: true
+      end
+    end
+  end
+  
+  describe '#unsubscribe_user' do
+    let(:preference){ create :subscription_preference, category: :participating_discussions }
+    let!(:subscriptions){ create_list :subscription, 2, category: :participating_discussions, user: preference.user }
+    let!(:others) do
+      create_list(:subscription, 2, category: preference.category) +
+      create_list(:subscription, 2, category: :messages, user: preference.user )
+    end
+    
+    it 'should disable the subscriptions in the category' do
+      preference.update enabled: false
+      expect(subscriptions.map(&:reload)).to_not be_any &:enabled
+      expect(others.map(&:reload)).to be_all &:enabled
+    end
+  end
 end
