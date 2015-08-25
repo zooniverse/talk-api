@@ -12,7 +12,7 @@ class Comment
     end
     
     def notify_subscribers
-      discussion.subscriptions.participating_discussions.each do |subscription|
+      subscriptions.each do |subscription|
         next if subscription.user == user
         Notification.create({
           source: self,
@@ -23,6 +23,12 @@ class Comment
           subscription: subscription
         }) if subscription.try(:enabled?)
       end
+    end
+    
+    def subscriptions
+      list = discussion.subscriptions.participating_discussions
+      list += discussion.subscriptions.followed_discussions
+      list.uniq{ |subscription| subscription.user_id }
     end
     
     def subscribe_user

@@ -8,11 +8,15 @@ class SubscriptionPolicy < ApplicationPolicy
   end
   
   def create?
-    false
+    logged_in?
   end
   
   def update?
     owner?
+  end
+  
+  def destroy?
+    false
   end
   
   class Scope < Scope

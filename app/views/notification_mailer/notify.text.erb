@@ -52,9 +52,9 @@ Zooniverse Talk Notifications:
 
 <% end %>
 
-<% if @participating.any? %>
+<% if @discussions.any? %>
   Discussions you're following
-  <% @participating.each_pair do |section, discussions| %>
+  <% @discussions.each_pair do |section, discussions| %>
   <% if project = discussions.first.last.first.project %>
     <%= project.display_name %>
   <% elsif section == 'zooniverse' %>

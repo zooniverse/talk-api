@@ -11,14 +11,14 @@ RSpec.describe SubscriptionPolicy, type: :policy do
   
   context 'with a user' do
     let(:user){ create :user }
-    it_behaves_like 'a policy permitting', :index
-    it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
+    it_behaves_like 'a policy permitting', :index, :create
+    it_behaves_like 'a policy forbidding', :show, :update, :destroy
   end
   
   context 'with the owner' do
     let(:user){ record.user }
-    it_behaves_like 'a policy permitting', :index, :show, :update
-    it_behaves_like 'a policy forbidding', :create, :destroy
+    it_behaves_like 'a policy permitting', :index, :show, :create, :update
+    it_behaves_like 'a policy forbidding', :destroy
   end
   
   context 'with scope' do

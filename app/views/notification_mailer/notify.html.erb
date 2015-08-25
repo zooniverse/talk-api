@@ -87,10 +87,10 @@
     <% end %>
   <% end %>
   
-  <% if @participating.any? %>
+  <% if @discussions.any? %>
     <%= h2 "Discussions you're following" %>
     
-    <% @participating.each_pair do |section, discussions| %>
+    <% @discussions.each_pair do |section, discussions| %>
       <% project = discussions.first.last.first.project %>
       <div>
         <%= h3 do %>

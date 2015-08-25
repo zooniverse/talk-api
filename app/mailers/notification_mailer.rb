@@ -35,16 +35,16 @@ class NotificationMailer < ApplicationMailer
     @messages = select_category('messages').group_by{ |n| n.source.conversation }
     @mentions = select_category('mentions').group_by &:section
     @system = select_category('system').group_by &:section
-    @participating = { }
-    select_category('participating_discussions').each do |n|
-      @participating[n.section] ||= { }
-      @participating[n.section][n.subscription.source] ||= []
-      @participating[n.section][n.subscription.source] << n
+    @discussions = { }
+    select_category('participating_discussions', 'followed_discussions').each do |n|
+      @discussions[n.section] ||= { }
+      @discussions[n.section][n.subscription.source] ||= []
+      @discussions[n.section][n.subscription.source] << n
     end
   end
   
-  def select_category(type)
-    @notifications.select{ |notification| notification.subscription.category == type }
+  def select_category(*types)
+    @notifications.select{ |notification| types.include? notification.subscription.category }
   end
   
   def set_delivered

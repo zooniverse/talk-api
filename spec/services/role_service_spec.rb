@@ -3,7 +3,6 @@ require 'spec_helper'
 RSpec.describe RoleService, type: :service do
   it_behaves_like 'a service', Role, sets_user: false do
     let(:current_user){ create :admin, section: 'project-1' }
-    let(:parent_board){ create :role }
     let(:create_params) do
       {
         roles: {

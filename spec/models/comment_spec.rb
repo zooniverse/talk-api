@@ -357,15 +357,16 @@ RSpec.describe Comment, type: :model do
   end
   
   describe '#notify_subscribers' do
-    let(:users){ create_list :user, 2 }
-    let(:user_subscriptions){ Subscription.participating_discussions.where source: discussion, user: users }
-    let(:notifications){ Notification.where subscription: user_subscriptions }
-    let(:notified_users){ notifications.reload.collect &:user }
+    let(:participating_users){ create_list :user, 2 }
+    let(:following_user){ create :user }
+    let(:users){ participating_users + [following_user] }
+    let(:notified_users){ Notification.all.collect &:user }
     let(:unsubscribed_user){ create :user }
     let(:discussion){ create :discussion }
     
     before(:each) do
-      users.each{ |user| user.subscribe_to discussion, :participating_discussions }
+      participating_users.each{ |user| user.subscribe_to discussion, :participating_discussions }
+      following_user.subscribe_to discussion, :followed_discussions
       unsubscribed_user.preference_for(:participating_discussions).update_attributes enabled: false
     end
     

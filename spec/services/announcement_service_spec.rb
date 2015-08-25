@@ -3,7 +3,6 @@ require 'spec_helper'
 RSpec.describe AnnouncementService, type: :service do
   it_behaves_like 'a service', Announcement do
     let(:current_user){ create :admin, section: 'project-1' }
-    let(:parent_board){ create :announcement }
     let(:create_params) do
       {
         announcements: {
