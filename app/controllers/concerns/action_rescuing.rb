@@ -24,6 +24,8 @@ module ActionRescuing
     rescue_from TalkService::ParameterError, with: :unprocessable
     rescue_from Talk::InvalidParameterError, with: :unprocessable
     rescue_from Talk::BannedUserError, with: :forbidden
+    rescue_from Talk::BlockedUserError, with: :forbidden
+    rescue_from Talk::UserBlockedError, with: :forbidden
     rescue_from OauthAccessToken::ExpiredError, with: :unauthorized
     rescue_from OauthAccessToken::RevokedError, with: :unauthorized
   end

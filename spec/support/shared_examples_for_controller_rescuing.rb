@@ -77,6 +77,12 @@ RSpec.shared_examples_for 'a controller rescuing' do
     Talk::BannedUserError.new, with: 403
   
   it_behaves_like 'ActionRescuing',
+    Talk::BlockedUserError.new, with: 403
+  
+  it_behaves_like 'ActionRescuing',
+    Talk::UserBlockedError.new, with: 403
+  
+  it_behaves_like 'ActionRescuing',
     OauthAccessToken::ExpiredError.new, with: 401
   
   it_behaves_like 'ActionRescuing',
