@@ -27,7 +27,10 @@ class ApplicationController < ActionController::Base
       moderations: { href: '/moderations', type: 'moderations' },
       notifications: { href: '/notifications', type: 'notifications' },
       roles: { href: '/roles', type: 'roles' },
+      subscription_preferences: { href: '/subscription_preferences', type: 'subscription_preferences' },
+      subscriptions: { href: '/subscriptions', type: 'subscriptions' },
       tags: { href: '/tags', type: 'tags' },
+      popular_tags: { href: '/tags/popular', type: 'popular_tags' },
       user_ip_bans: { href: '/user_ip_bans', type: 'user_ip_bans' },
       users: { href: '/users', type: 'users' }
     }
