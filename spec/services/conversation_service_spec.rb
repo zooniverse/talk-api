@@ -55,6 +55,20 @@ RSpec.describe ConversationService, type: :service do
         its(:user){ is_expected.to eql current_user }
         its(:user_ip){ is_expected.to eql '1.2.3.4' }
       end
+      
+      context 'when the recipient has blocked the sender' do
+        it 'should fail' do
+          create :blocked_user, user: recipients.first, blocked_user: current_user
+          expect{ service.build }.to raise_error Talk::BlockedUserError
+        end
+      end
+      
+      context 'when the sender has blocked a recipient' do
+        it 'should fail' do
+          create :blocked_user, user: current_user, blocked_user: recipients.first
+          expect{ service.build }.to raise_error Talk::UserBlockedError
+        end
+      end
     end
   end
 end

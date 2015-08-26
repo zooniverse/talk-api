@@ -16,6 +16,20 @@ module Talk
     alias_method :to_s, :message
   end
   
+  class BlockedUserError < StandardError
+    def message
+      'You have been blocked by that user'
+    end
+    alias_method :to_s, :message
+  end
+  
+  class UserBlockedError < StandardError
+    def message
+      'You have blocked that user'
+    end
+    alias_method :to_s, :message
+  end
+  
   class InvalidParameterError < StandardError
     def initialize(param, expected, actual)
       @param = param

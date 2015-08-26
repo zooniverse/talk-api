@@ -11,6 +11,8 @@ class ConversationService < ApplicationService
   def build_user_conversations_for(conversation)
     conversation.user_conversations.build user_id: current_user.id, is_unread: false
     
+    raise Talk::BlockedUserError.new if blocked?
+    raise Talk::UserBlockedError.new if blocking?
     recipient_ids.each do |recipient_id|
       conversation.user_conversations.build user_id: recipient_id, is_unread: true
     end
@@ -37,5 +39,13 @@ class ConversationService < ApplicationService
     ActionController::Parameters.new({
       messages: unrooted_params.slice(:body)
     })
+  end
+  
+  def blocked?
+    BlockedUser.blocked_by(recipient_ids).blocking(current_user.id).exists?
+  end
+  
+  def blocking?
+    BlockedUser.blocked_by(current_user.id).blocking(recipient_ids).exists?
   end
 end
