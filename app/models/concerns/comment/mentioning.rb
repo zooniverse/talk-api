@@ -18,6 +18,7 @@ class Comment
       body.scan(MATCH_MENTIONS).each do |focus_mention, focus_type, focus_id, user_mention, login|
         if focus_mention
           focus_klass = { 'S' => Subject, 'C' => Collection }[focus_type]
+          next unless focus_klass.present? && focus_id.present?
           mentioned focus_mention, focus_klass.find_by_id(focus_id)
         else
           mentioned user_mention, User.find_by_login(login)
