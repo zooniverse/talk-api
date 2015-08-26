@@ -35,7 +35,7 @@ class Message < ActiveRecord::Base
     end
     
     def notify_subscribers
-      Subscription.messages.where(source: recipient_conversations, user: recipients).each do |subscription|
+      Subscription.messages.enabled.where(source: recipient_conversations, user: recipients).each do |subscription|
         Notification.create({
           source: self,
           user_id: subscription.user_id,

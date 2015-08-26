@@ -9,6 +9,7 @@ class Subscription < ActiveRecord::Base
   after_update :clear_notifications, if: ->{ enabled_change == [true, false] }
   
   validates_with SubscriptionUniquenessValidator, on: :create
+  scope :enabled, ->{ where enabled: true }
   
   def preference
     @preference ||= SubscriptionPreference.find_or_default_for(user, category)
