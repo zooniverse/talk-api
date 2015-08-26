@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :subscriptions
   has_many :subscription_preferences
+  has_many :blocked_users
   has_one :unsubscribe_token
   
   moderatable_with :ignore, by: [:moderator, :admin]
