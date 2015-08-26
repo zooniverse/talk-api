@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   def resources
     {
       announcements: { href: '/announcements', type: 'announcements' },
+      blocked_users: { href: '/blocked_users', type: 'blocked_users' },
       boards: { href: '/boards', type: 'boards' },
       comments: { href: '/comments', type: 'comments' },
       conversations: { href: '/conversations', type: 'conversations' },

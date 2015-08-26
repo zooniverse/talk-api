@@ -3,6 +3,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   defaults format: 'json' do
     resources :announcements
+    resources :blocked_users
     resources :boards
     resources :comments do
       member do
