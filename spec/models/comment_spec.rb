@@ -229,9 +229,13 @@ RSpec.describe Comment, type: :model do
     
     let(:user){ create :user }
     let(:user_mention){ "@#{ user.login }" }
+    let(:admin_user){ create :admin, section: 'zooniverse' }
+    
+    let(:board){ create :board }
+    let(:discussion){ create :discussion, board: board }
     
     let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.login }?" }
-    let(:comment){ create :comment, body: body }
+    let(:comment){ create :comment, discussion: discussion, body: body }
     
     it 'should match subjects' do
       expect(comment.mentioning).to include subject_mention => {
@@ -261,6 +265,19 @@ RSpec.describe Comment, type: :model do
     
     it 'should create mentions for users' do
       expect(comment.mentions.where(mentionable: user).exists?).to be true
+    end
+    
+    context 'when the comment is not accessible by the mentioned user' do
+      let(:body){ "Hey @#{ user.login } and @#{ admin_user.login }" }
+      let(:board){ create :board, permissions: { read: 'team', write: 'team' } }
+      
+      it 'should not create mentions for users without access' do
+        expect(comment.mentions.where(mentionable: user).exists?).to be false
+      end
+      
+      it 'should create mentions for users with access' do
+        expect(comment.mentions.where(mentionable: admin_user).exists?).to be true
+      end
     end
   end
   

@@ -20,7 +20,8 @@ class Comment
           focus_klass = { 'S' => Subject, 'C' => Collection }[focus_type]
           mentioned focus_mention, focus_klass.find_by_id(focus_id)
         else
-          mentioned user_mention, User.find_by_login(login)
+          mentioned_user = User.find_by_login login
+          mentioned(user_mention, mentioned_user) if accessible_by?(mentioned_user)
         end
       end
     end
@@ -29,6 +30,11 @@ class Comment
       removed_from(:mentioning).each_pair do |mention, hash|
         Mention.where(comment_id: id, mentionable_id: hash['id']).destroy_all
       end
+    end
+    
+    def accessible_by?(user)
+      return false unless user
+      CommentPolicy.new(user, self).show?
     end
     
     protected
