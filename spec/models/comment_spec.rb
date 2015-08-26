@@ -389,4 +389,21 @@ RSpec.describe Comment, type: :model do
       expect(user.notifications).to be_empty
     end
   end
+  
+  describe '#subscriptions_to_notify' do
+    let(:discussion){ create :discussion }
+    let(:comment){ create :comment, discussion: discussion, user: user1 }
+    let(:user1){ create :user }
+    let(:user2){ create :user }
+    let(:user3){ create :user }
+    let!(:participating1){ create :subscription, category: :participating_discussions, source: discussion, user: user1, enabled: true }
+    let!(:participating2){ create :subscription, category: :participating_discussions, source: discussion, user: user2, enabled: false }
+    let!(:participating3){ create :subscription, category: :participating_discussions, source: discussion, user: user3, enabled: false }
+    let!(:following1){ create :subscription, category: :followed_discussions, source: discussion, user: user1, enabled: true }
+    let!(:following2){ create :subscription, category: :followed_discussions, source: discussion, user: user2, enabled: true }
+    let!(:following3){ create :subscription, category: :followed_discussions, source: discussion, user: user3, enabled: false }
+    subject{ comment.subscriptions_to_notify }
+    its(:length){ is_expected.to eql 1 }
+    its('first.user_id'){ is_expected.to eql user2.id }
+  end
 end

@@ -12,8 +12,7 @@ class Comment
     end
     
     def notify_subscribers
-      subscriptions.each do |subscription|
-        next if subscription.user == user
+      subscriptions_to_notify.each do |subscription|
         Notification.create({
           source: self,
           user_id: subscription.user.id,
@@ -25,9 +24,9 @@ class Comment
       end
     end
     
-    def subscriptions
-      list = discussion.subscriptions.participating_discussions
-      list += discussion.subscriptions.followed_discussions
+    def subscriptions_to_notify
+      list = discussion.subscriptions.participating_discussions.enabled.where 'user_id <> ?', user.id
+      list += discussion.subscriptions.followed_discussions.enabled.where 'user_id <> ?', user.id
       list.uniq{ |subscription| subscription.user_id }
     end
     

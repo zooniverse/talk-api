@@ -32,6 +32,13 @@ RSpec.describe Subscription, type: :model do
     end
   end
   
+  describe '.enabled' do
+    let(:enabled){ create_list :subscription, 2, enabled: true }
+    let(:disabled){ create_list :subscription, 2, enabled: false }
+    subject{ Subscription.enabled }
+    it{ is_expected.to match_array enabled }
+  end
+  
   describe '#preference' do
     let(:user){ create :user }
     let(:subscription){ build :subscription, user: user }
