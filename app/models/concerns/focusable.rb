@@ -20,8 +20,4 @@ module Focusable
   def mentioned_by(comment)
     # TO-DO: notification for collection mentions?
   end
-  
-  def tags(limit: 10)
-    Tag.where(taggable_id: id).popular(limit: limit).keys
-  end
 end
