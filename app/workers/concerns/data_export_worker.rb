@@ -30,7 +30,9 @@ module DataExportWorker
     ::File.unlink data_file
     uploader = ::Uploader.new gzip_file
     uploader.upload
-    data_request.notify_user message: "Your data export of #{ name } is ready", url: uploader.url
+    url = uploader.url
+    data_request.notify_user message: "Your data export of #{ name } is ready", url: url
+    data_request.update_attributes url: url
     ::File.unlink gzip_file
   end
   

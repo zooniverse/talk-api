@@ -43,9 +43,5 @@ class TagPolicy < ApplicationPolicy
       return scope.all if zooniverse_admin?
       scope.joins(comment: { discussion: :board }).where permissions.join(' or ')
     end
-    
-    def comment_scope
-      CommentPolicy::Scope.new user, Comment
-    end
   end
 end

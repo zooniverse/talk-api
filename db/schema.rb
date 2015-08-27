@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150826205951) do
+ActiveRecord::Schema.define(version: 20150827165446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20150826205951) do
     t.datetime "updated_at"
     t.integer  "state",      default: 0, null: false
     t.integer  "project_id"
+    t.string   "url"
   end
 
   add_index "data_requests", ["expires_at"], name: "index_data_requests_on_expires_at", using: :btree

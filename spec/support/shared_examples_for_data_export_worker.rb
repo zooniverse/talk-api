@@ -136,6 +136,11 @@ RSpec.shared_examples_for 'a data export worker' do
         .with message: "Your data export of some_name is ready", url: uploader.url
       subject.process_data
     end
+    
+    it 'should set the url' do
+      subject.process_data
+      expect(data_request.reload.url).to eql 'location'
+    end
   end
   
   describe '#perform' do
