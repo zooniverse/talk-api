@@ -23,7 +23,6 @@ class NotificationEmailWorker
     # Ensure there are undelivered notifications for this user and digest level
     return unless user.notifications.undelivered.joins(:subscription).where(subscriptions: { category: categories }).exists?
     
-    # Temporarily disable mail delivery for production
-    # ::NotificationMailer.notify(user, digest).deliver_now!
+    ::NotificationMailer.notify(user, digest).deliver_now!
   end
 end

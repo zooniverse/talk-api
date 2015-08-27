@@ -64,7 +64,7 @@ RSpec.describe NotificationEmailWorker, type: :worker do
         allow(user).to receive_message_chain('notifications.undelivered.joins.where.exists?').and_return true
       end
       
-      it 'should attempt to deliver email', :pending do
+      it 'should attempt to deliver email' do
         mail = double deliver_now!: true
         expect(NotificationMailer).to receive(:notify).with(user, :daily).and_return mail
         expect(mail).to receive :deliver_now!
