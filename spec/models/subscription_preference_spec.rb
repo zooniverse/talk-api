@@ -26,6 +26,9 @@ RSpec.describe SubscriptionPreference, type: :model do
     its([:participating_discussions]){ is_expected.to eql :daily }
     its([:mentions]){ is_expected.to eql :immediate }
     its([:messages]){ is_expected.to eql :immediate }
+    its([:system]){ is_expected.to eql :immediate }
+    its([:followed_discussions]){ is_expected.to eql :daily }
+    its([:moderation_reports]){ is_expected.to eql :immediate }
   end
   
   describe '.find_or_default_for' do
@@ -62,6 +65,10 @@ RSpec.describe SubscriptionPreference, type: :model do
     its([:messages]){ is_expected.to be_messages }
     its([:system]){ is_expected.to be_a described_class }
     its([:system]){ is_expected.to be_system }
+    its([:followed_discussions]){ is_expected.to be_a described_class }
+    its([:followed_discussions]){ is_expected.to be_followed_discussions }
+    its([:moderation_reports]){ is_expected.to be_a described_class }
+    its([:moderation_reports]){ is_expected.to be_moderation_reports }
     
     it 'should .find_or_default_for each category' do
       expect(described_class).to receive(:find_or_default_for)

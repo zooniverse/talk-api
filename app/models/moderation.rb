@@ -1,4 +1,6 @@
 class Moderation < ActiveRecord::Base
+  include Notifiable
+  
   belongs_to :target, polymorphic: true
   validates :target, presence: true, on: :create
   validates :section, presence: true
@@ -12,6 +14,40 @@ class Moderation < ActiveRecord::Base
     closed: 2,
     watched: 3
   }
+  
+  concerning :Subscribing do
+    included do
+      after_create :subscribe_users
+      after_commit :notify_subscribers_later, on: :create
+    end
+    
+    def notify_subscribers_later
+      ModerationNotificationWorker.perform_async id
+    end
+    
+    def notify_subscribers
+      Subscription.moderation_reports.enabled.where(source: self, user: moderators).each do |subscription|
+        Notification.create({
+          source: self,
+          user_id: subscription.user_id,
+          message: "A #{ target_type.downcase } has been reported",
+          url: FrontEnd.link_to(self),
+          section: section,
+          subscription: subscription
+        }) if subscription.try(:enabled?)
+      end
+    end
+    
+    def subscribe_users
+      moderators.find_each do |user|
+        user.subscribe_to self, :moderation_reports
+      end
+    end
+    
+    def moderators
+      @moderators ||= User.joins(:roles).where(roles: { name: %w(moderator admin), section: section }).all
+    end
+  end
   
   protected
   
