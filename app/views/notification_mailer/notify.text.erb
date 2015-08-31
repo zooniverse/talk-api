@@ -3,72 +3,90 @@ Zooniverse Talk Notifications:
 <% if @system.any? %>
   System
 <% @system.each_pair do |section, notifications| %>
-  <% if project = notifications.first.project %>
+<% if project = notifications.first.project %>
     <%= project.display_name %>
-  <% elsif section == 'zooniverse' %>
+<% elsif section == 'zooniverse' %>
     Zooniverse
-  <% end %>
-  <% notifications.each do |notification| %>
+<% end %>
+<% notifications.each do |notification| %>
       <% notification.message %>
       Download: <%= notification.url %>
-  <% end %>
+<% end %>
 
 
 <% end %>
 
+<% end %>
+
+<% if @moderations.any? %>
+  Moderation Reports
+
+<% @moderations.each_pair do |section, notifications| %>
+<% project = notifications.first.project %>
+<% if project %>
+    <%= project.display_name %>
+<% elsif section == 'zooniverse' %>
+    Zooniverse
+<% end %>
+
+<% notifications.each do |notification| %>
+      <%= notification.message %>: <%= notification.url %>
+
+<% end %>
+<% end %>
 <% end %>
 
 <% if @messages.any? %>
   Messages
-  <% @messages.each_pair do |conversation, notifications| %>
+<% @messages.each_pair do |conversation, notifications| %>
     You have <%= pluralize notifications.length, 'New message' %> in conversation "<%= conversation.title %>"
-    <% notifications.each do |notification| %>
+<% notifications.each do |notification| %>
       <%= notification.message %>
       <%= notification.source.body %>
       View on talk: <%= notification.url %>
-    <% end %>
+<% end %>
 
-  <% end %>
+<% end %>
 
 
 <% end %>
 
 <% if @mentions.any? %>
   Mentions
-  <% @mentions.each_pair do |section, notifications| %>
-    <% if project = notifications.first.project %>
-      <%= project.display_name %>
-    <% elsif section == 'zooniverse' %>
-      Zooniverse
-    <% end %>
-      <% notifications.each do |notification| %>
-        <% notification.message %>
-        <%= notification.source.body %>
-        View on talk: <%= notification.url %>
-      <% end %>
+<% @mentions.each_pair do |section, notifications| %>
+<% if project = notifications.first.project %>
+    <%= project.display_name %>
+<% elsif section == 'zooniverse' %>
+    Zooniverse
+<% end %>
+<% notifications.each do |notification| %>
+      <% notification.message %>
+      <%= notification.source.body %>
+      View on talk: <%= notification.url %>
+<% end %>
 
-  <% end %>
+<% end %>
 
 
 <% end %>
 
 <% if @discussions.any? %>
   Discussions you're following
-  <% @discussions.each_pair do |section, discussions| %>
-  <% if project = discussions.first.last.first.project %>
+<% @discussions.each_pair do |section, discussions| %>
+<% if project = discussions.first.last.first.project %>
     <%= project.display_name %>
-  <% elsif section == 'zooniverse' %>
+<% elsif section == 'zooniverse' %>
     Zooniverse
-  <% end %>
-  <% discussions.each_pair do |discussion, notifications| %>
-    <%= pluralize notifications.length, 'New comment' %> on <%= discussion.title %>
-    <% notifications.each do |notification| %>
-      <% notification.message %>
-      <%= notification.source.body %>
-      View on talk: <%= notification.url %>
-    <% end %>
+<% end %>
+<% discussions.each_pair do |discussion, notifications| %>
+      <%= pluralize notifications.length, 'New comment' %> on <%= discussion.title %>
+<% notifications.each do |notification| %>
+        <% notification.message %>
+        <%= notification.source.body %>
+        View on talk: <%= notification.url %>
+<% end %>
 
-    <% end %>
+<% end %>
 
-  <% end %>
+<% end %>
 <% end %>

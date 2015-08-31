@@ -35,6 +35,7 @@ class NotificationMailer < ApplicationMailer
     @messages = select_category('messages').group_by{ |n| n.source.conversation }
     @mentions = select_category('mentions').group_by &:section
     @system = select_category('system').group_by &:section
+    @moderations = select_category('moderation_reports').group_by &:section
     @discussions = { }
     select_category('participating_discussions', 'followed_discussions').each do |n|
       @discussions[n.section] ||= { }

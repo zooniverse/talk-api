@@ -35,6 +35,8 @@ class FrontEnd
       "#{ host }/#/inbox/#{ object.id }"
     when Discussion
       "#{ talk_root_for object, project }/#{ object.board_id }/#{ object.id }"
+    when Moderation
+      "#{ talk_root_for object, project }/moderations"
     when Project
       "#{ host }/#/projects/#{ object.slug }"
     when User

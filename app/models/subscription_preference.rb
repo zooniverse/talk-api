@@ -19,7 +19,8 @@ class SubscriptionPreference < ActiveRecord::Base
       mentions: :immediate,
       messages: :immediate,
       system: :immediate,
-      followed_discussions: :daily
+      followed_discussions: :daily,
+      moderation_reports: :immediate
     }.with_indifferent_access
   end
   
@@ -29,7 +30,8 @@ class SubscriptionPreference < ActiveRecord::Base
       mentions: find_or_default_for(user, :mentions),
       messages: find_or_default_for(user, :messages),
       system: find_or_default_for(user, :system),
-      followed_discussions: find_or_default_for(user, :followed_discussions)
+      followed_discussions: find_or_default_for(user, :followed_discussions),
+      moderation_reports: find_or_default_for(user, :moderation_reports)
     }
   end
   

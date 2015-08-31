@@ -25,6 +25,39 @@
     <% end %>
   <% end %>
   
+  <% if @moderations.any? %>
+    <%= h2 'Moderation Reports' %>
+    
+    <% @moderations.each_pair do |section, notifications| %>
+      <%= container do %>
+        <% project = notifications.first.project %>
+        <%= h3 do %>
+          <% if project %>
+            <%= link_to project.display_name, FrontEnd.project_talk(project), style: link_style %>
+          <% elsif section == 'zooniverse' %>
+            <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
+          <% end %>
+        <% end %>
+        
+        <div>
+          <% notifications.each do |notification| %>
+            <%= container do %>
+              <div>
+                <%= link_to notification.message, notification.url, style: link_style %>
+                <% if notification.source.target_type == 'Comment' %>
+                  <div>
+                    <%= MarkdownApi.markdown(notification.source.target.body, slug: project.try(:slug)).html_safe %>
+                  </div>
+                  <div><%= time_ago_in_words notification.source.created_at %> ago</div>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+  
   <% if @messages.any? %>
     <%= h2 'Messages' %>
     

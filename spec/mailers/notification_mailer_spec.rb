@@ -6,7 +6,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   let(:project){ create :project }
   let(:section){ "project-#{ project.id }" }
   
-  let!(:user1){ create :user }
+  let!(:user1){ create :moderator, section: section }
   let!(:user2){ create :user }
   
   let!(:mention_preference){ user1.preference_for(:mentions).update email_digest: :immediate }
@@ -14,12 +14,14 @@ RSpec.describe NotificationMailer, type: :mailer do
   let!(:participating_preference){ user1.preference_for(:participating_discussions).update email_digest: :daily }
   let!(:message_preference){ user1.preference_for(:messages).update email_digest: :weekly }
   let!(:followed_preference){ user1.preference_for(:followed_discussions).update email_digest: :daily }
+  let!(:moderation_preference){ user1.preference_for(:moderation_reports).update email_digest: :immediate }
   
   let(:board){ create :board, section: section }
   let!(:discussion){ create :discussion, board: board, user: user1 }
   let!(:followed_discussion){ create :discussion_with_comments, board: board }
   let!(:comment){ create :comment, discussion: discussion, user: user1 }
   let!(:reply_comment){ create :comment, user: user2, discussion: discussion, body: "Hey @#{ user1.login }" }
+  let!(:moderation){ create :moderation, target: reply_comment, section: section }
   
   let(:zooniverse_board){ create :board, section: 'zooniverse' }
   let!(:zooniverse_discussion){ create :discussion, board: zooniverse_board, user: user1 }
@@ -33,6 +35,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     user1.subscribe_to followed_discussion, :followed_discussions
     Mention.all.each &:notify_mentioned
     Comment.all.each &:notify_subscribers
+    Moderation.all.each &:notify_subscribers
     data_request.notify_user url: 'foo', message: 'bar'
     conversation.messages.each &:notify_subscribers
   end
@@ -69,7 +72,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     context 'with immediate' do
       it_behaves_like 'NotificationMailer#notify' do
         let(:frequency){ :immediate }
-        let(:categories){ %w(mentions system) }
+        let(:categories){ %w(mentions system moderation_reports) }
       end
     end
     
@@ -95,7 +98,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     context 'with immediate' do
       let(:frequency){ :immediate }
       subject{ categories }
-      it{ is_expected.to match_array Subscription.categories.values_at(:mentions, :system) }
+      it{ is_expected.to match_array Subscription.categories.values_at(:mentions, :system, :moderation_reports) }
     end
     
     context 'with daily' do
@@ -132,9 +135,9 @@ RSpec.describe NotificationMailer, type: :mailer do
       let(:frequency){ :immediate }
       subject{ notification_categories }
       
-      let(:categories){ [1, 3] }
-      its(:uniq){ is_expected.to match_array %w(mentions system) }
-      its(:length){ is_expected.to eql 3 }
+      let(:categories){ [1, 3, 5] }
+      its(:uniq){ is_expected.to match_array %w(mentions system moderation_reports) }
+      its(:length){ is_expected.to eql 4 }
     end
     
     context 'with daily' do
@@ -202,6 +205,18 @@ RSpec.describe NotificationMailer, type: :mailer do
       end
     end
     
+    context 'moderation_reports' do
+      let!(:reports){ mailer.instance_variable_get :@moderations }
+      subject{ reports }
+      
+      its(:keys){ is_expected.to match_array [section] }
+      
+      context 'notifications' do
+        subject{ reports[section].map &:source }
+        it{ is_expected.to eql [moderation] }
+      end
+    end
+    
     context 'discussions' do
       let(:discussions){ mailer.instance_variable_get :@discussions }
       subject{ discussions }
@@ -246,6 +261,12 @@ RSpec.describe NotificationMailer, type: :mailer do
     
     context 'with system' do
       let(:category){ 'system' }
+      its(:uniq){ is_expected.to eql [category] }
+      its(:length){ is_expected.to eql 1 }
+    end
+    
+    context 'with moderation_reports' do
+      let(:category){ 'moderation_reports' }
       its(:uniq){ is_expected.to eql [category] }
       its(:length){ is_expected.to eql 1 }
     end
