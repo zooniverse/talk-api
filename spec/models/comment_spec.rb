@@ -119,6 +119,15 @@ RSpec.describe Comment, type: :model do
         comment.destroy
         expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
       end
+      
+      it 'should remove reply references' do
+        reply = create :comment, reply: comment
+        expect{
+          comment.destroy
+        }.to change{
+          reply.reload.reply
+        }.from(comment).to nil
+      end
     end
     
     describe '#soft_destroy' do
