@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150827165446) do
+ActiveRecord::Schema.define(version: 20150902193407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20150827165446) do
     t.hstore   "upvotes",       default: {}
     t.integer  "project_id"
     t.string   "user_ip"
+    t.integer  "reply_id"
   end
 
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree

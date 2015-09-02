@@ -25,5 +25,6 @@ class CommentSchema
     obj.string :category
     obj.string :body, **required
     focus obj
+    obj.id :reply_id
   end
 end

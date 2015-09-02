@@ -13,6 +13,7 @@ RSpec.describe CommentSchema, type: :schema do
         with :properties do
           its(:category){ is_expected.to eql type: 'string' }
           its(:body){ is_expected.to eql type: 'string' }
+          its(:reply_id){ is_expected.to eql id_schema }
           it_behaves_like 'a focus schema'
         end
       end

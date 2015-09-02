@@ -14,6 +14,9 @@ class Comment < ActiveRecord::Base
   has_many :tags, dependent: :destroy
   has_many :taggables, through: :tags
   
+  belongs_to :reply, class_name: 'Comment'
+  has_many :replies, class_name: 'Comment', foreign_key: :reply_id
+  
   belongs_to :user, required: true
   belongs_to :discussion, counter_cache: true, touch: true, required: true
   belongs_to :focus, polymorphic: true
@@ -31,7 +34,7 @@ class Comment < ActiveRecord::Base
   before_create :denormalize_attributes
   after_create :update_counters
   after_update :update_discussion_counters
-  after_destroy :update_counters
+  after_destroy :update_counters, :clear_replies
   
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
@@ -106,5 +109,9 @@ class Comment < ActiveRecord::Base
     changes.fetch(:discussion_id, []).compact.each do |id|
       Discussion.find_by_id(id).try :update_counters!
     end
+  end
+  
+  def clear_replies
+    replies.update_all reply_id: nil
   end
 end
