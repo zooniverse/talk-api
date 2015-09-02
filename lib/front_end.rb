@@ -8,11 +8,11 @@ class FrontEnd
   end
   
   def self.zooniverse_talk
-    "#{ host }/#/talk"
+    "#{ host }/talk"
   end
   
   def self.project_talk(project)
-    "#{ host }/#/projects/#{ project.slug }/talk"
+    "#{ host }/projects/#{ project.slug }/talk"
   end
   
   def self.talk_root_for(object, project = nil)
@@ -32,17 +32,17 @@ class FrontEnd
     when Comment
       "#{ talk_root_for object, project }/#{ object.discussion.board_id }/#{ object.discussion_id }?comment=#{ object.id }"
     when Conversation
-      "#{ host }/#/inbox/#{ object.id }"
+      "#{ host }/inbox/#{ object.id }"
     when Discussion
       "#{ talk_root_for object, project }/#{ object.board_id }/#{ object.id }"
     when Moderation
       "#{ talk_root_for object, project }/moderations"
     when Project
-      "#{ host }/#/projects/#{ object.slug }"
+      "#{ host }/projects/#{ object.slug }"
     when User
-      "#{ host }/#/users/#{ object.login }"
+      "#{ host }/users/#{ object.login }"
     when UserConversation, Message
-      "#{ host }/#/inbox/#{ object.conversation_id }"
+      "#{ host }/inbox/#{ object.conversation_id }"
     end
   end
 end

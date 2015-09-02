@@ -21,7 +21,7 @@ RSpec.describe FrontEnd, type: :lib do
   
   describe '.zooniverse_talk' do
     before(:each){ expect(subject).to receive(:host).and_return 'host' }
-    its(:zooniverse_talk){ is_expected.to eql 'host/#/talk' }
+    its(:zooniverse_talk){ is_expected.to eql 'host/talk' }
   end
   
   describe '.project_talk' do
@@ -29,7 +29,7 @@ RSpec.describe FrontEnd, type: :lib do
     before(:each){ expect(subject).to receive(:host).and_return 'host' }
     
     it 'should link to the project talk' do
-      expect(subject.project_talk(project)).to eql 'host/#/projects/foo/bar/talk'
+      expect(subject.project_talk(project)).to eql 'host/projects/foo/bar/talk'
     end
   end
   
@@ -41,7 +41,7 @@ RSpec.describe FrontEnd, type: :lib do
       let(:board){ create :board, section: "project-#{ project.id }" }
       
       it 'should link to the project talk' do
-        expect(subject.talk_root_for(board)).to eql 'host/#/projects/foo/bar/talk'
+        expect(subject.talk_root_for(board)).to eql 'host/projects/foo/bar/talk'
       end
     end
     
@@ -49,7 +49,7 @@ RSpec.describe FrontEnd, type: :lib do
       let(:board){ create :board, section: 'zooniverse' }
       
       it 'should link to the zooniverse talk' do
-        expect(subject.talk_root_for(board)).to eql 'host/#/talk'
+        expect(subject.talk_root_for(board)).to eql 'host/talk'
       end
     end
   end
@@ -65,43 +65,43 @@ RSpec.describe FrontEnd, type: :lib do
       end
     end
     
-    it_behaves_like 'FrontEnd.link_to', Board, 'host/#/talk/123' do
+    it_behaves_like 'FrontEnd.link_to', Board, 'host/talk/123' do
       let(:object){ create :board, id: 123 }
     end
     
-    it_behaves_like 'FrontEnd.link_to', Comment, 'host/#/talk/1/2?comment=3' do
+    it_behaves_like 'FrontEnd.link_to', Comment, 'host/talk/1/2?comment=3' do
       let(:board){ create :board, id: 1 }
       let(:discussion){ create :discussion, id: 2, board: board }
       let(:object){ create :comment, id: 3, discussion: discussion }
     end
     
-    it_behaves_like 'FrontEnd.link_to', Conversation, 'host/#/inbox/123' do
+    it_behaves_like 'FrontEnd.link_to', Conversation, 'host/inbox/123' do
       let(:object){ create :conversation, id: 123 }
     end
     
-    it_behaves_like 'FrontEnd.link_to', Discussion, 'host/#/talk/1/2' do
+    it_behaves_like 'FrontEnd.link_to', Discussion, 'host/talk/1/2' do
       let(:board){ create :board, id: 1 }
       let(:object){ create :discussion, id: 2, board: board }
     end
     
-    it_behaves_like 'FrontEnd.link_to', Message, 'host/#/inbox/123' do
+    it_behaves_like 'FrontEnd.link_to', Message, 'host/inbox/123' do
       let(:conversation){ create :conversation_with_messages, id: 123 }
       let(:object){ create :message, conversation: conversation }
     end
     
-    it_behaves_like 'FrontEnd.link_to', User, 'host/#/talk/moderations' do
+    it_behaves_like 'FrontEnd.link_to', User, 'host/talk/moderations' do
       let(:object){ create :moderation }
     end
     
-    it_behaves_like 'FrontEnd.link_to', Project, 'host/#/projects/foo/bar' do
+    it_behaves_like 'FrontEnd.link_to', Project, 'host/projects/foo/bar' do
       let(:object){ create :project, slug: 'foo/bar' }
     end
     
-    it_behaves_like 'FrontEnd.link_to', User, 'host/#/users/Foo' do
+    it_behaves_like 'FrontEnd.link_to', User, 'host/users/Foo' do
       let(:object){ create :user, login: 'Foo' }
     end
     
-    it_behaves_like 'FrontEnd.link_to', UserConversation, 'host/#/inbox/123' do
+    it_behaves_like 'FrontEnd.link_to', UserConversation, 'host/inbox/123' do
       let(:conversation){ create :conversation_with_messages, id: 123 }
       let(:object){ create :user_conversation, conversation: conversation }
     end
