@@ -67,12 +67,17 @@ RSpec.describe Comment, type: :model do
     
     it 'should denormalize the user login' do
       comment = create :comment
-      expect(comment.user_login).to eq comment.user.login
+      expect(comment.user_login).to eql comment.user.login
     end
     
     it 'should denormalize the focus type for focuses' do
       subject_comment = create :comment, focus: build(:subject)
       expect(subject_comment.focus_type).to eql 'Subject'
+    end
+    
+    it 'should denormalize the board id' do
+      comment = create :comment
+      expect(comment.board_id).to eql comment.discussion.board.id
     end
     
     it 'should update the discussion comment count' do

@@ -20,7 +20,7 @@ class Comment < ActiveRecord::Base
   belongs_to :user, required: true
   belongs_to :discussion, counter_cache: true, touch: true, required: true
   belongs_to :focus, polymorphic: true
-  has_one :board, through: :discussion
+  belongs_to :board
   
   validates :body, presence: true
   validates :section, presence: true
@@ -33,6 +33,7 @@ class Comment < ActiveRecord::Base
   before_validation :set_section
   before_create :denormalize_attributes
   after_create :update_counters
+  before_update :update_board_id, if: ->{ discussion_id_changed? }
   after_update :update_discussion_counters
   after_destroy :update_counters, :clear_replies
   
@@ -98,10 +99,15 @@ class Comment < ActiveRecord::Base
   
   def denormalize_attributes
     self.user_login = user.login
+    self.board_id = discussion.board_id
   end
   
   def update_counters
     discussion.update_counters!
+  end
+  
+  def update_board_id
+    denormalize_attributes if board_id != discussion.board_id
   end
   
   def update_discussion_counters

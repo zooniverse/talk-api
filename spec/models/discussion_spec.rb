@@ -121,6 +121,10 @@ RSpec.describe Discussion, type: :model do
       expect{ move_discussion }.to change{ source.reload.users_count }.from(1).to 0
     end
     
+    it 'should update the source comments board_id' do
+      expect{ move_discussion }.to change{ comment.reload.board_id }.from(source.id).to destination.id
+    end
+    
     it 'should update the destination discussions_count' do
       expect{ move_discussion }.to change{ destination.reload.discussions_count }.from(0).to 1
     end
