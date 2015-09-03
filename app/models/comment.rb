@@ -58,8 +58,7 @@ class Comment < ActiveRecord::Base
   end
   
   def searchable?
-    return @searchable if @searchable
-    @searchable = discussion.searchable?
+    discussion.searchable? && !is_deleted?
   end
   
   def searchable_update

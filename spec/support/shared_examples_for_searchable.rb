@@ -95,6 +95,17 @@ RSpec.shared_examples_for 'a searchable model' do
         searchable.save
       end
     end
+    
+    context 'when destroying the searchable model' do
+      it 'should remove the searchable' do
+        model_instance = searchable
+        searchable_instance = model_instance.searchable
+        model_instance.destroy
+        expect{
+          searchable_instance.reload
+        }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
   end
   
   describe "Searchable#{ described_class.name }" do

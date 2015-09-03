@@ -14,6 +14,7 @@ module Searchable
     after_create :create_searchable, if: :searchable?
     after_update :update_searchable, if: :searchable?
     after_update :destroy_searchable, unless: :searchable?
+    after_destroy :destroy_searchable
     has_one :searchable, class_name: searchable_klass.name, foreign_key: :searchable_id
   end
   
