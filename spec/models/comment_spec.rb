@@ -432,4 +432,36 @@ RSpec.describe Comment, type: :model do
     its(:length){ is_expected.to eql 1 }
     its('first.user_id'){ is_expected.to eql user2.id }
   end
+  
+  describe '#searchable?' do
+    subject{ create :comment }
+    
+    context 'when the discussion is searchable' do
+      before(:each){ allow(subject.discussion).to receive(:searchable?).and_return true }
+      
+      context 'when the comment is not deleted' do
+        before(:each){ subject.is_deleted = false }
+        it{ is_expected.to be_searchable }
+      end
+      
+      context 'when the comment is deleted' do
+        before(:each){ subject.is_deleted = true }
+        it{ is_expected.to_not be_searchable }
+      end
+    end
+    
+    context 'when the discussion is not searchable' do
+      before(:each){ allow(subject.discussion).to receive(:searchable?).and_return false }
+      
+      context 'when the comment is not deleted' do
+        before(:each){ subject.is_deleted = false }
+        it{ is_expected.to_not be_searchable }
+      end
+      
+      context 'when the comment is deleted' do
+        before(:each){ subject.is_deleted = true }
+        it{ is_expected.to_not be_searchable }
+      end
+    end
+  end
 end
