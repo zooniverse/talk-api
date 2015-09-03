@@ -34,9 +34,7 @@ class CommentPolicy < ApplicationPolicy
   end
   
   def locked?
-    Array.wrap(record).any? do |comment|
-      comment.discussion.locked?
-    end
+    discussions.any? &:locked?
   end
   
   def discussion_policy
@@ -44,7 +42,7 @@ class CommentPolicy < ApplicationPolicy
   end
   
   def discussions
-    Array.wrap(record).compact.collect &:discussion
+    @_discussions ||= Array.wrap(record).compact.collect(&:discussion)
   end
   
   class Scope < Scope
