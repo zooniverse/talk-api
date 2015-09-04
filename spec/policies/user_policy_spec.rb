@@ -16,12 +16,6 @@ RSpec.describe UserPolicy, type: :policy do
     it_behaves_like 'a policy forbidding', :create, :update, :destroy
   end
   
-  context 'with the logged in user' do
-    let(:user){ record }
-    it_behaves_like 'a policy permitting', :index, :show, :update
-    it_behaves_like 'a policy forbidding', :create, :destroy
-  end
-  
   context 'with a moderator' do
     let(:user){ create :moderator }
     it_behaves_like 'a policy permitting', :index, :show

@@ -7,7 +7,7 @@ RSpec.describe ConversationsController, type: :controller do
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller restricting',
     create: { status: 401, response: :error },
-    update: { status: 401, response: :error }
+    update: { status: 405, response: :error }
   
   context 'without an authorized user' do
     let(:user){ create :user }
@@ -16,7 +16,7 @@ RSpec.describe ConversationsController, type: :controller do
     it_behaves_like 'a controller restricting',
       index: { status: 200, response: :empty },
       show: { status: 401, response: :error },
-      update: { status: 401, response: :error },
+      update: { status: 405, response: :error },
       destroy: { status: 401, response: :error }
   end
   
@@ -58,7 +58,7 @@ RSpec.describe ConversationsController, type: :controller do
     end
     
     it_behaves_like 'a controller restricting',
-      update: { status: 401, response: :error }
+      update: { status: 405, response: :error }
     
     context 'destroying' do
       let!(:record){ create :conversation_with_messages, user: user }

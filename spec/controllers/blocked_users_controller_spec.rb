@@ -11,7 +11,7 @@ RSpec.describe BlockedUsersController, type: :controller do
     show: { status: 401, response: :error },
     create: { status: 401, response: :error },
     destroy: { status: 401, response: :error },
-    update: { status: 401, response: :error }
+    update: { status: 405, response: :error }
   
   context 'without an authorized user' do
     let(:user){ create :user }
@@ -22,7 +22,7 @@ RSpec.describe BlockedUsersController, type: :controller do
     it_behaves_like 'a controller restricting',
       show: { status: 401, response: :error },
       destroy: { status: 401, response: :error },
-      update: { status: 401, response: :error }
+      update: { status: 405, response: :error }
     
     it_behaves_like 'a controller creating' do
       let(:current_user){ user }
@@ -42,6 +42,6 @@ RSpec.describe BlockedUsersController, type: :controller do
     
     it_behaves_like 'a controller rendering', :index, :show, :destroy
     it_behaves_like 'a controller restricting',
-      update: { status: 401, response: :error }
+      update: { status: 405, response: :error }
   end
 end
