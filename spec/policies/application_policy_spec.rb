@@ -128,6 +128,6 @@ RSpec.describe ApplicationPolicy, type: :policy do
     it{ is_expected.to be_moderator }
     it{ is_expected.to_not be_admin }
     it{ is_expected.to be_team }
-    it{ is_expected.to have_attributes user_roles: {'zooniverse' => ['moderator'], 'project-2' => ['admin', 'team'] } }
+    its(:user_roles){ is_expected.to include 'zooniverse' => ['moderator'], 'project-2' => ['admin', 'team'] }
   end
 end

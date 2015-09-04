@@ -30,7 +30,7 @@ class BoardPolicy < ApplicationPolicy
   end
   
   def board_ids
-    Array.wrap(record).collect &:id
+    Array.wrap(record).compact.collect &:id
   end
   
   class PermissionsScope < Scope
