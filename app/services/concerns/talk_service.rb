@@ -24,6 +24,8 @@ module TalkService
     @resource = model_class.new unrooted_params
   rescue ArgumentError => e
     reraise_enum_errors e
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def find_resource
@@ -34,6 +36,8 @@ module TalkService
     resource.assign_attributes unrooted_params
   rescue ArgumentError => e
     reraise_enum_errors e
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def create
@@ -41,6 +45,8 @@ module TalkService
     authorize unless authorized?
     validate unless validated?
     resource.save!
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def update
@@ -49,6 +55,8 @@ module TalkService
     update_resource
     validate unless validated?
     resource.save!
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def authorize
@@ -109,6 +117,14 @@ module TalkService
     attribute = e.message.match(/is not a valid (\w+)/)[1]
     enum = model_class.send attribute.pluralize
     raise Talk::InvalidParameterError.new(attribute, "in #{ enum.keys }", unrooted_params[attribute])
+  end
+  
+  def reraise_constantize_errors(e)
+    if e.message =~ /wrong constant name/
+      raise TalkService::ParameterError.new('Invalid type')
+    else
+      raise e
+    end
   end
   
   def unauthorized!
