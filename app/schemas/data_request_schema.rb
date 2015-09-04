@@ -13,4 +13,10 @@ class DataRequestSchema
       end
     end
   end
+  
+  def update
+    root do |root_object|
+      additional_properties false
+    end
+  end
 end

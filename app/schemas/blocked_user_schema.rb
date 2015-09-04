@@ -10,4 +10,10 @@ class BlockedUserSchema
       id :blocked_user_id, required: true
     end
   end
+  
+  def update
+    root do |root_object|
+      additional_properties false
+    end
+  end
 end
