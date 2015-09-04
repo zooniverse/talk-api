@@ -22,6 +22,8 @@ module TalkService
   
   def build
     @resource = model_class.new unrooted_params
+  rescue ArgumentError => e
+    reraise_enum_errors e
   end
   
   def find_resource
@@ -30,6 +32,8 @@ module TalkService
   
   def update_resource
     resource.assign_attributes unrooted_params
+  rescue ArgumentError => e
+    reraise_enum_errors e
   end
   
   def create
@@ -97,6 +101,15 @@ module TalkService
   end
   
   protected
+  
+  # Rails raises an ArgumentError when assigning an invalid value to an enum
+  # This is just stupid, so generate a rescuable exception with a helpful message instead
+  def reraise_enum_errors(e)
+    raise e unless e.message =~ /is not a valid/
+    attribute = e.message.match(/is not a valid (\w+)/)[1]
+    enum = model_class.send attribute.pluralize
+    raise Talk::InvalidParameterError.new(attribute, "in #{ enum.keys }", unrooted_params[attribute])
+  end
   
   def unauthorized!
     raise Pundit::NotAuthorizedError.new "not allowed to #{ action } this #{ model_class }"

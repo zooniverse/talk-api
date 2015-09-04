@@ -6,6 +6,9 @@ class SubscriptionPreference < ActiveRecord::Base
   validates :enabled, inclusion: { in: [true, false] }
   scope :enabled, ->{ where enabled: true }
   after_update :unsubscribe_user, if: ->{ enabled_change == [true, false] }
+  validates :email_digest, inclusion: {
+    in: %w(immediate daily weekly never)
+  }
   
   enum email_digest: {
     immediate: 0,
