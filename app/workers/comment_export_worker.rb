@@ -9,7 +9,11 @@ class CommentExportWorker
   end
   
   def find_each(&block)
-    view_model.find_each &block
+    view_model.find_each batch_size: batch_size, &block
+  end
+  
+  def row_count
+    view_model.count
   end
   
   def row_from(row)

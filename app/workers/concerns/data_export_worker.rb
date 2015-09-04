@@ -44,6 +44,14 @@ module DataExportWorker
     raise ::NotImplementedError.new 'find_each'
   end
   
+  def row_count
+    raise ::NotImplementedError.new 'row_count'
+  end
+  
+  def batch_size
+    [[row_count - 1, 1_000].min, 1].max
+  end
+  
   def each_row
     index = 0
     find_each do |*args|
