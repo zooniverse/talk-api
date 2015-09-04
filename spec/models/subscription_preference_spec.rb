@@ -13,12 +13,6 @@ RSpec.describe SubscriptionPreference, type: :model do
       expect(without_category).to_not be_valid
       expect(without_category).to fail_validation category: 'is not included in the list'
     end
-    
-    it 'should require an enabled preference' do
-      without_enabled = build :subscription_preference, enabled: nil
-      expect(without_enabled).to_not be_valid
-      expect(without_enabled).to fail_validation enabled: 'is not included in the list'
-    end
   end
   
   describe '.defaults' do

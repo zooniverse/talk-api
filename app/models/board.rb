@@ -1,6 +1,7 @@
 class Board < ActiveRecord::Base
   include Searchable
   include Sectioned
+  include BooleanCoercion
   
   has_many :discussions, dependent: :restrict_with_error
   has_one :latest_discussion, ->{ includes(DiscussionSerializer.includes).reorder updated_at: :desc }, class_name: 'Discussion'

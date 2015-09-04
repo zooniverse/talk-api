@@ -1,5 +1,6 @@
 class SubscriptionPreference < ActiveRecord::Base
   include SubscriptionCategories
+  include BooleanCoercion
   belongs_to :user, required: true
   
   validates :enabled, inclusion: { in: [true, false] }

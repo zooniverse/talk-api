@@ -1,5 +1,6 @@
 class UserConversation < ActiveRecord::Base
   include Subscribable
+  include BooleanCoercion
   
   belongs_to :conversation
   belongs_to :user, required: true

@@ -1,6 +1,7 @@
 class Notification < ActiveRecord::Base
   include Expirable
   include Sectioned
+  include BooleanCoercion
   
   belongs_to :source, polymorphic: true
   belongs_to :user, required: true
