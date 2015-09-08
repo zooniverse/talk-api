@@ -54,6 +54,7 @@ class Comment < ActiveRecord::Base
     update_attributes is_deleted: true, body: 'This comment has been deleted'
     mentions.destroy_all
     tags.destroy_all
+    close_moderation
     # prevent empty discussions
     discussion.destroy unless discussion.comments.where(is_deleted: false).any?
     self
