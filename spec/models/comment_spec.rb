@@ -178,7 +178,7 @@ RSpec.describe Comment, type: :model do
         expect{ comment.discussion.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
       
-      context 'via a moderation', :focus do
+      context 'via a moderation' do
         let!(:discussion){ create :discussion }
         let!(:comment){ create :comment, discussion: discussion }
         let!(:moderation){ create :moderation, target: comment }
