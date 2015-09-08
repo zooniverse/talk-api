@@ -67,7 +67,7 @@ RSpec.describe Moderation, type: :model do
       let(:action){ action_param.merge action: 'destroy' }
       its(:state){ is_expected.to eql 'closed' }
       its(:target){ is_expected.to be_nil }
-      its('destroyed_target.to_json'){ is_expected.to eql target.to_json }
+      its(:destroyed_target){ is_expected.to include 'id' => target.id }
     end
     
     context 'when ignoring' do

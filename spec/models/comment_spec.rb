@@ -177,6 +177,34 @@ RSpec.describe Comment, type: :model do
         comment.soft_destroy
         expect{ comment.discussion.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
+      
+      context 'via a moderation', :focus do
+        let!(:discussion){ create :discussion }
+        let!(:comment){ create :comment, discussion: discussion }
+        let!(:moderation){ create :moderation, target: comment }
+        let(:action){ { user_id: create(:user).id, message: 'deleting', action: 'destroy' } }
+        
+        before :each do
+          discussion.comments.where('id <> ?', comment.id).destroy_all
+          moderation.actions << action
+        end
+        
+        it 'should use soft destroy' do
+          allow(moderation).to receive(:target).and_return comment
+          expect(comment).to receive :soft_destroy
+          moderation.save
+        end
+        
+        it 'should destroy the discussion' do
+          moderation.save
+          expect{ discussion.reload }.to raise_error ActiveRecord::RecordNotFound
+        end
+        
+        it 'should destroy the comment' do
+          moderation.save
+          expect{ comment.reload }.to raise_error ActiveRecord::RecordNotFound
+        end
+      end
     end
     
     context 'updating board counts' do
