@@ -10,7 +10,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     index: { status: 401, response: :error },
     show: { status: 401, response: :error },
     create: { status: 401, response: :error },
-    destroy: { status: 401, response: :error },
+    destroy: { status: 405, response: :error },
     update: { status: 401, response: :error }
   
   context 'with a user' do
@@ -20,7 +20,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     it_behaves_like 'a controller rendering', :index
     it_behaves_like 'a controller restricting',
       show: { status: 401, response: :error },
-      destroy: { status: 401, response: :error },
+      destroy: { status: 405, response: :error },
       update: { status: 401, response: :error }
     
     it_behaves_like 'a controller creating' do
@@ -42,7 +42,7 @@ RSpec.describe SubscriptionsController, type: :controller do
     
     it_behaves_like 'a controller rendering', :index, :show
     it_behaves_like 'a controller restricting',
-      destroy: { status: 401, response: :error }
+      destroy: { status: 405, response: :error }
     
     it_behaves_like 'a controller updating' do
       let(:current_user){ record.user }

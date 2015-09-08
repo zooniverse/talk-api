@@ -7,9 +7,9 @@ RSpec.describe TagsController, type: :controller do
   it_behaves_like 'a controller rescuing'
   it_behaves_like 'a controller rendering', :index, :show
   it_behaves_like 'a controller restricting',
-    create: { status: 401, response: :error },
-    destroy: { status: 401, response: :error },
-    update: { status: 401, response: :error }
+    create: { status: 405, response: :error },
+    destroy: { status: 405, response: :error },
+    update: { status: 405, response: :error }
   
   describe '#popular' do
     let(:project){ create :project, display_name: 'tagged' }

@@ -3,6 +3,7 @@ class Discussion < ActiveRecord::Base
   include Searchable
   include Subscribable
   include Sectioned
+  include BooleanCoercion
   
   belongs_to :user, required: true
   belongs_to :board, required: true, counter_cache: true

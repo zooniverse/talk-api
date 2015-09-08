@@ -25,7 +25,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
         let(:verb){ :get }
         let(:action){ :index }
         let(:params){ { } }
-        let(:authorizable){ resource }
+        let(:authorizable){ resource unless actions[action][:status] == 405 }
         let(:status){ actions[action][:status] }
         let(:expected_response){ actions[action][:response] }
       end
@@ -38,7 +38,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
         let(:verb){ :get }
         let(:action){ :show }
         let(:params){ { id: record.id } }
-        let(:authorizable){ resource.where(id: record.id) }
+        let(:authorizable){ resource.where(id: record.id) unless actions[action][:status] == 405 }
         let(:status){ actions[action][:status] }
         let(:expected_response){ actions[action][:response] }
       end
@@ -78,7 +78,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
         let(:verb){ :delete }
         let(:action){ :destroy }
         let(:params){ { id: record.id } }
-        let(:authorizable){ record }
+        let(:authorizable){ record unless actions[action][:status] == 405 }
         let(:status){ actions[action][:status] }
         let(:expected_response){ actions[action][:response] }
       end

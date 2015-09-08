@@ -74,6 +74,25 @@ RSpec.shared_examples_for 'a data export worker' do
     end
   end
   
+  describe '#batch_size' do
+    before(:each){ allow(subject).to receive(:row_count).and_return count }
+    
+    context 'with 0 rows' do
+      let(:count){ 0 }
+      its(:batch_size){ is_expected.to eql 1 }
+    end
+    
+    context 'with < 1,000 rows' do
+      let(:count){ 123 }
+      its(:batch_size){ is_expected.to eql 122 }
+    end
+    
+    context 'with > 1,000 rows' do
+      let(:count){ 1_234 }
+      its(:batch_size){ is_expected.to eql 1_000 }
+    end
+  end
+  
   describe '#each_row' do
     before(:each) do
       allow(subject).to receive(:find_each)

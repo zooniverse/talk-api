@@ -18,6 +18,16 @@ Sidekiq::Testing.fake!
 
 Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
+if ENV['EVIL_MODE']
+  require 'open-uri'
+  
+  File.open('spec/support/awful_strings.json', 'wb') do |out|
+    open('https://raw.githubusercontent.com/minimaxir/big-list-of-naughty-strings/master/blns.json', 'rb') do |data|
+      out.write data.read
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include JSON::SchemaBuilder::RSpecHelper, type: :schema

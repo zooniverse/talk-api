@@ -1,5 +1,6 @@
 class ConversationsController < ApplicationController
   include TalkResource
+  disallow :update
   
   def index
     authorize model_class

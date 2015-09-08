@@ -42,7 +42,7 @@ class CommentPolicy < ApplicationPolicy
   end
   
   def discussions
-    @_discussions ||= Array.wrap(record).compact.collect(&:discussion)
+    @_discussions ||= Array.wrap(record).compact.collect(&:discussion).compact
   end
   
   class Scope < Scope

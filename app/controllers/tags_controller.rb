@@ -1,5 +1,6 @@
 class TagsController < ApplicationController
   include TalkResource
+  disallow :create, :update, :destroy
   
   def popular
     render json: popular_serializer.resource(params, nil, current_user: current_user)

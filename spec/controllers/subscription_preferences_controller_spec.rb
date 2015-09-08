@@ -8,8 +8,8 @@ RSpec.describe SubscriptionPreferencesController, type: :controller do
   it_behaves_like 'a controller restricting',
     index: { status: 401, response: :error },
     show: { status: 401, response: :error },
-    create: { status: 401, response: :error },
-    destroy: { status: 401, response: :error },
+    create: { status: 405, response: :error },
+    destroy: { status: 405, response: :error },
     update: { status: 401, response: :error }
   
   context 'without an authorized user' do
@@ -19,8 +19,8 @@ RSpec.describe SubscriptionPreferencesController, type: :controller do
     it_behaves_like 'a controller rendering', :index
     it_behaves_like 'a controller restricting',
       show: { status: 401, response: :error },
-      create: { status: 401, response: :error },
-      destroy: { status: 401, response: :error },
+      create: { status: 405, response: :error },
+      destroy: { status: 405, response: :error },
       update: { status: 401, response: :error }
   end
   
@@ -29,8 +29,8 @@ RSpec.describe SubscriptionPreferencesController, type: :controller do
     
     it_behaves_like 'a controller rendering', :index, :show
     it_behaves_like 'a controller restricting',
-      create: { status: 401, response: :error },
-      destroy: { status: 401, response: :error }
+      create: { status: 405, response: :error },
+      destroy: { status: 405, response: :error }
     
     it_behaves_like 'a controller updating' do
       let(:current_user){ record.user }

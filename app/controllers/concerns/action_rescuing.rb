@@ -30,6 +30,16 @@ module ActionRescuing
     rescue_from OauthAccessToken::RevokedError, with: :unauthorized
   end
   
+  module ClassMethods
+    def disallow(*methods)
+      methods.each do |method|
+        define_method method do
+          not_allowed StandardError.new('Method Not Allowed')
+        end
+      end
+    end
+  end
+  
   def unauthorized(exception)
     render_exception :unauthorized, exception
   end
@@ -40,6 +50,10 @@ module ActionRescuing
   
   def not_found(exception)
     render_exception :not_found, exception
+  end
+  
+  def not_allowed(exception)
+    render_exception :method_not_allowed, exception
   end
   
   def bad_request(exception)

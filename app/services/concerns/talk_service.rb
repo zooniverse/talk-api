@@ -22,6 +22,10 @@ module TalkService
   
   def build
     @resource = model_class.new unrooted_params
+  rescue ArgumentError => e
+    reraise_enum_errors e
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def find_resource
@@ -30,6 +34,10 @@ module TalkService
   
   def update_resource
     resource.assign_attributes unrooted_params
+  rescue ArgumentError => e
+    reraise_enum_errors e
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def create
@@ -37,6 +45,8 @@ module TalkService
     authorize unless authorized?
     validate unless validated?
     resource.save!
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def update
@@ -45,6 +55,8 @@ module TalkService
     update_resource
     validate unless validated?
     resource.save!
+  rescue NameError => e
+    reraise_constantize_errors e
   end
   
   def authorize
@@ -97,6 +109,23 @@ module TalkService
   end
   
   protected
+  
+  # Rails raises an ArgumentError when assigning an invalid value to an enum
+  # This is just stupid, so generate a rescuable exception with a helpful message instead
+  def reraise_enum_errors(e)
+    raise e unless e.message =~ /is not a valid/
+    attribute = e.message.match(/is not a valid (\w+)/)[1]
+    enum = model_class.send attribute.pluralize
+    raise Talk::InvalidParameterError.new(attribute, "in #{ enum.keys }", unrooted_params[attribute])
+  end
+  
+  def reraise_constantize_errors(e)
+    if e.message =~ /wrong constant name/
+      raise TalkService::ParameterError.new('Invalid type')
+    else
+      raise e
+    end
+  end
   
   def unauthorized!
     raise Pundit::NotAuthorizedError.new "not allowed to #{ action } this #{ model_class }"

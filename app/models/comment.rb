@@ -5,6 +5,7 @@ class Comment < ActiveRecord::Base
   include Searchable
   include Sectioned
   include Notifiable
+  include BooleanCoercion
   
   include Comment::Tagging
   include Comment::Mentioning

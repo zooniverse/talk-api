@@ -1,5 +1,6 @@
 class Subscription < ActiveRecord::Base
   include SubscriptionCategories
+  include BooleanCoercion
   
   has_many :notifications, dependent: :destroy
   belongs_to :user, required: true

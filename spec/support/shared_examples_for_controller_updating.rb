@@ -54,5 +54,17 @@ RSpec.shared_examples_for 'a controller updating' do
         expect(response.json).to be_a Hash
       end
     end
+    
+    if ENV['EVIL_MODE']
+      context 'with invalid parameters' do
+        include_context 'mangled params'
+        
+        it 'should not blow up' do
+          expect{
+            post :update, mangle(request_params).merge(id: record.id, format: :json)
+          }.to_not raise_error
+        end
+      end
+    end
   end
 end

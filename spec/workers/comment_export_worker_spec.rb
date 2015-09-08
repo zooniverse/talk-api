@@ -75,7 +75,7 @@ RSpec.describe CommentExportWorker, type: :worker do
     end
     
     it 'should scope to the view model' do
-      expect(subject).to receive(:view_model).and_call_original
+      expect(subject).to receive(:view_model).at_least(:once).and_call_original
       subject.find_each{ }
     end
     
@@ -86,6 +86,14 @@ RSpec.describe CommentExportWorker, type: :worker do
       expect do |block|
         subject.find_each &block
       end.to yield_successive_args row
+    end
+    
+    it 'should use the batch size' do
+      expect(subject).to receive(:batch_size).and_return 123
+      enumerator = double find_each: nil
+      expect(subject).to receive(:view_model).and_return enumerator
+      expect(enumerator).to receive(:find_each).with batch_size: 123
+      subject.find_each{ }
     end
   end
   
@@ -109,6 +117,13 @@ RSpec.describe CommentExportWorker, type: :worker do
     it 'should create the view' do
       expect(subject).to receive :create_view
       subject.perform data_request.id
+    end
+  end
+  
+  describe '#row_count' do
+    it 'should count section comments' do
+      expect(subject).to receive(:view_model).and_return double count: 5
+      expect(subject.row_count).to eql 5
     end
   end
 end
