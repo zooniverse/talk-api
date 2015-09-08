@@ -11,6 +11,7 @@ Zooniverse Talk Notifications:
 <% notifications.each do |notification| %>
       <% notification.message %>
       Download: <%= notification.url %>
+      Available until <%= notification.source.expires_at.strftime('%Y-%m-%d %H:%M UTC') %>
 <% end %>
 
 
