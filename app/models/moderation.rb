@@ -70,7 +70,7 @@ class Moderation < ActiveRecord::Base
   def destroy_target
     update_columns state: Moderation.states[:closed]
     self.destroyed_target = target.as_json
-    target.destroy!
+    target_type == 'Comment' ? target.soft_destroy : target.destroy!
     self.target = nil
   end
   
