@@ -3,9 +3,9 @@ require 'spec_helper'
 RSpec.shared_examples_for 'moderatable' do
   let(:name){ described_class.name.tableize.singularize.to_sym }
   let(:moderatable){ create name }
+  let!(:moderation){ create :moderation, target: moderatable }
   
   it 'should have a moderation' do
-    moderation = create :moderation, target: moderatable
     expect(moderatable.moderation).to eql moderation
   end
   
@@ -37,6 +37,39 @@ RSpec.shared_examples_for 'moderatable' do
       }.to change {
         sub_class.moderatable[:bar]
       }.from(baz: true).to foo: true
+    end
+  end
+  
+  describe '#close_moderation' do
+    context 'without a moderation' do
+      it 'should not close the moderation' do
+        moderation.destroy
+        expect{
+          moderatable.destroy
+        }.to_not raise_error
+      end
+    end
+    
+    context 'with a moderation' do
+      before :each do
+        allow(moderatable).to receive(:moderation).and_return moderation
+      end
+      
+      context 'with an ignored moderation' do
+        it 'should not close the moderation' do
+          moderation.update state: 'ignored'
+          expect(moderation).to_not receive :save
+          moderatable.destroy
+        end
+      end
+      
+      context 'with an open moderation' do
+        before(:each){ moderatable.destroy }
+        subject{ moderation.reload }
+        its(:state){ is_expected.to eql 'closed' }
+        its(:destroyed_target){ is_expected.to include 'id' => moderatable.id }
+        its(:target){ is_expected.to be_nil }
+      end
     end
   end
 end

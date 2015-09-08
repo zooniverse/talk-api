@@ -162,6 +162,11 @@ RSpec.describe Comment, type: :model do
         expect(comment.is_deleted?).to be true
       end
       
+      it 'should close the moderation' do
+        expect(comment).to receive :close_moderation
+        comment.soft_destroy
+      end
+      
       it 'should clear the comment body' do
         comment.soft_destroy
         expect(comment.body).to eql 'This comment has been deleted'

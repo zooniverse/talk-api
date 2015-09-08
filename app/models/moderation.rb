@@ -68,7 +68,7 @@ class Moderation < ActiveRecord::Base
   end
   
   def destroy_target
-    self.state = 'closed'
+    update_columns state: Moderation.states[:closed]
     self.destroyed_target = target.as_json
     target.destroy!
     self.target = nil
