@@ -12,6 +12,28 @@ RSpec.describe User, type: :model do
     end
   end
   
+  describe 'role scopes' do
+    let!(:admins){ create_list :admin, 2, section: 'project-123' }
+    let!(:moderators){ create_list :moderator, 2, section: 'project-123' }
+    let!(:scientists){ create_list :scientist, 2, section: 'project-123' }
+    let!(:other){ create_list :admin, 2, section: 'project-456' }
+    
+    describe '.admins' do
+      subject{ User.admins on: 'project-123' }
+      it{ is_expected.to match_array admins }
+    end
+    
+    describe '.moderators' do
+      subject{ User.moderators on: 'project-123' }
+      it{ is_expected.to match_array moderators }
+    end
+    
+    describe '.team' do
+      subject{ User.team on: 'project-123' }
+      it{ is_expected.to match_array admins + moderators + scientists }
+    end
+  end
+  
   describe '#preference_for' do
     it 'should find the subscription preference' do
       expect(SubscriptionPreference).to receive(:find_or_default_for).with user, :mentions
