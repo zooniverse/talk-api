@@ -30,15 +30,11 @@ class SubscriptionPreference < ActiveRecord::Base
   end
   
   def self.for_user(user)
-    {
-      participating_discussions: find_or_default_for(user, :participating_discussions),
-      mentions: find_or_default_for(user, :mentions),
-      messages: find_or_default_for(user, :messages),
-      system: find_or_default_for(user, :system),
-      followed_discussions: find_or_default_for(user, :followed_discussions),
-      moderation_reports: find_or_default_for(user, :moderation_reports),
-      group_mentions: find_or_default_for(user, :group_mentions),
-    }
+    { }.tap do |preferences|
+      defaults.keys.each do |category|
+        preferences[category] = find_or_default_for user, category
+      end
+    end.with_indifferent_access
   end
   
   def self.find_or_default_for(user, category)

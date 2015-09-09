@@ -52,20 +52,10 @@ RSpec.describe SubscriptionPreference, type: :model do
     let(:user){ create :user }
     subject{ described_class.for_user user }
     
-    its([:participating_discussions]){ is_expected.to be_a described_class }
-    its([:participating_discussions]){ is_expected.to be_participating_discussions }
-    its([:mentions]){ is_expected.to be_a described_class }
-    its([:mentions]){ is_expected.to be_mentions  }
-    its([:messages]){ is_expected.to be_a described_class }
-    its([:messages]){ is_expected.to be_messages }
-    its([:system]){ is_expected.to be_a described_class }
-    its([:system]){ is_expected.to be_system }
-    its([:followed_discussions]){ is_expected.to be_a described_class }
-    its([:followed_discussions]){ is_expected.to be_followed_discussions }
-    its([:moderation_reports]){ is_expected.to be_a described_class }
-    its([:moderation_reports]){ is_expected.to be_moderation_reports }
-    its([:group_mentions]){ is_expected.to be_a described_class }
-    its([:group_mentions]){ is_expected.to be_group_mentions }
+    SubscriptionPreference.categories.keys.each do |category|
+      its([category]){ is_expected.to be_a described_class }
+      its([category]){ is_expected.to send "be_#{ category }" }
+    end
     
     it 'should .find_or_default_for each category' do
       expect(described_class).to receive(:find_or_default_for)
