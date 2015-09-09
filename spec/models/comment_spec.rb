@@ -288,12 +288,13 @@ RSpec.describe Comment, type: :model do
     
     let(:user){ create :user }
     let(:user_mention){ "@#{ user.login }" }
+    let(:group_mention){ "@admins" }
     let(:admin_user){ create :admin, section: 'zooniverse' }
     
     let(:board){ create :board }
     let(:discussion){ create :discussion, board: board }
     
-    let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.login }?" }
+    let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.login } and @admins?" }
     let(:comment){ create :comment, discussion: discussion, body: body }
     
     it 'should match subjects' do
@@ -314,6 +315,10 @@ RSpec.describe Comment, type: :model do
       }
     end
     
+    it 'should match groups' do
+      expect(comment.group_mentioning).to include 'admins' => '@admins'
+    end
+    
     it 'should create mentions for subjects' do
       expect(comment.mentions.where(mentionable: subject).exists?).to be true
     end
@@ -324,6 +329,10 @@ RSpec.describe Comment, type: :model do
     
     it 'should create mentions for users' do
       expect(comment.mentions.where(mentionable: user).exists?).to be true
+    end
+    
+    it 'should create group mentions' do
+      expect(comment.group_mentions.where(name: 'admins').exists?).to be true
     end
     
     context 'when the comment is not accessible by the mentioned user' do
@@ -356,6 +365,20 @@ RSpec.describe Comment, type: :model do
       subject2 = create :subject
       comment.update! body: "#{ comment.body } ^S#{ subject2.id }"
       expect(comment.mentions.where(mentionable: subject2).exists?).to be true
+    end
+  end
+  
+  describe '#update_group_mentions' do
+    let(:comment){ create :comment, body: '@admins' }
+    
+    it 'should remove mentions on update' do
+      comment.update! body: '@moderators'
+      expect(comment.group_mentions.where(name: 'admins').exists?).to be false
+    end
+    
+    it 'should add mentions on update' do
+      comment.update! body: "#{ comment.body } @researchers"
+      expect(comment.group_mentions.where(name: 'researchers').exists?).to be true
     end
   end
   
