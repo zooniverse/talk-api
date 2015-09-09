@@ -10,6 +10,12 @@ class User < ActiveRecord::Base
   has_many :blocked_users
   has_one :unsubscribe_token
   
+  scope :with_roles, ->(*roles, on:){ joins(:roles).merge Role.where(section: on, name: roles) }
+  scope :admins, ->(on:){ with_roles 'admin', on: on }
+  scope :moderators, ->(on:){ with_roles 'moderator', on: on }
+  scope :scientists, ->(on:){ with_roles 'scientist', on: on }
+  scope :team, ->(on:){ with_roles 'moderator', 'admin', 'scientist', 'team', on: on }
+  
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
   moderatable_with :watch, by: [:moderator, :admin]
