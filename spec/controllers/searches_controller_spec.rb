@@ -93,6 +93,27 @@ RSpec.describe SearchesController, type: :controller do
       end
     end
     
+    context 'with a comma separated list of types' do
+      let(:request_params) do
+        { section: 'zooniverse', query: 'testing', types: 'boards,comments' }
+      end
+      
+      subject{ response }
+      before(:each){ send_request }
+      
+      its(:status){ is_expected.to eql 200 }
+      its(:content_type){ is_expected.to eql 'application/json' }
+      
+      describe 'json' do
+        subject{ response.json }
+        
+        it{ is_expected.to be_a Hash }
+        it{ is_expected.to_not have_key 'error' }
+        it{ is_expected.to have_key 'searches' }
+        it{ is_expected.to have_key 'meta' }
+      end
+    end
+    
     describe 'querying' do
       let(:request_params) do
         {
