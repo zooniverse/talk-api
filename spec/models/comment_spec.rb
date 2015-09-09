@@ -111,7 +111,7 @@ RSpec.describe Comment, type: :model do
     
     context 'destroying' do
       let(:subject){ create :subject }
-      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }" }
+      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }, @admins" }
       
       it 'should destroy tags' do
         tag = comment.tags.first
@@ -123,6 +123,12 @@ RSpec.describe Comment, type: :model do
         mention = comment.mentions.first
         comment.destroy
         expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+      
+      it 'should destroy group mentions' do
+        group_mention = comment.group_mentions.first
+        comment.destroy
+        expect{ group_mention.reload }.to raise_error ActiveRecord::RecordNotFound
       end
       
       it 'should remove reply references' do
@@ -137,7 +143,7 @@ RSpec.describe Comment, type: :model do
     
     describe '#soft_destroy' do
       let(:subject){ create :subject }
-      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }" }
+      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }, @admins" }
       let!(:other){ create :comment, discussion: comment.discussion }
       
       it 'should destroy tags' do
@@ -150,6 +156,12 @@ RSpec.describe Comment, type: :model do
         mention = comment.mentions.first
         comment.soft_destroy
         expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+      
+      it 'should destroy group mentions' do
+        group_mention = comment.group_mentions.first
+        comment.soft_destroy
+        expect{ group_mention.reload }.to raise_error ActiveRecord::RecordNotFound
       end
       
       it 'should not destroy the comment' do
