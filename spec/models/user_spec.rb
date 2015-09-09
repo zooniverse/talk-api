@@ -128,5 +128,43 @@ RSpec.describe User, type: :model do
   end
   
   describe '#group_mentioned_by' do
+    let(:comment){ create :comment }
+    let(:group_mention){ create :group_mention, comment: comment, name: 'admins' }
+    
+    it 'should create a notification' do
+      expect(Notification).to receive :create
+      user.group_mentioned_by group_mention
+    end
+    
+    it 'should create a subscription' do
+      expect(user).to receive(:subscribe_to).with comment.discussion, :group_mentions
+      user.group_mentioned_by group_mention
+    end
+    
+    context 'notification' do
+      subject{ user.group_mentioned_by group_mention }
+      its(:user_id){ is_expected.to eql user.id }
+      its(:message){ is_expected.to eql "You were mentioned as @admin by #{ comment.user.display_name } in #{ comment.discussion.title }" }
+      its(:url){ is_expected.to eql FrontEnd.link_to(comment) }
+      its(:section){ is_expected.to eql comment.section }
+      its(:source){ is_expected.to eql comment }
+    end
+    
+    context 'when preference is disabled' do
+      before(:each){ user.preference_for(:group_mentions).update_attribute :enabled, false }
+      
+      it 'should not create a notification' do
+        expect(Notification).to_not receive :create
+        user.group_mentioned_by group_mention
+      end
+      
+      it 'should not create a subscription' do
+        expect {
+          user.group_mentioned_by group_mention
+        }.to_not change{
+          Subscription.group_mentions.count
+        }
+      end
+    end
   end
 end

@@ -43,6 +43,16 @@ class User < ActiveRecord::Base
   end
   
   def group_mentioned_by(group_mention)
+    subscription = subscribe_to group_mention.comment.discussion, :group_mentions
+    
+    Notification.create({
+      source: group_mention.comment,
+      user_id: id,
+      message: "You were mentioned as @#{ group_mention.name.singularize } by #{ group_mention.user.display_name } in #{ group_mention.comment.discussion.title }",
+      url: FrontEnd.link_to(group_mention.comment),
+      section: group_mention.section,
+      subscription: subscription
+    }) if subscription.try(:enabled?)
   end
   
   def preference_for(category)
