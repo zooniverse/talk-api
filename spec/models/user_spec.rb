@@ -126,4 +126,7 @@ RSpec.describe User, type: :model do
       end
     end
   end
+  
+  describe '#group_mentioned_by' do
+  end
 end

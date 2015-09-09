@@ -12,6 +12,7 @@ class Comment < ActiveRecord::Base
   include Comment::Subscribing
   
   has_many :mentions, dependent: :destroy
+  has_many :group_mentions, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :taggables, through: :tags
   

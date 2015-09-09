@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include Moderatable
   
+  has_many :mentions, as: :mentionable
   has_many :roles
   has_many :user_conversations
   has_many :conversations, through: :user_conversations
@@ -14,6 +15,7 @@ class User < ActiveRecord::Base
   scope :admins, ->(on:){ with_roles 'admin', on: on }
   scope :moderators, ->(on:){ with_roles 'moderator', on: on }
   scope :scientists, ->(on:){ with_roles 'scientist', on: on }
+  singleton_class.send :alias_method, :researchers, :scientists
   scope :team, ->(on:){ with_roles 'moderator', 'admin', 'scientist', 'team', on: on }
   
   moderatable_with :ignore, by: [:moderator, :admin]
@@ -38,6 +40,9 @@ class User < ActiveRecord::Base
       section: comment.section,
       subscription: subscription
     }) if subscription.try(:enabled?)
+  end
+  
+  def group_mentioned_by(group_mention)
   end
   
   def preference_for(category)

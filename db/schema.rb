@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150903173946) do
+ActiveRecord::Schema.define(version: 20150909184254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,24 +61,25 @@ ActiveRecord::Schema.define(version: 20150903173946) do
 
   create_table "comments", force: :cascade do |t|
     t.string   "category"
-    t.text     "body",                          null: false
+    t.text     "body",                             null: false
     t.integer  "focus_id"
     t.string   "focus_type"
-    t.string   "section",                       null: false
+    t.string   "section",                          null: false
     t.integer  "discussion_id"
-    t.integer  "user_id",                       null: false
-    t.string   "user_login",                    null: false
-    t.boolean  "is_deleted",    default: false
-    t.json     "versions",      default: []
+    t.integer  "user_id",                          null: false
+    t.string   "user_login",                       null: false
+    t.boolean  "is_deleted",       default: false
+    t.json     "versions",         default: []
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.json     "mentioning",    default: {},    null: false
-    t.json     "tagging",       default: {}
-    t.hstore   "upvotes",       default: {}
+    t.json     "mentioning",       default: {},    null: false
+    t.json     "tagging",          default: {}
+    t.hstore   "upvotes",          default: {}
     t.integer  "project_id"
     t.string   "user_ip"
     t.integer  "reply_id"
     t.integer  "board_id"
+    t.json     "group_mentioning", default: {},    null: false
   end
 
   add_index "comments", ["board_id"], name: "index_comments_on_board_id", using: :btree
@@ -145,6 +146,15 @@ ActiveRecord::Schema.define(version: 20150903173946) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "label"
+  end
+
+  create_table "group_mentions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.string   "section"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "mentions", force: :cascade do |t|
