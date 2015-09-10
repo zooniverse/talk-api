@@ -20,7 +20,7 @@ RSpec.describe GroupMention, type: :model do
     
     it 'should require a valid name' do
       without_name = build :group_mention, name: 'foo'
-      expect(without_name).to fail_validation name: 'must be "admins", "moderators", "researchers", or "team"'
+      expect(without_name).to fail_validation name: 'must be "admins", "moderators", "researchers", "scientists", or "team"'
     end
   end
   
@@ -49,6 +49,11 @@ RSpec.describe GroupMention, type: :model do
     
     context 'with researchers' do
       let(:name){ 'researchers' }
+      it{ is_expected.to match_array researchers }
+    end
+    
+    context 'with scientists' do
+      let(:name){ 'scientists' }
       it{ is_expected.to match_array researchers }
     end
     

@@ -380,6 +380,11 @@ RSpec.describe Comment, type: :model do
       comment.update! body: "#{ comment.body } @researchers"
       expect(comment.group_mentions.where(name: 'researchers').exists?).to be true
     end
+    
+    it 'should add mentions on update' do
+      comment.update! body: "#{ comment.body } @scientists"
+      expect(comment.group_mentions.where(name: 'scientists').exists?).to be true
+    end
   end
   
   describe '#parse_tags' do

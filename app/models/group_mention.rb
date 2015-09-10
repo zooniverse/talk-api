@@ -3,8 +3,8 @@ class GroupMention < ActiveRecord::Base
   belongs_to :user, required: true
   validates :section, presence: true
   validates :name, presence: true, inclusion: {
-    in: %w(admins moderators researchers team),
-    message: 'must be "admins", "moderators", "researchers", or "team"'
+    in: %w(admins moderators researchers scientists team),
+    message: 'must be "admins", "moderators", "researchers", "scientists", or "team"'
   }
   
   before_validation :denormalize_attributes, :downcase_name, on: :create

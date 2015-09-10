@@ -9,6 +9,7 @@ class Comment
           admins |
           moderators |
           researchers |
+          scientists |
           team
         )
       ) |
