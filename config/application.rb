@@ -5,6 +5,7 @@ require 'active_record/railtie'
 require 'action_controller/railtie'
 require 'action_mailer/railtie'
 require 'rails/test_unit/railtie'
+require 'honeybadger'
 
 Bundler.require(*Rails.groups)
 
@@ -41,6 +42,12 @@ module Talk
       "Expected #{ @param } to be #{ @expected }, but was #{ @actual }"
     end
     alias_method :to_s, :message
+  end
+  
+  def self.report_error(e)
+    if Rails.env.staging? || Rails.env.production?
+      Honeybadger.notify_or_ignore e
+    end
   end
   
   class Application < Rails::Application
