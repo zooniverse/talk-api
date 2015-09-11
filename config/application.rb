@@ -43,6 +43,12 @@ module Talk
     alias_method :to_s, :message
   end
   
+  def self.report_error(e)
+    if Rails.env.staging? || Rails.env.production?
+      Honeybadger.notify_or_ignore e
+    end
+  end
+  
   class Application < Rails::Application
     config.autoload_paths += [
       'lib',

@@ -26,6 +26,9 @@ class MarkdownApi
   end
   
   def self.markdown(text, slug: nil)
-    request(:post, '/html', { markdown: text, project: slug }.to_json).body
+    request(:post, '/html', { markdown: text, project: slug }.to_json).body.force_encoding Encoding::UTF_8
+  rescue => e
+    Talk.report_error e
+    text
   end
 end
