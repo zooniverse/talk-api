@@ -12,6 +12,7 @@ class Comment < ActiveRecord::Base
   include Comment::Subscribing
   
   has_many :mentions, dependent: :destroy
+  has_many :group_mentions, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :taggables, through: :tags
   
@@ -53,6 +54,7 @@ class Comment < ActiveRecord::Base
   def soft_destroy
     update_attributes is_deleted: true, body: 'This comment has been deleted'
     mentions.destroy_all
+    group_mentions.destroy_all
     tags.destroy_all
     close_moderation
     # prevent empty discussions
