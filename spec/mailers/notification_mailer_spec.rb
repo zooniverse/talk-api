@@ -10,6 +10,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   let!(:user2){ create :user }
   
   let!(:mention_preference){ user1.preference_for(:mentions).update email_digest: :immediate }
+  let!(:group_mention_preference){ user1.preference_for(:group_mentions).update email_digest: :immediate }
   let!(:system_preference){ user1.preference_for(:system).update email_digest: :immediate }
   let!(:participating_preference){ user1.preference_for(:participating_discussions).update email_digest: :daily }
   let!(:message_preference){ user1.preference_for(:messages).update email_digest: :weekly }
@@ -20,13 +21,13 @@ RSpec.describe NotificationMailer, type: :mailer do
   let!(:discussion){ create :discussion, board: board, user: user1 }
   let!(:followed_discussion){ create :discussion_with_comments, board: board }
   let!(:comment){ create :comment, discussion: discussion, user: user1 }
-  let!(:reply_comment){ create :comment, user: user2, discussion: discussion, body: "Hey @#{ user1.login }" }
+  let!(:reply_comment){ create :comment, user: user2, discussion: discussion, body: "Hey @#{ user1.login } and @moderators" }
   let!(:moderation){ create :moderation, target: reply_comment, section: section }
   
   let(:zooniverse_board){ create :board, section: 'zooniverse' }
   let!(:zooniverse_discussion){ create :discussion, board: zooniverse_board, user: user1 }
   let!(:zooniverse_comment){ create :comment, discussion: zooniverse_discussion, user: user1 }
-  let!(:zooniverse_reply_comment){ create :comment, discussion: zooniverse_discussion, user: user2, body: "Hey @#{ user1.login }" }
+  let!(:zooniverse_reply_comment){ create :comment, discussion: zooniverse_discussion, user: user2, body: "Hey @#{ user1.login } and @moderators" }
   
   let!(:data_request){ create :data_request, user: user1, section: section }
   let!(:conversation){ create :conversation_with_messages, user: user2, recipients: [user1], message_count: 2 }
@@ -34,6 +35,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   before :each do
     user1.subscribe_to followed_discussion, :followed_discussions
     Mention.all.each &:notify_mentioned
+    GroupMention.all.each &:notify_mentioned
     Comment.all.each &:notify_subscribers
     Moderation.all.each &:notify_subscribers
     data_request.notify_user url: 'foo', message: 'bar'
@@ -72,7 +74,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     context 'with immediate' do
       it_behaves_like 'NotificationMailer#notify' do
         let(:frequency){ :immediate }
-        let(:categories){ %w(mentions system moderation_reports) }
+        let(:categories){ %w(mentions group_mentions system moderation_reports) }
       end
     end
     
@@ -98,7 +100,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     context 'with immediate' do
       let(:frequency){ :immediate }
       subject{ categories }
-      it{ is_expected.to match_array Subscription.categories.values_at(:mentions, :system, :moderation_reports) }
+      it{ is_expected.to match_array Subscription.categories.values_at(:mentions, :group_mentions, :system, :moderation_reports) }
     end
     
     context 'with daily' do
@@ -135,9 +137,9 @@ RSpec.describe NotificationMailer, type: :mailer do
       let(:frequency){ :immediate }
       subject{ notification_categories }
       
-      let(:categories){ [1, 3, 5] }
-      its(:uniq){ is_expected.to match_array %w(mentions system moderation_reports) }
-      its(:length){ is_expected.to eql 4 }
+      let(:categories){ [1, 3, 5, 6] }
+      its(:uniq){ is_expected.to match_array %w(mentions group_mentions system moderation_reports) }
+      its(:length){ is_expected.to eql 5 }
     end
     
     context 'with daily' do
@@ -184,7 +186,7 @@ RSpec.describe NotificationMailer, type: :mailer do
       
       context 'project notifications' do
         subject{ mentions[section].map &:source }
-        it{ is_expected.to eql [reply_comment] }
+        it{ is_expected.to eql [reply_comment, reply_comment] }
       end
       
       context 'zooniverse notifications' do
@@ -253,8 +255,14 @@ RSpec.describe NotificationMailer, type: :mailer do
       its(:length){ is_expected.to eql 2 }
     end
     
+    context 'with group_mentions' do
+      let(:category){ 'group_mentions' }
+      its(:uniq){ is_expected.to eql [category] }
+      its(:length){ is_expected.to eql 1 }
+    end
+    
     context 'with messages' do
-      let(:category){ 'mentions' }
+      let(:category){ 'messages' }
       its(:uniq){ is_expected.to eql [category] }
       its(:length){ is_expected.to eql 2 }
     end

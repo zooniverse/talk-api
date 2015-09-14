@@ -33,7 +33,7 @@ class NotificationMailer < ApplicationMailer
   
   def organize
     @messages = select_category('messages').group_by{ |n| n.source.conversation }
-    @mentions = select_category('mentions').group_by &:section
+    @mentions = select_category('mentions', 'group_mentions').group_by &:section
     @system = select_category('system').group_by &:section
     @moderations = select_category('moderation_reports').group_by &:section
     @discussions = { }
