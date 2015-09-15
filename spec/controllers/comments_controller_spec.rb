@@ -23,6 +23,7 @@ RSpec.describe CommentsController, type: :controller do
       
       let(:response_ids){ response.json['comments'].map{ |comment| comment['id'] } }
       let(:first_href){ response.json['meta']['comments']['first_href'] }
+      let(:href_params){ CGI.parse URI.parse(first_href).query }
       
       context 'when false' do
         before(:each){ get :index, format: :json, section: 'project-1', subject_default: false }
@@ -32,7 +33,9 @@ RSpec.describe CommentsController, type: :controller do
         end
         
         it 'should modify the link hrefs' do
-          expect(first_href).to eql "/comments?sort=created_at&board_id=#{ board_ids.join ',' }&section=project-1"
+          expect(href_params['sort']).to eql ['created_at']
+          expect(href_params['board_id'].first.split(',')).to match_array board_ids
+          expect(href_params['section']).to eql ['project-1']
         end
       end
       
@@ -44,7 +47,9 @@ RSpec.describe CommentsController, type: :controller do
         end
         
         it 'should modify the link hrefs' do
-          expect(first_href).to eql "/comments?sort=created_at&board_id=#{ subject_default_board.id }&section=project-1"
+          expect(href_params['sort']).to eql ['created_at']
+          expect(href_params['board_id']).to eql [subject_default_board.id.to_s]
+          expect(href_params['section']).to eql ['project-1']
         end
       end
     end
