@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150909184254) do
+ActiveRecord::Schema.define(version: 20150915171043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,11 +82,14 @@ ActiveRecord::Schema.define(version: 20150909184254) do
     t.json     "group_mentioning", default: {},    null: false
   end
 
+  add_index "comments", ["board_id", "created_at"], name: "index_comments_on_board_id_and_created_at", using: :btree
   add_index "comments", ["board_id"], name: "index_comments_on_board_id", using: :btree
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
   add_index "comments", ["discussion_id", "created_at"], name: "index_comments_on_discussion_id_and_created_at", using: :btree
   add_index "comments", ["discussion_id"], name: "index_comments_on_discussion_id", using: :btree
   add_index "comments", ["focus_id", "focus_type"], name: "index_comments_on_focus_id_and_focus_type", using: :btree
+  add_index "comments", ["section", "board_id", "created_at"], name: "index_comments_on_section_and_board_id_and_created_at", using: :btree
+  add_index "comments", ["section", "created_at"], name: "index_comments_on_section_and_created_at", using: :btree
   add_index "comments", ["user_id", "created_at"], name: "index_comments_on_user_id_and_created_at", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
@@ -156,6 +159,9 @@ ActiveRecord::Schema.define(version: 20150909184254) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "group_mentions", ["comment_id", "name"], name: "index_group_mentions_on_comment_id_and_name", using: :btree
+  add_index "group_mentions", ["comment_id"], name: "index_group_mentions_on_comment_id", using: :btree
 
   create_table "mentions", force: :cascade do |t|
     t.integer  "mentionable_id",   null: false
