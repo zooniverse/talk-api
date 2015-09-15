@@ -12,6 +12,44 @@ RSpec.describe CommentsController, type: :controller do
     upvote: { status: 401, response: :error },
     remove_upvote: { status: 401, response: :error }
   
+  describe '#index' do
+    context 'filtering by subject_default' do
+      let!(:subject_default_board){ create :board, section: 'project-1', subject_default: true }
+      let!(:subject_default_discussion){ create :discussion, board: subject_default_board }
+      let!(:subject_default_comment){ create :comment, discussion: subject_default_discussion }
+      let!(:comments){ create_list :comment, 2, section: 'project-1' }
+      let!(:comment_ids){ comments.map(&:id).map &:to_s }
+      let!(:board_ids){ comments.map(&:board_id).map &:to_s }
+      
+      let(:response_ids){ response.json['comments'].map{ |comment| comment['id'] } }
+      let(:first_href){ response.json['meta']['comments']['first_href'] }
+      
+      context 'when false' do
+        before(:each){ get :index, format: :json, section: 'project-1', subject_default: false }
+        
+        it 'should filter comments from subject default boards' do
+          expect(response_ids).to match_array comment_ids
+        end
+        
+        it 'should modify the link hrefs' do
+          expect(first_href).to eql "/comments?sort=created_at&board_id=#{ board_ids.join ',' }&section=project-1"
+        end
+      end
+      
+      context 'when true' do
+        before(:each){ get :index, format: :json, section: 'project-1', subject_default: true }
+        
+        it 'should filter comments from subject default boards' do
+          expect(response_ids).to match_array [subject_default_comment.id.to_s]
+        end
+        
+        it 'should modify the link hrefs' do
+          expect(first_href).to eql "/comments?sort=created_at&board_id=#{ subject_default_board.id }&section=project-1"
+        end
+      end
+    end
+  end
+  
   context 'without an authorized user' do
     let(:user){ create :user }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
