@@ -181,7 +181,6 @@ namespace :panoptes do
             section,
             project_id
           from tags
-          where taggable_type is not null
           group by section, project_id, name
           order by usages desc
       SQL
