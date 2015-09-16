@@ -44,9 +44,23 @@ module TalkSerializer
         end
       end
     end
+    
+    def current_sort_from(options)
+      options.sorting.map do |attribute, direction|
+        direction == :asc ? attribute : "-#{ attribute }"
+      end.join ','
+    end
   end
   
   module ClassMethodOverrides
+    def serialize_meta(page, options)
+      super.merge({
+        current_sort: current_sort_from(options),
+        default_sort: default_sort,
+        sortable_attributes: serializable_sorting_attributes || []
+      })
+    end
+    
     def resource(params = { }, scope = nil, context = { })
       super params, scope_preloading_for(scope), context
     end
