@@ -125,6 +125,13 @@ RSpec.describe Comment, type: :model do
         expect(board.users_count).to eql 4
       end
     end
+    
+    context 'with a focused discussion' do
+      let(:focus){ create :subject }
+      let(:discussion){ create :discussion, focus: focus }
+      subject{ create :comment, discussion: discussion }
+      its(:focus){ is_expected.to eql focus }
+    end
   end
   
   context 'destroying' do
