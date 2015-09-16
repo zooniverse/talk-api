@@ -49,6 +49,7 @@ RSpec.describe Tag, type: :model do
     
     its(:section){ is_expected.to eql comment.section }
     its(:user){ is_expected.to eql comment.user }
+    its(:user_login){ is_expected.to eql comment.user.login }
     its(:taggable){ is_expected.to eql comment.focus }
     its(:taggable_type){ is_expected.to eql comment.focus.class.name }
   end
