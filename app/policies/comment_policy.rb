@@ -22,7 +22,7 @@ class CommentPolicy < ApplicationPolicy
   end
   
   def move?
-    !locked? && (moderator? || admin?) && writable?
+    !locked? && !deleted? && (owner? || moderator? || admin?) && writable?
   end
   
   def upvote?

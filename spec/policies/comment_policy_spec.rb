@@ -23,8 +23,8 @@ RSpec.describe CommentPolicy, type: :policy do
     
     context 'with the owner' do
       let(:user){ record.user }
-      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
-      it_behaves_like 'a policy forbidding', :upvote, :remove_upvote, :move
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy, :move
+      it_behaves_like 'a policy forbidding', :upvote, :remove_upvote
     end
     
     context 'with a moderator' do
