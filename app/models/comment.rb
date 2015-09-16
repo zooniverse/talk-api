@@ -102,7 +102,7 @@ class Comment < ActiveRecord::Base
   end
   
   def denormalize_attributes
-    self.focus = discussion.focus if discussion.focus
+    self.focus ||= discussion.focus if discussion.focus
     self.user_login = user.login
     self.board_id = discussion.board_id
   end
