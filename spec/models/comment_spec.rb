@@ -109,116 +109,6 @@ RSpec.describe Comment, type: :model do
       }.by 3
     end
     
-    context 'destroying' do
-      let(:subject){ create :subject }
-      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }, @admins" }
-      
-      it 'should destroy tags' do
-        tag = comment.tags.first
-        comment.destroy
-        expect{ tag.reload }.to raise_error ActiveRecord::RecordNotFound
-      end
-      
-      it 'should destroy mentions' do
-        mention = comment.mentions.first
-        comment.destroy
-        expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
-      end
-      
-      it 'should destroy group mentions' do
-        group_mention = comment.group_mentions.first
-        comment.destroy
-        expect{ group_mention.reload }.to raise_error ActiveRecord::RecordNotFound
-      end
-      
-      it 'should remove reply references' do
-        reply = create :comment, reply: comment
-        expect{
-          comment.destroy
-        }.to change{
-          reply.reload.reply
-        }.from(comment).to nil
-      end
-    end
-    
-    describe '#soft_destroy' do
-      let(:subject){ create :subject }
-      let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }, @admins" }
-      let!(:other){ create :comment, discussion: comment.discussion }
-      
-      it 'should destroy tags' do
-        tag = comment.tags.first
-        comment.soft_destroy
-        expect{ tag.reload }.to raise_error ActiveRecord::RecordNotFound
-      end
-      
-      it 'should destroy mentions' do
-        mention = comment.mentions.first
-        comment.soft_destroy
-        expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
-      end
-      
-      it 'should destroy group mentions' do
-        group_mention = comment.group_mentions.first
-        comment.soft_destroy
-        expect{ group_mention.reload }.to raise_error ActiveRecord::RecordNotFound
-      end
-      
-      it 'should not destroy the comment' do
-        comment.soft_destroy
-        expect{ comment.reload }.to_not raise_error
-      end
-      
-      it 'should mark the comment as destroyed' do
-        comment.soft_destroy
-        expect(comment.is_deleted?).to be true
-      end
-      
-      it 'should close the moderation' do
-        expect(comment).to receive :close_moderation
-        comment.soft_destroy
-      end
-      
-      it 'should clear the comment body' do
-        comment.soft_destroy
-        expect(comment.body).to eql 'This comment has been deleted'
-      end
-      
-      it 'should destroy discussions when empty' do
-        other.soft_destroy
-        comment.soft_destroy
-        expect{ comment.discussion.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      end
-      
-      context 'via a moderation' do
-        let!(:discussion){ create :discussion }
-        let!(:comment){ create :comment, discussion: discussion }
-        let!(:moderation){ create :moderation, target: comment }
-        let(:action){ { user_id: create(:user).id, message: 'deleting', action: 'destroy' } }
-        
-        before :each do
-          discussion.comments.where('id <> ?', comment.id).destroy_all
-          moderation.actions << action
-        end
-        
-        it 'should use soft destroy' do
-          allow(moderation).to receive(:target).and_return comment
-          expect(comment).to receive :soft_destroy
-          moderation.save
-        end
-        
-        it 'should destroy the discussion' do
-          moderation.save
-          expect{ discussion.reload }.to raise_error ActiveRecord::RecordNotFound
-        end
-        
-        it 'should destroy the comment' do
-          moderation.save
-          expect{ comment.reload }.to raise_error ActiveRecord::RecordNotFound
-        end
-      end
-    end
-    
     context 'updating board counts' do
       let(:board) do
         discussion1 = create :discussion_with_comments, comment_count: 3, user_count: 2
@@ -233,6 +123,123 @@ RSpec.describe Comment, type: :model do
       
       it 'should update the user count' do
         expect(board.users_count).to eql 4
+      end
+    end
+    
+    context 'with a focused discussion' do
+      let(:focus){ create :subject }
+      let(:discussion){ create :discussion, focus: focus }
+      subject{ create :comment, discussion: discussion }
+      its(:focus){ is_expected.to eql focus }
+    end
+  end
+  
+  context 'destroying' do
+    let(:subject){ create :subject }
+    let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }, @admins" }
+    
+    it 'should destroy tags' do
+      tag = comment.tags.first
+      comment.destroy
+      expect{ tag.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'should destroy mentions' do
+      mention = comment.mentions.first
+      comment.destroy
+      expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'should destroy group mentions' do
+      group_mention = comment.group_mentions.first
+      comment.destroy
+      expect{ group_mention.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'should remove reply references' do
+      reply = create :comment, reply: comment
+      expect{
+        comment.destroy
+      }.to change{
+        reply.reload.reply
+      }.from(comment).to nil
+    end
+  end
+  
+  describe '#soft_destroy' do
+    let(:subject){ create :subject }
+    let(:comment){ create :comment, body: "#tag, ^S#{ subject.id }, @admins" }
+    let!(:other){ create :comment, discussion: comment.discussion }
+    
+    it 'should destroy tags' do
+      tag = comment.tags.first
+      comment.soft_destroy
+      expect{ tag.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'should destroy mentions' do
+      mention = comment.mentions.first
+      comment.soft_destroy
+      expect{ mention.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'should destroy group mentions' do
+      group_mention = comment.group_mentions.first
+      comment.soft_destroy
+      expect{ group_mention.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'should not destroy the comment' do
+      comment.soft_destroy
+      expect{ comment.reload }.to_not raise_error
+    end
+    
+    it 'should mark the comment as destroyed' do
+      comment.soft_destroy
+      expect(comment.is_deleted?).to be true
+    end
+    
+    it 'should close the moderation' do
+      expect(comment).to receive :close_moderation
+      comment.soft_destroy
+    end
+    
+    it 'should clear the comment body' do
+      comment.soft_destroy
+      expect(comment.body).to eql 'This comment has been deleted'
+    end
+    
+    it 'should destroy discussions when empty' do
+      other.soft_destroy
+      comment.soft_destroy
+      expect{ comment.discussion.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+    
+    context 'via a moderation' do
+      let!(:discussion){ create :discussion }
+      let!(:comment){ create :comment, discussion: discussion }
+      let!(:moderation){ create :moderation, target: comment }
+      let(:action){ { user_id: create(:user).id, message: 'deleting', action: 'destroy' } }
+      
+      before :each do
+        discussion.comments.where('id <> ?', comment.id).destroy_all
+        moderation.actions << action
+      end
+      
+      it 'should use soft destroy' do
+        allow(moderation).to receive(:target).and_return comment
+        expect(comment).to receive :soft_destroy
+        moderation.save
+      end
+      
+      it 'should destroy the discussion' do
+        moderation.save
+        expect{ discussion.reload }.to raise_error ActiveRecord::RecordNotFound
+      end
+      
+      it 'should destroy the comment' do
+        moderation.save
+        expect{ comment.reload }.to raise_error ActiveRecord::RecordNotFound
       end
     end
   end
