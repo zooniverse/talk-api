@@ -16,6 +16,7 @@ class Tag < ActiveRecord::Base
     return unless comment
     self.section = comment.section
     self.user = comment.user
+    self.user_login = comment.user.login
     self.taggable = comment.focus
     self.taggable_type = comment.focus.class if comment.focus
   end
