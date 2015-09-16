@@ -23,8 +23,8 @@ RSpec.describe CommentPolicy, type: :policy do
     
     context 'with the owner' do
       let(:user){ record.user }
-      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy, :move
-      it_behaves_like 'a policy forbidding', :upvote, :remove_upvote
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
+      it_behaves_like 'a policy forbidding', :upvote, :remove_upvote, :move
     end
     
     context 'with a moderator' do
@@ -161,6 +161,19 @@ RSpec.describe CommentPolicy, type: :policy do
       let(:user){ record.user }
       it_behaves_like 'a policy permitting', :index, :show
       it_behaves_like 'a policy forbidding', :create, :update, :destroy, :move, :upvote, :remove_upvote
+    end
+  end
+  
+  context 'with a deleted comment' do
+    let(:record){ create :comment, discussion: discussion, is_deleted: true }
+    let(:user){ create :user }
+    it_behaves_like 'a policy permitting', :index, :show
+    it_behaves_like 'a policy forbidding', :update, :destroy, :upvote, :remove_upvote
+    
+    context 'with the comment owner' do
+      let(:user){ record.user }
+      it_behaves_like 'a policy permitting', :index, :show
+      it_behaves_like 'a policy forbidding', :update, :destroy, :move, :upvote, :remove_upvote
     end
   end
   

@@ -14,23 +14,23 @@ class CommentPolicy < ApplicationPolicy
   end
   
   def update?
-    owner? && !locked? && writable?
+    owner? && !deleted? && !locked? && writable?
   end
   
   def destroy?
-    owner? && !locked? && writable?
+    owner? && !deleted? && !locked? && writable?
   end
   
   def move?
-    !locked? && (owner? || moderator? || admin?) && writable?
+    !locked? && (moderator? || admin?) && writable?
   end
   
   def upvote?
-    logged_in? && !owner? && writable?
+    logged_in? && !deleted? && !owner? && writable?
   end
   
   def remove_upvote?
-    logged_in? && !owner? && writable?
+    logged_in? && !deleted? && !owner? && writable?
   end
   
   def locked?
@@ -39,6 +39,10 @@ class CommentPolicy < ApplicationPolicy
   
   def discussion_policy
     DiscussionPolicy.new user, discussions
+  end
+  
+  def deleted?
+    Array.wrap(record).compact.any? &:is_deleted?
   end
   
   def discussions
