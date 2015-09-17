@@ -14,7 +14,7 @@ module EmbeddedAttributes
   end
   
   def discussion_attributes
-    %w(comments_count subject_default title updated_at users_count)
+    %w(comments_count subject_default title updated_at users_count focus_id focus_type)
   end
   
   def board_attributes
