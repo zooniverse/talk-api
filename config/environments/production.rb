@@ -19,6 +19,9 @@ Rails.application.configure do
   }
   
   config.after_initialize do
-    Rails.application.routes.default_url_options = config.action_mailer.default_url_options
+    Rails.application.routes.default_url_options = {
+      protocol: 'https',
+      host: 'talk.zooniverse.org'
+    }
   end
 end
