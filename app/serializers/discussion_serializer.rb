@@ -7,9 +7,9 @@ class DiscussionSerializer
   attribute :latest_comment
   can_include :comments, :board, :user
   can_filter_by :title, :subject_default, :sticky
-  can_sort_by :updated_at, :sticky, :sticky_position
+  can_sort_by :last_comment_created_at, :sticky, :sticky_position
   embed_attributes_from :project, :board
-  self.default_sort = '-sticky,sticky_position,-updated_at'
+  self.default_sort = '-sticky,sticky_position,-last_comment_created_at'
   self.preloads = [:latest_comment]
   self.includes = [:user, :board, :project]
   
