@@ -34,10 +34,10 @@ class Comment < ActiveRecord::Base
   
   before_validation :set_section
   before_create :denormalize_attributes
-  after_create :update_counters
+  after_create :update_discussion
   before_update :update_board_id, if: ->{ discussion_id_changed? }
-  after_update :update_discussion_counters
-  after_destroy :update_counters, :clear_replies
+  after_update :update_moved_discussion
+  after_destroy :update_discussion, :clear_replies
   
   moderatable_with :destroy, by: [:moderator, :admin]
   moderatable_with :ignore, by: [:moderator, :admin]
@@ -107,7 +107,9 @@ class Comment < ActiveRecord::Base
     self.board_id = discussion.board_id
   end
   
-  def update_counters
+  def update_discussion
+    discussion.last_comment_created_at = discussion.comments.order(created_at: :desc).first.try :created_at
+    discussion.last_comment_created_at ||= discussion.created_at
     discussion.update_counters!
   end
   
@@ -115,7 +117,7 @@ class Comment < ActiveRecord::Base
     denormalize_attributes if board_id != discussion.board_id
   end
   
-  def update_discussion_counters
+  def update_moved_discussion
     changes.fetch(:discussion_id, []).compact.each do |id|
       Discussion.find_by_id(id).try :update_counters!
     end
