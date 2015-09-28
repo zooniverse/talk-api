@@ -9,11 +9,11 @@ RSpec.describe DiscussionSerializer, type: :serializer do
     
     describe '.default_sort' do
       let(:board){ create :board }
-      let!(:model_instance){ create :discussion, board: board, updated_at: 1.minute.ago.utc }
+      let!(:model_instance){ create :discussion, board: board, last_comment_created_at: 1.minute.ago.utc }
       let(:discussion1){ model_instance }
-      let!(:discussion2){ create :discussion, board: board, updated_at: 2.minutes.ago.utc }
-      let!(:sticky1){ create :discussion, board: board, updated_at: 2.minute.ago.utc, sticky: true, sticky_position: 1 }
-      let!(:sticky2){ create :discussion, board: board, updated_at: 1.minutes.ago.utc, sticky: true, sticky_position: 2 }
+      let!(:discussion2){ create :discussion, board: board, last_comment_created_at: 2.minutes.ago.utc }
+      let!(:sticky1){ create :discussion, board: board, last_comment_created_at: 2.minute.ago.utc, sticky: true, sticky_position: 1 }
+      let!(:sticky2){ create :discussion, board: board, last_comment_created_at: 1.minutes.ago.utc, sticky: true, sticky_position: 2 }
       let(:policy_scope){ DiscussionPolicy::Scope.new nil, model.all }
       let(:json){ serializer.page({ sort: serializer.default_sort }, policy_scope.resolve) }
       subject{ json[:discussions].collect{ |d| d[:id] } }
