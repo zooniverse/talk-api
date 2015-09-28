@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928165922) do
+ActiveRecord::Schema.define(version: 20150928175254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,22 +41,23 @@ ActiveRecord::Schema.define(version: 20150928165922) do
   add_index "blocked_users", ["user_id", "blocked_user_id"], name: "index_blocked_users_on_user_id_and_blocked_user_id", unique: true, using: :btree
 
   create_table "boards", force: :cascade do |t|
-    t.string   "title",                             null: false
-    t.string   "description",                       null: false
-    t.string   "section",                           null: false
-    t.integer  "users_count",       default: 0
-    t.integer  "comments_count",    default: 0
-    t.integer  "discussions_count", default: 0
-    t.json     "permissions",       default: {}
+    t.string   "title",                                   null: false
+    t.string   "description",                             null: false
+    t.string   "section",                                 null: false
+    t.integer  "users_count",             default: 0
+    t.integer  "comments_count",          default: 0
+    t.integer  "discussions_count",       default: 0
+    t.json     "permissions",             default: {}
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "parent_id"
-    t.boolean  "subject_default",   default: false, null: false
+    t.boolean  "subject_default",         default: false, null: false
     t.integer  "project_id"
+    t.datetime "last_comment_created_at"
   end
 
-  add_index "boards", ["parent_id", "created_at"], name: "index_boards_on_parent_id_and_created_at", using: :btree
-  add_index "boards", ["section", "created_at"], name: "index_boards_on_section_and_created_at", using: :btree
+  add_index "boards", ["parent_id", "last_comment_created_at"], name: "index_boards_on_parent_id_and_last_comment_created_at", using: :btree
+  add_index "boards", ["section", "last_comment_created_at"], name: "index_boards_on_section_and_last_comment_created_at", using: :btree
   add_index "boards", ["section", "subject_default"], name: "index_boards_on_section_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
 
   create_table "comments", force: :cascade do |t|
