@@ -89,6 +89,22 @@ RSpec.describe Comment, type: :model do
       }.by 1
     end
     
+    it 'should update the discussion last_comment_created_at at timestamp' do
+      discussion = create :discussion
+      first_comment = create :comment, discussion: discussion
+      expect(discussion.reload.last_comment_created_at).to be_within(1.second).of first_comment.created_at
+      second_comment = create :comment, discussion: discussion
+      expect(discussion.reload.last_comment_created_at).to be_within(1.second).of second_comment.created_at
+    end
+    
+    it 'should update the board last_comment_created_at at timestamp' do
+      discussion = create :discussion
+      first_comment = create :comment, discussion: discussion
+      expect(discussion.board.reload.last_comment_created_at).to be_within(1.second).of first_comment.created_at
+      second_comment = create :comment, discussion: discussion
+      expect(discussion.board.reload.last_comment_created_at).to be_within(1.second).of second_comment.created_at
+    end
+    
     it 'should update the discussion updated_at timestamp' do
       discussion = create :discussion
       expect {
@@ -163,6 +179,22 @@ RSpec.describe Comment, type: :model do
       }.to change{
         reply.reload.reply
       }.from(comment).to nil
+    end
+    
+    it 'should update the discussion last_comment_created_at at timestamp' do
+      discussion = create :discussion
+      first_comment = create :comment, discussion: discussion
+      second_comment = create :comment, discussion: discussion
+      second_comment.destroy
+      expect(discussion.reload.last_comment_created_at).to be_within(1.second).of first_comment.created_at
+    end
+    
+    it 'should update the board last_comment_created_at at timestamp' do
+      discussion = create :discussion
+      first_comment = create :comment, discussion: discussion
+      second_comment = create :comment, discussion: discussion
+      second_comment.destroy
+      expect(discussion.board.reload.last_comment_created_at).to be_within(1.second).of first_comment.created_at
     end
   end
   

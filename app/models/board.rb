@@ -4,7 +4,7 @@ class Board < ActiveRecord::Base
   include BooleanCoercion
   
   has_many :discussions, dependent: :restrict_with_error
-  has_one :latest_discussion, ->{ includes(DiscussionSerializer.includes).reorder updated_at: :desc }, class_name: 'Discussion'
+  has_one :latest_discussion, ->{ includes(DiscussionSerializer.includes).reorder last_comment_created_at: :desc }, class_name: 'Discussion'
   has_many :comments
   has_many :sub_boards, class_name: 'Board', foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'Board'

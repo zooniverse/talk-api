@@ -6,9 +6,9 @@ class BoardSerializer
   attribute :latest_discussion
   can_include :discussions, :parent, :sub_boards
   can_filter_by :subject_default
-  can_sort_by :created_at
+  can_sort_by :last_comment_created_at
   embed_attributes_from :project
-  self.default_sort = 'created_at'
+  self.default_sort = 'last_comment_created_at'
   self.preloads = [:latest_discussion]
   self.eager_loads = [:project, :parent]
   
