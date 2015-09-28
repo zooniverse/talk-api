@@ -110,6 +110,8 @@ class Comment < ActiveRecord::Base
   def update_discussion
     discussion.last_comment_created_at = discussion.comments.order(created_at: :desc).first.try :created_at
     discussion.last_comment_created_at ||= discussion.created_at
+    board.last_comment_created_at = discussion.last_comment_created_at
+    board.save if board.changed?
     discussion.update_counters!
   end
   
