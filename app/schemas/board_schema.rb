@@ -13,6 +13,7 @@ class BoardSchema
   def update
     root do |root_object|
       changes root_object
+      integer :position
     end
   end
   
