@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928175254) do
+ActiveRecord::Schema.define(version: 20150930181940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,10 +54,11 @@ ActiveRecord::Schema.define(version: 20150928175254) do
     t.boolean  "subject_default",         default: false, null: false
     t.integer  "project_id"
     t.datetime "last_comment_created_at"
+    t.integer  "position",                default: 0
   end
 
-  add_index "boards", ["parent_id", "last_comment_created_at"], name: "index_boards_on_parent_id_and_last_comment_created_at", using: :btree
-  add_index "boards", ["section", "last_comment_created_at"], name: "index_boards_on_section_and_last_comment_created_at", using: :btree
+  add_index "boards", ["parent_id", "position", "last_comment_created_at"], name: "sub_board_order", using: :btree
+  add_index "boards", ["section", "position", "last_comment_created_at"], name: "board_order", using: :btree
   add_index "boards", ["section", "subject_default"], name: "index_boards_on_section_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
 
   create_table "comments", force: :cascade do |t|
