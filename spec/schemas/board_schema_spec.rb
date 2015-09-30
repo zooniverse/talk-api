@@ -50,6 +50,7 @@ RSpec.describe BoardSchema, type: :schema do
       
       with :properties do
         its(:section){ is_expected.to be nil }
+        its(:position){ is_expected.to eql type: 'integer' }
       end
     end
   end
