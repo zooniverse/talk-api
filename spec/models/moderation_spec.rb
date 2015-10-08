@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Moderation, type: :model do
   it_behaves_like 'a notifiable model'
+  it_behaves_like 'a sectioned model'
   
   context 'validating' do
     it 'should require a target' do

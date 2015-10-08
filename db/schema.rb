@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151008151351) do
+ActiveRecord::Schema.define(version: 20151008181815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,6 +200,7 @@ ActiveRecord::Schema.define(version: 20151008151351) do
     t.datetime "updated_at"
     t.string   "section",                       null: false
     t.json     "destroyed_target"
+    t.integer  "project_id"
   end
 
   add_index "moderations", ["section", "state", "updated_at"], name: "index_moderations_on_section_and_state_and_updated_at", using: :btree
