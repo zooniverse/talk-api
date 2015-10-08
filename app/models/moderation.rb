@@ -1,5 +1,6 @@
 class Moderation < ActiveRecord::Base
   include Notifiable
+  include Sectioned
   
   belongs_to :target, polymorphic: true
   validates :target, presence: true, on: :create

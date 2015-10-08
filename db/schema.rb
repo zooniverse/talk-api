@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150930181940) do
+ActiveRecord::Schema.define(version: 20151008181815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,6 +200,7 @@ ActiveRecord::Schema.define(version: 20150930181940) do
     t.datetime "updated_at"
     t.string   "section",                       null: false
     t.json     "destroyed_target"
+    t.integer  "project_id"
   end
 
   add_index "moderations", ["section", "state", "updated_at"], name: "index_moderations_on_section_and_state_and_updated_at", using: :btree
@@ -222,7 +223,9 @@ ActiveRecord::Schema.define(version: 20150930181940) do
   add_index "notifications", ["created_at"], name: "expiring_index", using: :btree
   add_index "notifications", ["source_id", "source_type"], name: "index_notifications_on_source_id_and_source_type", using: :btree
   add_index "notifications", ["subscription_id"], name: "index_notifications_on_subscription_id", using: :btree
+  add_index "notifications", ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at", using: :btree
   add_index "notifications", ["user_id", "delivered", "created_at"], name: "unread_index", using: :btree
+  add_index "notifications", ["user_id", "section", "created_at"], name: "index_notifications_on_user_id_and_section_and_created_at", using: :btree
   add_index "notifications", ["user_id", "section", "delivered", "created_at"], name: "unread_section_index", using: :btree
 
   create_table "roles", force: :cascade do |t|
