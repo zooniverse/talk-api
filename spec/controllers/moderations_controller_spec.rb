@@ -107,7 +107,7 @@ RSpec.describe ModerationsController, type: :controller do
       end
       
       it 'should sanitize the response' do
-        expect(create_response.keys).to match_array %w(href id links section state target target_id target_type updated_at)
+        expect(create_response.keys).to match_array %w(href id links project_id section state target target_id target_type updated_at)
       end
     end
     
