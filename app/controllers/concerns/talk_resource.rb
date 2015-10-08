@@ -25,7 +25,7 @@ module TalkResource
     if params[:id].is_a? String
       params[:id].split(',').compact.collect &:to_i
     else
-      params[:id]
+      params.fetch :id, []
     end
   end
 end

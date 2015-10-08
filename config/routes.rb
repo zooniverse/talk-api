@@ -16,7 +16,11 @@ Rails.application.routes.draw do
     resources :discussions
     resources :messages
     resources :moderations
-    resources :notifications
+    resources :notifications do
+      collection do
+        put :read
+      end
+    end
     resources :roles
     resources :subscription_preferences
     resources :subscriptions
