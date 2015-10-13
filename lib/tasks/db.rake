@@ -188,7 +188,7 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         create or replace view popular_focus_tags as
           select
-            name || '-' || section as id,
+            name || '-' || taggable_id || '-' || taggable_type || '-' || section as id,
             name,
             count(name) as usages,
             taggable_type,
