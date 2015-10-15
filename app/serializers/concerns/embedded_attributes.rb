@@ -14,11 +14,11 @@ module EmbeddedAttributes
   end
   
   def discussion_attributes
-    %w(comments_count subject_default title updated_at users_count focus_id focus_type)
+    %w(comments_count subject_default title updated_at users_count focus_id focus_type locked)
   end
   
   def board_attributes
-    %w(comments_count description discussions_count id parent_id subject_default title users_count)
+    %w(comments_count description discussions_count id parent_id subject_default title users_count permissions)
   end
   
   def project_attributes
