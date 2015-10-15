@@ -17,6 +17,7 @@ RSpec.shared_examples_for 'a serializer with embedded attributes' do |relations:
       its([:board_subject_default]){ is_expected.to eql model_instance.board.subject_default }
       its([:board_title]){ is_expected.to eql model_instance.board.title }
       its([:board_users_count]){ is_expected.to eql model_instance.board.reload.users_count }
+      its([:board_permissions]){ is_expected.to eql model_instance.board.permissions.symbolize_keys }
     end
   end
   
@@ -28,6 +29,7 @@ RSpec.shared_examples_for 'a serializer with embedded attributes' do |relations:
       its([:discussion_title]){ is_expected.to eql model_instance.discussion.title }
       its([:discussion_updated_at]){ is_expected.to be_within(1.second).of model_instance.discussion.reload.updated_at }
       its([:discussion_users_count]){ is_expected.to eql model_instance.discussion.reload.users_count }
+      its([:discussion_locked]){ is_expected.to eql model_instance.discussion.locked }
     end
   end
   
