@@ -5,7 +5,6 @@ class CommentSerializer
   
   all_attributes except: [:user_ip]
   attributes :reply_user_id, :reply_user_login, :reply_user_display_name
-  can_include :discussion
   can_sort_by :created_at
   can_filter_by :user_id, :board_id, :focus_id, :focus_type
   embed_attributes_from :discussion, :board, :project

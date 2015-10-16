@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe DiscussionSerializer, type: :serializer do
-  it_behaves_like 'a talk serializer', exposing: :all, including: [:comments, :board, :user] do
+  it_behaves_like 'a talk serializer', exposing: :all do
     subject{ json }
     it_behaves_like 'a serializer with embedded attributes', relations: [:project, :board]
     
