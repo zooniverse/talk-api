@@ -4,7 +4,6 @@ class BoardSerializer
   
   all_attributes
   attribute :latest_discussion
-  can_include :discussions, :parent, :sub_boards
   can_filter_by :subject_default
   can_sort_by :position, :last_comment_created_at
   embed_attributes_from :project

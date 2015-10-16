@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe CommentSerializer, type: :serializer do
-  it_behaves_like 'a talk serializer', exposing: :all, excluding: [:user_ip], including: [:discussion] do
+  it_behaves_like 'a talk serializer', exposing: :all, excluding: [:user_ip] do
     let(:replied_to){ create :comment }
     let(:object){ create :comment, reply: replied_to }
     let(:json){ CommentSerializer.resource(id: model_instance.id)[:comments].first }

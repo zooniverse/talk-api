@@ -9,7 +9,11 @@ class Discussion < ActiveRecord::Base
   belongs_to :board, required: true, counter_cache: true
   belongs_to :focus, polymorphic: true
   has_many :comments, dependent: :destroy
-  has_one :latest_comment, ->{ includes(CommentSerializer.includes).reorder created_at: :desc }, class_name: 'Comment'
+  has_one :latest_comment, ->{
+    includes(CommentSerializer.includes)
+      .select('distinct on(comments.discussion_id) comments.*')
+      .reorder discussion_id: :asc, created_at: :desc
+  }, class_name: 'Comment'
   
   validates :title, presence: true, length: { in: 3..140, unless: ->{ subject_default? } }
   validates :section, presence: true

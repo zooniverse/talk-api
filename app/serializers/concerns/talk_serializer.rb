@@ -62,11 +62,11 @@ module TalkSerializer
     end
     
     def resource(params = { }, scope = nil, context = { })
-      super params, scope_preloading_for(scope), context
+      super params, scope_preloading_for(scope), context.merge(params: params)
     end
     
     def page(params = { }, scope = nil, context = { })
-      super params, scope_preloading_for(scope), context
+      super params, scope_preloading_for(scope), context.merge(params: params)
     end
     
     def scope_preloading_for(scope)
@@ -84,5 +84,9 @@ module TalkSerializer
   
   def current_user
     @context[:current_user]
+  end
+  
+  def params
+    @context.fetch :params, { }
   end
 end
