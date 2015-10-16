@@ -9,8 +9,8 @@ class DiscussionSerializer
   can_sort_by :last_comment_created_at, :sticky, :sticky_position
   embed_attributes_from :project, :board
   self.default_sort = '-sticky,sticky_position,-last_comment_created_at'
-  self.preloads = [:latest_comment]
-  self.includes = [:user, :board, :project]
+  self.preloads = [:latest_comment, :user]
+  self.eager_loads = [:board, :project]
   
   def custom_attributes
     super.merge user_display_name: model.user.display_name
