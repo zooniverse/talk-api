@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :conversations
     resources :data_requests
     resources :discussions
+    resources :mentions
     resources :messages
     resources :moderations
     resources :notifications do
