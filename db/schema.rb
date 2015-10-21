@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151021200808) do
+ActiveRecord::Schema.define(version: 20151021203819) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,8 +178,11 @@ ActiveRecord::Schema.define(version: 20151021200808) do
     t.integer  "board_id"
   end
 
+  add_index "mentions", ["board_id"], name: "index_mentions_on_board_id", using: :btree
   add_index "mentions", ["comment_id"], name: "index_mentions_on_comment_id", using: :btree
-  add_index "mentions", ["mentionable_id"], name: "index_mentions_on_mentionable_id", using: :btree
+  add_index "mentions", ["mentionable_id", "mentionable_type", "created_at"], name: "mentionable_created_at", using: :btree
+  add_index "mentions", ["mentionable_id", "mentionable_type", "section", "created_at"], name: "mentionable_section_created_at", using: :btree
+  add_index "mentions", ["mentionable_id", "mentionable_type"], name: "index_mentions_on_mentionable_id_and_mentionable_type", using: :btree
 
   create_table "messages", force: :cascade do |t|
     t.integer  "conversation_id", null: false
