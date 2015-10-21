@@ -2,14 +2,19 @@ class Mention < ActiveRecord::Base
   include Sectioned
   
   belongs_to :comment, required: true
+  belongs_to :board, required: true
   belongs_to :user, required: true
   belongs_to :mentionable, polymorphic: true, required: true
   
-  before_save :set_section, :set_project_id
+  before_validation :set_section, :set_board_id
   after_commit :notify_later, on: :create
   
   def set_section
     self.section = comment.section
+  end
+  
+  def set_board_id
+    self.board_id = comment.board_id
   end
   
   def notify_later

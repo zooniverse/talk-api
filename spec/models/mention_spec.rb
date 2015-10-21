@@ -17,12 +17,14 @@ RSpec.describe Mention, type: :model do
       subject{ create :mention, comment: project_comment }
       its(:section){ is_expected.to eql "project-#{ project.id }" }
       its(:project_id){ is_expected.to eql project.id }
+      its(:board_id){ is_expected.to eql project_board.id }
     end
     
     context 'without a project' do
       subject{ create :mention, comment: section_comment }
       its(:section){ is_expected.to eql 'zooniverse' }
       its(:project_id){ is_expected.to be_nil }
+      its(:board_id){ is_expected.to eql section_board.id }
     end
   end
   
