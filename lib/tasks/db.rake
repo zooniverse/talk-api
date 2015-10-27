@@ -62,7 +62,7 @@ namespace :panoptes do
           id int4,
           name varchar(255),
           slug varchar(255),
-          project_id int4,
+          project_ids int4[],
           created_at timestamp(6),
           updated_at timestamp(6),
           display_name varchar(255),
@@ -113,16 +113,24 @@ namespace :panoptes do
     
     desc 'Drops Panoptes foreign tables'
     task :drop_foreign_tables => :environment do
+      Rake::Task['panoptes:db:drop_search_view'].invoke
       ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
-        drop view if exists searches;
-        drop materialized view if exists searchable_collections cascade;
         drop foreign table if exists projects, collections, collection_subjects, oauth_access_tokens, subjects, users;
       SQL
     end
     
     desc 'Recreates Panoptes foreign tables'
     task :recreate_foreign_tables => [:drop_foreign_tables, :create_foreign_tables, :create_search_view, :create_popular_tags_view]
+    
+    desc 'Creates the search view'
+    task :drop_search_view => :environment do
+      ActiveRecord::Base.establish_connection talk_config
+      ActiveRecord::Base.connection.execute <<-SQL
+        drop view if exists searches;
+        drop materialized view if exists searchable_collections cascade;
+      SQL
+    end
     
     desc 'Creates the search view'
     task :create_search_view => :environment do
@@ -142,18 +150,18 @@ namespace :panoptes do
                 setweight(to_tsvector('C' || collections.id::text), 'A')
                 as content,
                 
-                'project-' || projects.id as section
+                array_agg('project-' || projects.id) as sections
               from collections
                 left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
-                join projects on projects.id = collections.project_id
+                join projects on projects.id = any(collections.project_ids)
               where
                 collections.private is not true and projects.private is not true
               group by
-                collections.id, collections.name, collections.display_name, projects.id;
+                collections.id, collections.name, collections.display_name;
               
               create unique index search_collections_id_index on searchable_collections using btree(searchable_id);
               create index search_collections_index on searchable_collections using gin(content);
-              create index search_collections_section_index on searchable_collections using btree(section, searchable_type);
+              create index search_collections_sections_index on searchable_collections using btree(sections, searchable_type);
             end if;
             
             create or replace view searches as
@@ -205,11 +213,35 @@ namespace :panoptes do
     desc 'Create Panoptes tables for testing'
     task :create_tables => :environment do
       local_environment!
+      
+      ActiveRecord::Base.establish_connection talk_config
+      ActiveRecord::Base.connection.execute <<-SQL
+        drop sequence if exists users_id_seq;
+        create sequence users_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
+        
+        drop sequence if exists oauth_access_tokens_id_seq;
+        create sequence oauth_access_tokens_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
+        
+        drop sequence if exists projects_id_seq;
+        create sequence projects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
+        
+        drop sequence if exists collections_id_seq;
+        create sequence collections_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
+        
+        drop sequence if exists subjects_id_seq;
+        create sequence subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
+        
+        drop sequence if exists collection_subjects_id_seq;
+        create sequence collection_subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
+      SQL
+      
       ActiveRecord::Base.establish_connection panoptes_config
       ActiveRecord::Base.connection.execute <<-SQL
         drop table if exists users;
+        drop sequence if exists users_id_seq;
+        create sequence users_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
         create table users (
-          id serial not null,
+          id integer primary key default nextval('users_id_seq'),
           email character varying default ''::character varying,
           encrypted_password character varying default ''::character varying not null,
           reset_password_token character varying,
@@ -237,13 +269,14 @@ namespace :panoptes do
           banned boolean default false not null,
           migrated boolean default false,
           valid_email boolean default true not null,
-          uploaded_subjects_count integer default 0,
-          constraint users_pkey primary key (id)
+          uploaded_subjects_count integer default 0
         );
         
         drop table if exists oauth_access_tokens;
+        drop sequence if exists oauth_access_tokens_id_seq;
+        create sequence oauth_access_tokens_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
         create table oauth_access_tokens (
-          id serial not null,
+          id integer primary key default nextval('oauth_access_tokens_id_seq'),
           resource_owner_id int4 default null,
           application_id int4 default null,
           token varchar not null default null,
@@ -255,8 +288,10 @@ namespace :panoptes do
         );
         
         drop table if exists projects;
+        drop sequence if exists projects_id_seq;
+        create sequence projects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
         create table projects (
-          id serial not null,
+          id integer primary key default nextval('projects_id_seq'),
           name character varying,
           display_name character varying,
           slug character varying,
@@ -273,28 +308,30 @@ namespace :panoptes do
           beta boolean default false,
           live boolean default false not null,
           urls jsonb default '[]'::jsonb,
-          migrated boolean default false,
-          constraint projects_pkey primary key (id)
+          migrated boolean default false
         );
         
         drop table if exists collections;
+        drop sequence if exists collections_id_seq;
+        create sequence collections_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
         create table collections (
-          id serial not null,
+          id integer primary key default nextval('collections_id_seq'),
           name character varying,
-          project_id integer,
+          project_ids integer[],
           slug character varying,
           created_at timestamp without time zone,
           updated_at timestamp without time zone,
           activated_state integer default 0 not null,
           display_name character varying,
           private boolean,
-          lock_version integer default 0,
-          constraint collections_pkey primary key (id)
+          lock_version integer default 0
         );
         
         drop table if exists subjects;
+        drop sequence if exists subjects_id_seq;
+        create sequence subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
         create table subjects (
-          id serial not null,
+          id integer primary key default nextval('subjects_id_seq'),
           zooniverse_id character varying,
           metadata jsonb default '{}'::jsonb,
           created_at timestamp without time zone,
@@ -302,16 +339,16 @@ namespace :panoptes do
           project_id integer,
           migrated boolean,
           lock_version integer default 0,
-          upload_user_id character varying,
-          constraint subjects_pkey primary key (id)
+          upload_user_id character varying
         );
         
         drop table if exists collection_subjects;
+        drop sequence if exists collection_subjects_id_seq;
+        create sequence collection_subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
         create table collection_subjects (
-          id serial not null,
+          id integer primary key default nextval('collection_subjects_id_seq'),
           subject_id int4 not null,
-          collection_id int4 not null,
-          constraint collection_subjects_pkey primary key (id)
+          collection_id int4 not null
         );
       SQL
     end

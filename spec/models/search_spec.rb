@@ -27,7 +27,7 @@ RSpec.describe Search, type: :model do
   describe '.in_section' do
     it 'should query a section' do
       sql = Search.in_section('foo').to_sql
-      expect(sql).to match /"section" = 'foo'/
+      expect(sql).to match /sections @> array\['foo'\]::varchar\[\]/
     end
   end
   

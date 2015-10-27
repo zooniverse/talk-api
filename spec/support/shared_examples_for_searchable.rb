@@ -136,7 +136,14 @@ RSpec.shared_examples_for 'a searchable model' do
     describe '#_denormalize' do
       subject{ searchable_model }
       its(:searchable_type){ is_expected.to eql searchable.class.name }
-      its(:section){ is_expected.to eql searchable.section }
+      
+      it 'should set the section(s)' do
+        if searchable.respond_to?(:sections)
+          expect(searchable_model.sections).to match_array searchable.sections
+        else
+          expect(searchable_model.sections).to eql [searchable.section]
+        end
+      end
     end
   end
 end

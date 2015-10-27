@@ -1,7 +1,6 @@
 class Collection < ActiveRecord::Base
   include Focusable
   include Searchable::Querying
-  belongs_to :project
   
   class_attribute :searchable_klass
   self.searchable_klass = SearchableCollection
@@ -13,5 +12,9 @@ class Collection < ActiveRecord::Base
   
   def self.refresh!
     connection.execute 'refresh materialized view concurrently searchable_collections;'
+  end
+  
+  def projects
+    Project.where id: project_ids
   end
 end
