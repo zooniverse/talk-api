@@ -14,7 +14,11 @@ module Focusable
   end
   
   def section
-    "#{ project.id }-#{ project.display_name }"
+    if self[:project_ids]
+      project_ids.collect{ |project_id| "project-#{ project_id }" }
+    else
+      "project-#{ project.id }"
+    end
   end
   
   def mentioned_by(comment)

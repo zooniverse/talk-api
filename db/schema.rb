@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151021203819) do
+ActiveRecord::Schema.define(version: 20151027173138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
   enable_extension "postgres_fdw"
+  enable_extension "hstore"
 
   create_table "announcements", force: :cascade do |t|
     t.text     "message",    null: false
@@ -250,29 +250,29 @@ ActiveRecord::Schema.define(version: 20151021203819) do
   create_table "searchable_boards", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type",              null: false
     t.tsvector "content",         default: "", null: false
-    t.string   "section",                      null: false
+    t.string   "sections",        default: [], null: false, array: true
   end
 
   add_index "searchable_boards", ["content"], name: "index_searchable_boards_on_content", using: :gin
-  add_index "searchable_boards", ["section", "searchable_type"], name: "index_searchable_boards_on_section_and_searchable_type", using: :btree
+  add_index "searchable_boards", ["sections", "searchable_type"], name: "index_searchable_boards_on_sections_and_searchable_type", using: :btree
 
   create_table "searchable_comments", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type",              null: false
     t.tsvector "content",         default: "", null: false
-    t.string   "section",                      null: false
+    t.string   "sections",        default: [], null: false, array: true
   end
 
   add_index "searchable_comments", ["content"], name: "index_searchable_comments_on_content", using: :gin
-  add_index "searchable_comments", ["section", "searchable_type"], name: "index_searchable_comments_on_section_and_searchable_type", using: :btree
+  add_index "searchable_comments", ["sections", "searchable_type"], name: "index_searchable_comments_on_sections_and_searchable_type", using: :btree
 
   create_table "searchable_discussions", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type",              null: false
     t.tsvector "content",         default: "", null: false
-    t.string   "section",                      null: false
+    t.string   "sections",        default: [], null: false, array: true
   end
 
   add_index "searchable_discussions", ["content"], name: "index_searchable_discussions_on_content", using: :gin
-  add_index "searchable_discussions", ["section", "searchable_type"], name: "index_searchable_discussions_on_section_and_searchable_type", using: :btree
+  add_index "searchable_discussions", ["sections", "searchable_type"], name: "index_searchable_discussions_on_sections_and_searchable_type", using: :btree
 
   create_table "subscription_preferences", force: :cascade do |t|
     t.integer  "category",                    null: false

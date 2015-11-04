@@ -9,7 +9,7 @@ class Search < ActiveRecord::Base
   belongs_to :searchable, polymorphic: true
   
   scope :of_type, ->(types){ where searchable_type: types }
-  scope :in_section, ->(section){ where section: section }
+  scope :in_section, ->(section){ where('sections @> array[?]::varchar[]', section) }
   scope :with_content, ->(terms) {
     query = _parse_query terms
     where('content @@ to_tsquery(?)', query)

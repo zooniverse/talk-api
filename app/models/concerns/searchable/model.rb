@@ -27,7 +27,7 @@ module Searchable
     
     def _denormalize
       self.searchable_type = searchable_klass.name
-      self.section = searchable.section
+      self.sections = searchable.respond_to?(:sections) ? searchable.sections : [searchable.section]
     end
   end
 end
