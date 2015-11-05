@@ -63,9 +63,11 @@ module DataExportWorker
   def write_data
     ::File.open("#{ name }.json", 'w').tap do |file|
       file.write '['
-      each_row do |row, index|
-        file.write(',') unless index.zero?
-        file.write row.to_json
+      if row_count > 0
+        each_row do |row, index|
+          file.write(',') unless index.zero?
+          file.write row.to_json
+        end
       end
       file.write "]\n"
       file.close

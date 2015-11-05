@@ -44,7 +44,11 @@ RSpec.shared_examples_for 'a data export worker' do
     
     context 'with no rows' do
       before(:each) do
-        allow(subject).to receive :each_row
+        allow(subject).to receive(:row_count).and_return 0
+      end
+      
+      it 'should not attempt to iterate each row' do
+        expect(subject).to_not receive :each_row
       end
       
       it 'should write an empty array' do
@@ -57,6 +61,7 @@ RSpec.shared_examples_for 'a data export worker' do
     
     context 'with multiple rows' do
       before(:each) do
+        allow(subject).to receive(:row_count).and_return 2
         allow(subject).to receive(:each_row)
           .and_yield({ first: 'works' }, 0)
           .and_yield({ second: 'also works' }, 1)
