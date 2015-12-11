@@ -15,13 +15,24 @@ RSpec.describe UnsubscribeToken, type: :model do
     end
     
     it 'should create when not existing' do
-      expect(UnsubscribeToken).to receive :create
+      expect(UnsubscribeToken).to receive(:create).and_call_original
       UnsubscribeToken.for_user other_user
     end
     
     it 'should handle collisions' do
       allow(SecureRandom).to receive(:hex).and_return(token.token, 'something else')
       expect(UnsubscribeToken.for_user(other_user).token).to eql 'something else'
+    end
+    
+    it 'should reset expires_at' do
+      first = 1.week.ago.utc
+      token.update_attribute :expires_at, first
+      
+      expect {
+        UnsubscribeToken.for_user(token.user)
+      }.to change {
+        token.reload.expires_at
+      }.from(first).to be_within(1.second).of(1.month.from_now.utc)
     end
   end
   
