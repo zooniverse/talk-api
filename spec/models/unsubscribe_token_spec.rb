@@ -25,14 +25,12 @@ RSpec.describe UnsubscribeToken, type: :model do
     end
     
     it 'should reset expires_at' do
-      first = 1.week.ago.utc
-      token.update_attribute :expires_at, first
-      
+      token.update_attribute :expires_at, 1.week.ago.utc
       expect {
         UnsubscribeToken.for_user(token.user)
       }.to change {
         token.reload.expires_at
-      }.from(first).to be_within(1.second).of(1.month.from_now.utc)
+      }.to be_within(1.second).of(1.month.from_now.utc)
     end
   end
   
