@@ -6,7 +6,7 @@ RSpec.describe MentionPolicy, type: :policy do
   let(:discussion){ create :discussion, board: board }
   let(:comment){ create :comment, discussion: discussion }
   let(:record){ create :mention, comment: comment }
-  let(:subject){ MentionPolicy.new user, record }
+  subject{ MentionPolicy.new user, record }
   
   context 'with permissions read:all write:all' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'all', write: 'all' } }
@@ -160,7 +160,7 @@ RSpec.describe MentionPolicy, type: :policy do
     let(:other_comment){ create :comment, discussion: other_discussion }
     let(:other_mentions){ create_list :mention, 2, comment: other_comment }
     
-    let(:subject){ MentionPolicy::Scope.new(user, Mention).resolve }
+    subject{ MentionPolicy::Scope.new(user, Mention).resolve }
     
     context 'without a user' do
       it{ is_expected.to match_array public_mentions }

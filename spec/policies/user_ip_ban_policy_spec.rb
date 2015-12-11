@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe UserIpBanPolicy, type: :policy do
   let(:user){ }
   let(:record){ create :user_ip_ban }
-  let(:subject){ UserIpBanPolicy.new user, record }
+  subject{ UserIpBanPolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy

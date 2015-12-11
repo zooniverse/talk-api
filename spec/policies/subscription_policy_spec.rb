@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe SubscriptionPolicy, type: :policy do
   let(:user){ }
   let(:record){ create :subscription }
-  let(:subject){ SubscriptionPolicy.new user, record }
+  subject{ SubscriptionPolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
@@ -25,7 +25,7 @@ RSpec.describe SubscriptionPolicy, type: :policy do
     let!(:other_records){ create_list :subscription, 2 }
     let(:user){ create :user }
     let(:records){ create_list :subscription, 2, user: user }
-    let(:subject){ SubscriptionPolicy::Scope.new(user, Subscription).resolve }
+    subject{ SubscriptionPolicy::Scope.new(user, Subscription).resolve }
     
     it{ is_expected.to match_array records }
   end

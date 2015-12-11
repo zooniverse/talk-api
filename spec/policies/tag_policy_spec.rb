@@ -6,7 +6,7 @@ RSpec.describe TagPolicy, type: :policy do
   let(:discussion){ create :discussion, board: board }
   let(:comment){ create :comment, discussion: discussion, body: 'testing #test' }
   let(:record){ comment.tags.first }
-  let(:subject){ TagPolicy.new user, record }
+  subject{ TagPolicy.new user, record }
   
   context 'with permissions read:all write:all' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'all', write: 'all' } }
@@ -178,7 +178,7 @@ RSpec.describe TagPolicy, type: :policy do
     let(:other_comments){ create_list :comment, 2, discussion: other_discussion, body: '#test5' }
     let(:other_tags){ other_comments.collect(&:tags).flatten }
     
-    let(:subject){ TagPolicy::Scope.new(user, Tag).resolve }
+    subject{ TagPolicy::Scope.new(user, Tag).resolve }
     
     context 'without a user' do
       it{ is_expected.to match_array public_tags }

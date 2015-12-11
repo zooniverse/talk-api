@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe AnnouncementPolicy, type: :policy do
   let(:user){ }
   let(:record){ create :announcement }
-  let(:subject){ AnnouncementPolicy.new user, record }
+  subject{ AnnouncementPolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy permitting', :index, :show

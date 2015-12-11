@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe ApplicationPolicy, type: :policy do
   let(:user){ }
   let(:record){ OpenStruct.new }
-  let(:subject){ ApplicationPolicy.new user, record }
+  subject{ ApplicationPolicy.new user, record }
   
   describe 'default actions' do
     it_behaves_like 'a policy permitting', :index, :show

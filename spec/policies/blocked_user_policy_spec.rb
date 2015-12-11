@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe BlockedUserPolicy, type: :policy do
   let(:user){ }
   let(:record){ create :blocked_user }
-  let(:subject){ BlockedUserPolicy.new user, record }
+  subject{ BlockedUserPolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
@@ -43,7 +43,7 @@ RSpec.describe BlockedUserPolicy, type: :policy do
     let!(:other_records){ create_list :blocked_user, 2 }
     let(:user){ create :user }
     let(:records){ create_list :blocked_user, 2, user: user }
-    let(:subject){ BlockedUserPolicy::Scope.new(user, BlockedUser).resolve }
+    subject{ BlockedUserPolicy::Scope.new(user, BlockedUser).resolve }
     
     it{ is_expected.to match_array records }
   end

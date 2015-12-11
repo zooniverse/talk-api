@@ -4,7 +4,7 @@ RSpec.describe RolePolicy, type: :policy do
   let(:user){ }
   let(:role_user){ create :user }
   let(:record){ build :moderator_role, user: role_user }
-  let(:subject){ RolePolicy.new user, record }
+  subject{ RolePolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy permitting', :index, :show
