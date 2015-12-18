@@ -5,7 +5,7 @@ RSpec.describe CommentPolicy, type: :policy do
   let(:board){ create :board }
   let(:discussion){ create :discussion, board: board }
   let(:record){ create :comment, discussion: discussion }
-  let(:subject){ CommentPolicy.new user, record }
+  subject{ CommentPolicy.new user, record }
   
   context 'with permissions read:all write:all' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'all', write: 'all' } }
@@ -198,7 +198,7 @@ RSpec.describe CommentPolicy, type: :policy do
     let(:other_discussion){ create :discussion, board: other_board }
     let(:other_comments){ create_list :comment, 2, discussion: other_discussion }
     
-    let(:subject){ CommentPolicy::Scope.new(user, Comment).resolve }
+    subject{ CommentPolicy::Scope.new(user, Comment).resolve }
     
     context 'without a user' do
       it{ is_expected.to match_array public_comments }

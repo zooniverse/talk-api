@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe MessagePolicy, type: :policy do
   let(:user){ }
   let(:record){ create :message }
-  let(:subject){ MessagePolicy.new user, record }
+  subject{ MessagePolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
@@ -37,7 +37,7 @@ RSpec.describe MessagePolicy, type: :policy do
     let!(:other_records){ create_list :message, 2 }
     let(:user){ create :user }
     let(:records){ create_list :message, 2, user: user }
-    let(:subject){ MessagePolicy::Scope.new(user, Message).resolve }
+    subject{ MessagePolicy::Scope.new(user, Message).resolve }
     
     it{ is_expected.to match_array records }
   end

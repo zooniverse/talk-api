@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe DataRequestPolicy, type: :policy do
   let(:user){ }
   let(:record){ create :data_request, section: 'project-1' }
-  let(:subject){ DataRequestPolicy.new user, record }
+  subject{ DataRequestPolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
@@ -50,7 +50,7 @@ RSpec.describe DataRequestPolicy, type: :policy do
     let(:user_records){ create_list :data_request, 1, section: 'project-1', user: user }
     let!(:section_records){ create_list :data_request, 2, section: 'project-1' }
     let!(:other_records){ create_list :data_request, 2, section: 'project-2' }
-    let(:subject){ DataRequestPolicy::Scope.new(user, DataRequest).resolve }
+    subject{ DataRequestPolicy::Scope.new(user, DataRequest).resolve }
     
     context 'with an owner admin' do
       let(:user){ create :admin, section: 'project-1' }

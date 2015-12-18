@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe DiscussionPolicy, type: :policy do
   let(:user){ }
   let(:record){ create :discussion, board: board, section: 'project-1' }
-  let(:subject){ DiscussionPolicy.new user, record }
+  subject{ DiscussionPolicy.new user, record }
   
   context 'with permissions read:all write:all' do
     let(:board){ create :board, section: 'project-1', permissions: { read: 'all', write: 'all' } }
@@ -166,7 +166,7 @@ RSpec.describe DiscussionPolicy, type: :policy do
     let(:other_board){ create :board, section: 'project-2', permissions: { read: 'admin', write: 'admin' } }
     let!(:other_discussions){ create_list :discussion, 2, board: other_board }
     
-    let(:subject){ DiscussionPolicy::Scope.new(user, Discussion).resolve }
+    subject{ DiscussionPolicy::Scope.new(user, Discussion).resolve }
     
     context 'without a user' do
       it{ is_expected.to match_array public_discussions }

@@ -4,7 +4,7 @@ RSpec.describe ModerationPolicy, type: :policy do
   let(:user){ }
   let(:comment){ create :comment, section: 'project-1' }
   let(:record){ create :moderation, target: comment }
-  let(:subject){ ModerationPolicy.new user, record }
+  subject{ ModerationPolicy.new user, record }
   
   context 'without a user' do
     it_behaves_like 'a policy forbidding', :index, :show, :create, :update, :destroy
@@ -34,7 +34,7 @@ RSpec.describe ModerationPolicy, type: :policy do
     let!(:other_records){ create_list :moderation, 2, section: 'project-2' }
     let(:user){ create :moderator, section: 'project-1' }
     let(:records){ create_list :moderation, 2, section: 'project-1' }
-    let(:subject){ ModerationPolicy::Scope.new(user, Moderation).resolve }
+    subject{ ModerationPolicy::Scope.new(user, Moderation).resolve }
     
     it{ is_expected.to match_array records }
   end
