@@ -19,6 +19,7 @@ gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 gem 'newrelic_rpm', '~> 3.14'
 gem 'honeybadger', '~> 2.3.2'
+gem 'poseidon', '~> 0.0.5'
 
 group :production do
   gem 'puma', '~> 2.15.3'
@@ -32,6 +33,7 @@ group :test, :development do
   gem 'guard-rspec', '~> 4.6.4'
   gem 'timecop'
   gem 'pry', '~> 0.10.3'
+  gem 'benchmark-ips'
 end
 
 group :test do
