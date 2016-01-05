@@ -581,4 +581,52 @@ RSpec.describe Comment, type: :model do
       end
     end
   end
+  
+  describe Comment::Publishing do
+    let!(:comment){ create :comment }
+    subject{ comment }
+    
+    describe '#publish_to_kafka_later' do
+      it 'should be triggered after a commit' do
+        expect(comment).to receive :publish_to_kafka_later
+        comment.run_callbacks :commit
+      end
+      
+      it 'should enqueue the publish worker' do
+        expect(CommentPublishWorker).to receive(:perform_async).with comment.id
+        comment.publish_to_kafka_later
+      end
+    end
+    
+    describe '#publish_to_kafka' do
+      it 'should publish' do
+        expect(Kafka).to receive(:publish).with 'events',
+          comment.to_kafka, comment.kafka_id
+        comment.publish_to_kafka
+      end
+    end
+    
+    describe '#kafka_id' do
+      subject{ comment.kafka_id }
+      it{ is_expected.to eql "comment.#{ comment.id }" }
+    end
+    
+    describe '#kafka_data' do
+      subject{ comment.kafka_data }
+      its(:keys){ is_expected.to match_array [
+        :board_id, :discussion_id, :focus_id,
+        :focus_type, :project_id, :section
+      ] }
+    end
+    
+    describe '#to_kafka' do
+      subject{ comment.to_kafka }
+      it{ is_expected.to include comment.kafka_data }
+      its([:event_id]){ is_expected.to eql comment.kafka_id }
+      its([:event_time]){ is_expected.to eql comment.created_at.as_json }
+      its([:event_type]){ is_expected.to eql 'talk.comment' }
+      its([:user_id]){ is_expected.to be_a(String) }
+      its([:_ip_address]){ is_expected.to eql comment.user_ip }
+    end
+  end
 end
