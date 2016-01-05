@@ -596,6 +596,17 @@ RSpec.describe Comment, type: :model do
         expect(CommentPublishWorker).to receive(:perform_async).with comment.id
         comment.publish_to_kafka_later
       end
+      
+      context 'when not searchable' do
+        before(:each) do
+          allow(comment).to receive(:searchable?).and_return false
+        end
+        
+        it 'should not be triggered' do
+          expect(comment).to_not receive :publish_to_kafka_later
+          comment.run_callbacks :commit
+        end
+      end
     end
     
     describe '#publish_to_kafka' do
