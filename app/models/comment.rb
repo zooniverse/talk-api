@@ -10,6 +10,7 @@ class Comment < ActiveRecord::Base
   include Comment::Tagging
   include Comment::Mentioning
   include Comment::Subscribing
+  include Comment::Publishing
   
   has_many :mentions, dependent: :destroy
   has_many :group_mentions, dependent: :destroy
