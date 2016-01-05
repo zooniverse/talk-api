@@ -6,7 +6,7 @@ class Comment
     extend ActiveSupport::Concern
     
     included do
-      after_commit :publish_to_kafka_later, on: :create
+      after_commit :publish_to_kafka_later, on: :create, if: :searchable?
     end
     
     def publish_to_kafka_later
