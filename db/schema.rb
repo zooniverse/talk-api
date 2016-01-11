@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027173138) do
+ActiveRecord::Schema.define(version: 20160111193434) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,8 +102,6 @@ ActiveRecord::Schema.define(version: 20151027173138) do
     t.integer  "participant_ids", default: [],              array: true
   end
 
-  add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at", using: :btree
-
   create_table "data_requests", force: :cascade do |t|
     t.integer  "user_id",                null: false
     t.string   "section",                null: false
@@ -140,11 +138,8 @@ ActiveRecord::Schema.define(version: 20151027173138) do
   end
 
   add_index "discussions", ["board_id", "last_comment_created_at"], name: "index_discussions_on_board_id_and_last_comment_created_at", using: :btree
-  add_index "discussions", ["board_id", "sticky", "sticky_position", "last_comment_created_at"], name: "sorted_sticky_board_id_comment_created_at", using: :btree
   add_index "discussions", ["board_id", "sticky", "sticky_position"], name: "index_discussions_on_board_id_and_sticky_and_sticky_position", where: "(sticky = true)", using: :btree
-  add_index "discussions", ["board_id", "sticky_position", "last_comment_created_at"], name: "sticky_board_id_coment_created_at", using: :btree
   add_index "discussions", ["board_id", "title", "subject_default"], name: "index_discussions_on_board_id_and_title_and_subject_default", unique: true, where: "(subject_default = true)", using: :btree
-  add_index "discussions", ["sticky", "sticky_position", "last_comment_created_at"], name: "sticky_comment_created_at", using: :btree
 
   create_table "event_logs", force: :cascade do |t|
     t.integer  "user_id"
@@ -245,7 +240,6 @@ ActiveRecord::Schema.define(version: 20151027173138) do
 
   add_index "roles", ["user_id", "section", "is_shown"], name: "index_roles_on_user_id_and_section_and_is_shown", using: :btree
   add_index "roles", ["user_id", "section", "name"], name: "index_roles_on_user_id_and_section_and_name", unique: true, using: :btree
-  add_index "roles", ["user_id"], name: "index_roles_on_user_id", using: :btree
 
   create_table "searchable_boards", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type",              null: false
@@ -254,7 +248,8 @@ ActiveRecord::Schema.define(version: 20151027173138) do
   end
 
   add_index "searchable_boards", ["content"], name: "index_searchable_boards_on_content", using: :gin
-  add_index "searchable_boards", ["sections", "searchable_type"], name: "index_searchable_boards_on_sections_and_searchable_type", using: :btree
+  add_index "searchable_boards", ["searchable_type"], name: "index_searchable_boards_on_searchable_type", using: :btree
+  add_index "searchable_boards", ["sections"], name: "index_searchable_boards_on_sections", using: :gin
 
   create_table "searchable_comments", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type",              null: false
@@ -263,7 +258,8 @@ ActiveRecord::Schema.define(version: 20151027173138) do
   end
 
   add_index "searchable_comments", ["content"], name: "index_searchable_comments_on_content", using: :gin
-  add_index "searchable_comments", ["sections", "searchable_type"], name: "index_searchable_comments_on_sections_and_searchable_type", using: :btree
+  add_index "searchable_comments", ["searchable_type"], name: "index_searchable_comments_on_searchable_type", using: :btree
+  add_index "searchable_comments", ["sections"], name: "index_searchable_comments_on_sections", using: :gin
 
   create_table "searchable_discussions", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type",              null: false
@@ -272,7 +268,8 @@ ActiveRecord::Schema.define(version: 20151027173138) do
   end
 
   add_index "searchable_discussions", ["content"], name: "index_searchable_discussions_on_content", using: :gin
-  add_index "searchable_discussions", ["sections", "searchable_type"], name: "index_searchable_discussions_on_sections_and_searchable_type", using: :btree
+  add_index "searchable_discussions", ["searchable_type"], name: "index_searchable_discussions_on_searchable_type", using: :btree
+  add_index "searchable_discussions", ["sections"], name: "index_searchable_discussions_on_sections", using: :gin
 
   create_table "subscription_preferences", force: :cascade do |t|
     t.integer  "category",                    null: false
