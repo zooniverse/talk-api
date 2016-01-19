@@ -47,6 +47,9 @@
                 <%= link_to notification.message, notification.url, style: link_style %>
                 <% if notification.source.target_type == 'Comment' %>
                   <div>
+                    <%= link_to 'View comment on talk', FrontEnd.link_to(notification.source.target), style: link_style %>
+                  </div>
+                  <div>
                     <%= MarkdownApi.markdown(notification.source.target.body, slug: project.try(:slug)).html_safe %>
                   </div>
                   <div><%= time_ago_in_words notification.source.created_at %> ago</div>
