@@ -21,11 +21,10 @@ RSpec.describe Board, type: :model do
       expect(without_description).to fail_validation description: "can't be blank"
     end
     
-    it 'should restrict deletion with dependent discussions' do
+    it 'should cascade deletion to dependent discussions' do
       board = create :board_with_discussions
-      expect{ board.reload.destroy! }.to raise_error ActiveRecord::RecordNotDestroyed
-      board.discussions.destroy_all
-      expect{ board.destroy! }.to_not raise_error
+      expect{ board.destroy.reload }.to raise_error ActiveRecord::RecordNotFound
+      expect(Discussion.where(board_id: board.id)).to_not exist
     end
   end
   
@@ -55,7 +54,7 @@ RSpec.describe Board, type: :model do
     end
   end
   
-  describe '#cascade_searchable' do
+  describe '#cascade_searchable_later' do
     let(:board){ create :board_with_discussions, discussion_count: 2 }
     let(:children){ board.discussions.all.to_a + board.comments.all.to_a }
     let(:comments) do
@@ -64,23 +63,17 @@ RSpec.describe Board, type: :model do
       end.flatten
     end
     
-    def expect_searchable(obj, exists:)
-      expect(!!obj.searchable).to be exists
-    end
-    
     context 'when changing from public to private' do
       it 'should initially be searchable' do
         children.each do |child|
-          expect_searchable child, exists: true
+          expect(child.searchable).to be_present
         end
       end
       
       it 'should remove all searchable children' do
         board.permissions['read'] = 'private'
+        expect(BoardVisibilityWorker).to receive(:perform_in).with 1.second, board.id, :destroy_searchable
         board.save
-        children.each do |child|
-          expect_searchable child, exists: false
-        end
       end
     end
     
@@ -89,26 +82,22 @@ RSpec.describe Board, type: :model do
       
       it 'should initially be unsearchable' do
         children.each do |child|
-          expect_searchable child, exists: false
+          expect(child.searchable).to_not be_present
         end
       end
       
-      it 'should remove all searchable children' do
+      it 'should add all searchable children' do
         board.permissions['read'] = 'all'
+        expect(BoardVisibilityWorker).to receive(:perform_in).with 1.second, board.id, :update_searchable
         board.save
-        children.each do |child|
-          expect_searchable child, exists: true
-        end
       end
     end
     
     context 'when not changing read permissions' do
-      it 'should remove all searchable children' do
+      it 'should not modify searchable children' do
         board.permissions['write'] = 'admin'
+        expect(BoardVisibilityWorker).to_not receive :perform_in
         board.save
-        children.each do |child|
-          expect_searchable child, exists: true
-        end
       end
     end
   end

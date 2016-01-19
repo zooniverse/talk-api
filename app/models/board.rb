@@ -3,7 +3,7 @@ class Board < ActiveRecord::Base
   include Sectioned
   include BooleanCoercion
   
-  has_many :discussions, dependent: :restrict_with_error
+  has_many :discussions, dependent: :destroy
   has_one :latest_discussion, ->{
     includes(DiscussionSerializer.includes)
       .select('distinct on(discussions.board_id) discussions.*')
@@ -18,7 +18,7 @@ class Board < ActiveRecord::Base
   validates :description, presence: true
   validates :section, presence: true
   
-  after_update :cascade_searchable, if: :permissions_changed?
+  after_update :cascade_searchable_later, if: :permissions_changed?
   
   def searchable?
     permissions['read'] == 'all'
@@ -42,18 +42,15 @@ class Board < ActiveRecord::Base
     save if changed?
   end
   
-  # This should be moved into a background worker
-  def cascade_searchable
-    # was public, but isn't now
-    if permissions_was['read'] == 'all' && permissions['read'] != 'all'
-      each_discussion_and_comment &:destroy_searchable
-    # wasn't public, but is now
+  def cascade_searchable_later
+    action = if permissions_was['read'] == 'all' && permissions['read'] != 'all'
+      :destroy_searchable # was public, but isn't now
     elsif permissions_was['read'] != 'all' && permissions['read'] == 'all'
-      each_discussion_and_comment &:update_searchable
+      :update_searchable # wasn't public, but is now
     end
+    
+    BoardVisibilityWorker.perform_in(1.second, id, action) if action
   end
-  
-  protected
   
   def each_discussion_and_comment
     discussions.find_each do |discussion|
