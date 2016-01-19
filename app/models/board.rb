@@ -3,7 +3,7 @@ class Board < ActiveRecord::Base
   include Sectioned
   include BooleanCoercion
   
-  has_many :discussions, dependent: :restrict_with_error
+  has_many :discussions, dependent: :destroy
   has_one :latest_discussion, ->{
     includes(DiscussionSerializer.includes)
       .select('distinct on(discussions.board_id) discussions.*')

@@ -21,11 +21,10 @@ RSpec.describe Board, type: :model do
       expect(without_description).to fail_validation description: "can't be blank"
     end
     
-    it 'should restrict deletion with dependent discussions' do
+    it 'should cascade deletion to dependent discussions' do
       board = create :board_with_discussions
-      expect{ board.reload.destroy! }.to raise_error ActiveRecord::RecordNotDestroyed
-      board.discussions.destroy_all
-      expect{ board.destroy! }.to_not raise_error
+      expect{ board.destroy.reload }.to raise_error ActiveRecord::RecordNotFound
+      expect(Discussion.where(board_id: board.id)).to_not exist
     end
   end
   
