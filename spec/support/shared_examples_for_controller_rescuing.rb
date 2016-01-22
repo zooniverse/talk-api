@@ -65,6 +65,9 @@ RSpec.shared_examples_for 'a controller rescuing' do
     Pundit::NotAuthorizedError.new, with: 401
   
   it_behaves_like 'ActionRescuing',
+    RangeError.new('12345678901234'), with: 400
+  
+  it_behaves_like 'ActionRescuing',
     RestPack::Serializer::InvalidInclude.new('foo'), with: 400
   
   it_behaves_like 'ActionRescuing',
