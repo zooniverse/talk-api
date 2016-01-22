@@ -19,6 +19,7 @@ module ActionRescuing
     rescue_from Pundit::NotDefinedError, with: :not_implemented
     rescue_from Pundit::NotAuthorizedError, with: :unauthorized
     
+    rescue_from RangeError, with: :bad_request
     rescue_from RestPack::Serializer::InvalidInclude, with: :bad_request
     
     rescue_from TalkService::ParameterError, with: :unprocessable
