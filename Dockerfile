@@ -22,6 +22,6 @@ ADD ./ /rails_app
 
 ADD docker/supervisor.conf /etc/supervisor/conf.d/talk.conf
 
-EXPOSE 80
+EXPOSE 81
 
 ENTRYPOINT /usr/bin/supervisord
