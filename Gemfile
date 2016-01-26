@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.5'
+gem 'rails', '~> 4.2.5.1'
 gem 'rack-cors', '~> 0.4.0'
 gem 'pg', '~> 0.18.4'
 gem 'redis', '~> 3.2.2'
@@ -20,6 +20,7 @@ gem 'spring', group: :development
 gem 'newrelic_rpm', '~> 3.14'
 gem 'honeybadger', '~> 2.3.2'
 gem 'poseidon', '~> 0.0.5'
+gem 'logstasher', '~> 0.8.6'
 
 group :production do
   gem 'puma', '~> 2.15.3'

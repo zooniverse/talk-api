@@ -24,4 +24,7 @@ Rails.application.configure do
       host: 'talk.zooniverse.org'
     }
   end
+  
+  config.logstasher.enabled = true
+  config.logstasher.log_controller_parameters = true
 end
