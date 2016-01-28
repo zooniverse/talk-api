@@ -6,7 +6,12 @@ class MarkdownApi
     return @host if @host
     config_file = Rails.root.join 'config/markdown.yml'
     config = YAML.load(config_file.read)[Rails.env] if config_file.exist?
-    @host = ENV['MARKDOWN_HOST'] || config.try(:[], 'host')
+    
+    @host = if ENV['MARKDOWN_PORT_2998_TCP_ADDR']
+      "http://#{ ENV['MARKDOWN_PORT_2998_TCP_ADDR'] }:2998"
+    else
+      ENV['MARKDOWN_HOST'] || config.try(:[], 'host')
+    end
   end
   
   def self.connection
