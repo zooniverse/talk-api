@@ -1,0 +1,28 @@
+postgres:
+  image: postgres
+  environment:
+    - "POSTGRES_USER=talkapi"
+    - "POSTGRES_PASSWORD=talkapi"
+  ports:
+    - "5432:5432"
+
+redis:
+  image: redis
+  command: redis-server --appendonly yes
+  ports:
+    - "6379:6379"
+
+talkapi:
+  dockerfile: Dockerfile
+  build: ./
+  volumes:
+    - ./:/rails_app
+  ports:
+    - "3000:3000"
+  environment:
+    - "RAILS_ENV=development"
+  # external_links:
+  #   - external_postgres_container:pg
+  links:
+    - postgres:pg
+    - redis
