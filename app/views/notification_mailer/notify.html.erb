@@ -124,6 +124,45 @@
     <% end %>
   <% end %>
   
+  <% if @started_discussions.any? %>
+    <%= h2 "Boards you're following" %>
+    
+    <% @started_discussions.each_pair do |section, boards| %>
+      <% project = boards.first.last.first.project %>
+      <div>
+        <%= h3 do %>
+          <% if project %>
+            <%= link_to project.display_name, FrontEnd.project_talk(project), style: link_style %>
+          <% elsif section == 'zooniverse' %>
+            <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
+          <% end %>
+        <% end %>
+        
+        <div>
+          <% boards.each_pair do |board, notifications| %>
+            <%= container do %>
+              <h4>
+                <%= pluralize notifications.length, 'New discussions' %>
+                on
+                <%= link_to board.title, FrontEnd.link_to(board, project), style: link_style %>
+              </h4>
+              
+              <div>
+                <% notifications.each do |notification| %>
+                  <%= container do %>
+                    <div><%= notification.message %></div>
+                    <div><%= time_ago_in_words notification.source.created_at %> ago</div>
+                    <%= link_to 'View on talk', notification.url, style: link_style %>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+  
   <% if @discussions.any? %>
     <%= h2 "Discussions you're following" %>
     
