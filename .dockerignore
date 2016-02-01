@@ -1,1 +1,6 @@
-.git
+.vagrant
+.ruby-gemset
+.ruby-version
+.bundle
+spec
+log/*
