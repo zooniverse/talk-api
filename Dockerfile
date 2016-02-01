@@ -7,13 +7,14 @@ ENV LC_ALL en_US.UTF-8
 
 WORKDIR /rails_app
 
-ADD ./Gemfile /rails_app/
-ADD ./Gemfile.lock /rails_app/
-
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y supervisor git libpq-dev && \
     apt-get clean
+
+
+ADD ./Gemfile /rails_app/
+ADD ./Gemfile.lock /rails_app/
 
 RUN cd /rails_app && \
     bundle install --without test development
