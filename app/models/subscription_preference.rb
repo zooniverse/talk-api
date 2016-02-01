@@ -25,7 +25,8 @@ class SubscriptionPreference < ActiveRecord::Base
       system: :immediate,
       followed_discussions: :daily,
       moderation_reports: :immediate,
-      group_mentions: :immediate
+      group_mentions: :immediate,
+      started_discussions: :never
     }.with_indifferent_access
   end
   

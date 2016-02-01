@@ -2,6 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Board, type: :model do
   it_behaves_like 'a sectioned model'
+  it_behaves_like 'a subscribable model'
   it_behaves_like 'a searchable interface'
   it_behaves_like 'a searchable model' do
     let(:searchable){ create :board }
