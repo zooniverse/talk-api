@@ -23,6 +23,8 @@ ADD ./ /rails_app
 
 ADD docker/supervisor.conf /etc/supervisor/conf.d/talk.conf
 
+RUN (cd /rails_app && git log --format="%H" -n 1 > commit_id.txt && rm -rf .git)
+
 EXPOSE 81
 
 ENTRYPOINT /usr/bin/supervisord
