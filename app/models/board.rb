@@ -1,6 +1,7 @@
 class Board < ActiveRecord::Base
   include Searchable
   include Sectioned
+  include Subscribable
   include BooleanCoercion
   
   has_many :discussions, dependent: :destroy
