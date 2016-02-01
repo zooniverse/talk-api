@@ -42,6 +42,12 @@ class NotificationMailer < ApplicationMailer
       @discussions[n.section][n.subscription.source] ||= []
       @discussions[n.section][n.subscription.source] << n
     end
+    @started_discussions = { }
+    select_category('started_discussions').each do |n|
+      @started_discussions[n.section] ||= { }
+      @started_discussions[n.section][n.subscription.source] ||= []
+      @started_discussions[n.section][n.subscription.source] << n
+    end
   end
   
   def select_category(*types)

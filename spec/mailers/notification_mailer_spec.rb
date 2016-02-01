@@ -16,6 +16,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   let!(:message_preference){ user1.preference_for(:messages).update email_digest: :weekly }
   let!(:followed_preference){ user1.preference_for(:followed_discussions).update email_digest: :daily }
   let!(:moderation_preference){ user1.preference_for(:moderation_reports).update email_digest: :immediate }
+  let!(:started_preference){ user1.preference_for(:started_discussions).update email_digest: :weekly }
   
   let(:board){ create :board, section: section }
   let!(:discussion){ create :discussion, board: board, user: user1 }
@@ -34,9 +35,11 @@ RSpec.describe NotificationMailer, type: :mailer do
   
   before :each do
     user1.subscribe_to followed_discussion, :followed_discussions
+    user1.subscribe_to board, :started_discussions
     Mention.all.each &:notify_mentioned
     GroupMention.all.each &:notify_mentioned
     Comment.all.each &:notify_subscribers
+    Discussion.all.each &:notify_subscribers
     Moderation.all.each &:notify_subscribers
     data_request.notify_user url: 'foo', message: 'bar'
     conversation.messages.each &:notify_subscribers
@@ -112,7 +115,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     context 'with weekly' do
       let(:frequency){ :weekly }
       subject{ categories }
-      it{ is_expected.to match_array Subscription.categories.values_at(:messages) }
+      it{ is_expected.to match_array Subscription.categories.values_at(:messages, :started_discussions) }
     end
     
     context 'with disabled preferences' do
@@ -154,9 +157,9 @@ RSpec.describe NotificationMailer, type: :mailer do
     context 'with weekly' do
       let(:frequency){ :weekly }
       subject{ notification_categories }
-      let(:categories){ [2] }
-      its(:uniq){ is_expected.to match_array %w(messages) }
-      its(:length){ is_expected.to eql 2 }
+      let(:categories){ [2, 7] }
+      its(:uniq){ is_expected.to match_array %w(messages started_discussions) }
+      its(:length){ is_expected.to eql 3 }
     end
   end
   
