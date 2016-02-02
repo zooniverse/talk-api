@@ -11,11 +11,11 @@ class SubscriptionSchema
       id :user_id, required: true
       id :source_id, required: true
       string :source_type, required: true do
-        enum %w(Discussion)
+        enum %w(Board Discussion)
       end
       boolean :enabled, default: true
       string :category, required: true do
-        enum %w(followed_discussions)
+        enum %w(started_discussions followed_discussions)
       end
     end
   end
