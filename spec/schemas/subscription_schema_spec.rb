@@ -15,8 +15,8 @@ RSpec.describe SubscriptionSchema, type: :schema do
         its(:enabled){ is_expected.to eql type: 'boolean', default: true }
         its(:source_id){ is_expected.to eql id_schema }
         its(:user_id){ is_expected.to eql id_schema }
-        its(:source_type){ is_expected.to eql type: 'string', enum: %w(Discussion) }
-        its(:category){ is_expected.to eql type: 'string', enum: %w(followed_discussions) }
+        its(:source_type){ is_expected.to eql type: 'string', enum: %w(Board Discussion) }
+        its(:category){ is_expected.to eql type: 'string', enum: %w(started_discussions followed_discussions) }
       end
     end
   end
