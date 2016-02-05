@@ -188,4 +188,59 @@ RSpec.describe Discussion, type: :model do
       expect(create_discussion(position: 100).sticky_position).to eql 100.0
     end
   end
+  
+  describe '#notify_subscribers_later' do
+    let(:discussion){ create :discussion }
+    
+    it 'should queue the notification' do
+      expect(DiscussionSubscriptionWorker).to receive(:perform_async).with discussion.id
+      discussion.run_callbacks :commit
+    end
+  end
+  
+  describe '#notify_subscribers' do
+    let(:users){ create_list :user, 2 }
+    let(:notified_users){ Notification.all.collect &:user }
+    let(:unsubscribed_user){ create :user }
+    let(:discussion){ create :discussion }
+    let(:board){ discussion.board }
+    
+    before(:each) do
+      users.each{ |user| user.subscribe_to board, :started_discussions }
+      unsubscribed_user.preference_for(:started_discussions).update_attributes enabled: false
+    end
+    
+    it 'should create notifications for subscribed users' do
+      discussion = create :discussion, board: board
+      discussion.notify_subscribers
+      expect(notified_users).to match_array users
+    end
+    
+    it 'should not create notifications for unsubscribed users' do
+      discussion = create :discussion, board: board
+      discussion.notify_subscribers
+      expect(notified_users).to_not include unsubscribed_user
+    end
+    
+    it 'should not create a notification for the discussing user' do
+      user = users.first
+      discussion = create :discussion, board: board, user: user
+      discussion.notify_subscribers
+      expect(user.notifications).to be_empty
+    end
+  end
+  
+  describe '#subscriptions_to_notify' do
+    let(:board){ create :board }
+    let(:discussion){ create :discussion, board: board, user: user1 }
+    let(:user1){ create :user }
+    let(:user2){ create :user }
+    let(:user3){ create :user }
+    let!(:participating1){ create :subscription, category: :started_discussions, source: board, user: user1, enabled: true }
+    let!(:participating2){ create :subscription, category: :started_discussions, source: board, user: user2, enabled: true }
+    let!(:participating3){ create :subscription, category: :started_discussions, source: board, user: user3, enabled: false }
+    subject{ discussion.subscriptions_to_notify }
+    its(:length){ is_expected.to eql 1 }
+    its('first.user_id'){ is_expected.to eql user2.id }
+  end
 end

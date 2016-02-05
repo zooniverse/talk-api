@@ -71,6 +71,26 @@ Zooniverse Talk Notifications:
 
 <% end %>
 
+<% if @started_discussions.any? %>
+  Boards you're following
+<% @started_discussions.each_pair do |section, boards| %>
+<% if project = boards.first.last.first.project %>
+    <%= project.display_name %>
+<% elsif section == 'zooniverse' %>
+    Zooniverse
+<% end %>
+<% boards.each_pair do |board, notifications| %>
+      <%= pluralize notifications.length, 'New discussion' %> on <%= board.title %>
+<% notifications.each do |notification| %>
+        <% notification.message %>
+        View on talk: <%= notification.url %>
+<% end %>
+
+<% end %>
+
+<% end %>
+<% end %>
+
 <% if @discussions.any? %>
   Discussions you're following
 <% @discussions.each_pair do |section, discussions| %>

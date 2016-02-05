@@ -3,7 +3,16 @@ module SubscriptionCategories
   
   included do
     validates :category, inclusion: {
-      in: %w(participating_discussions mentions messages system followed_discussions moderation_reports group_mentions)
+      in: [
+        'participating_discussions',
+        'mentions',
+        'messages',
+        'system',
+        'followed_discussions',
+        'moderation_reports',
+        'group_mentions',
+        'started_discussions'
+      ]
     }
     
     enum category: {
@@ -13,7 +22,8 @@ module SubscriptionCategories
       system: 3,
       followed_discussions: 4,
       moderation_reports: 5,
-      group_mentions: 6
+      group_mentions: 6,
+      started_discussions: 7
     }
   end
 end
