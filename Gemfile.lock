@@ -141,7 +141,6 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     pg (0.18.4)
-    poseidon (0.0.5)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -263,6 +262,8 @@ GEM
       addressable (< 2.4.0)
       crack (>= 0.3.2)
       hashdiff
+    zoo_stream (1.0.0)
+      aws-sdk
 
 PLATFORMS
   ruby
@@ -281,7 +282,6 @@ DEPENDENCIES
   logstasher (~> 0.8.6)
   newrelic_rpm (~> 3.14)
   pg (~> 0.18.4)
-  poseidon (~> 0.0.5)
   pry (~> 0.10.3)
   puma (~> 2.15.3)
   pundit (~> 1.0.1)
@@ -301,6 +301,7 @@ DEPENDENCIES
   spring-commands-rspec (~> 1.0.4)
   timecop
   webmock (~> 1.22.3)
+  zoo_stream (~> 1.0)
 
 BUNDLED WITH
    1.11.2
