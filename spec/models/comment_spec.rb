@@ -586,15 +586,15 @@ RSpec.describe Comment, type: :model do
     let!(:comment){ create :comment }
     subject{ comment }
     
-    describe '#publish_to_kafka_later' do
+    describe '#publish_to_event_stream_later' do
       it 'should be triggered after a commit' do
-        expect(comment).to receive :publish_to_kafka_later
+        expect(comment).to receive :publish_to_event_stream_later
         comment.run_callbacks :commit
       end
       
       it 'should enqueue the publish worker' do
         expect(CommentPublishWorker).to receive(:perform_async).with comment.id
-        comment.publish_to_kafka_later
+        comment.publish_to_event_stream_later
       end
       
       context 'when not searchable' do
@@ -603,41 +603,33 @@ RSpec.describe Comment, type: :model do
         end
         
         it 'should not be triggered' do
-          expect(comment).to_not receive :publish_to_kafka_later
+          expect(comment).to_not receive :publish_to_event_stream_later
           comment.run_callbacks :commit
         end
       end
     end
     
-    describe '#publish_to_kafka' do
+    describe '#publish_to_event_stream' do
       it 'should publish' do
-        expect(Kafka).to receive(:publish).with 'events',
-          comment.to_kafka, comment.kafka_id
-        comment.publish_to_kafka
+        expect(ZooStream).to receive(:publish).with event: 'comment',
+          data: comment.to_event_stream,
+          shard_by: comment.discussion_id
+        comment.publish_to_event_stream
       end
     end
     
-    describe '#kafka_id' do
-      subject{ comment.kafka_id }
-      it{ is_expected.to eql "comment.#{ comment.id }" }
-    end
-    
-    describe '#kafka_data' do
-      subject{ comment.kafka_data }
-      its(:keys){ is_expected.to match_array [
-        :board_id, :discussion_id, :focus_id,
-        :focus_type, :project_id, :section
-      ] }
-    end
-    
-    describe '#to_kafka' do
-      subject{ comment.to_kafka }
-      it{ is_expected.to include comment.kafka_data }
-      its([:event_id]){ is_expected.to eql comment.kafka_id }
-      its([:event_time]){ is_expected.to eql comment.created_at.as_json }
-      its([:event_type]){ is_expected.to eql 'talk.comment' }
+    describe '#to_event_stream' do
+      subject{ comment.to_event_stream }
+      its([:id]){ is_expected.to eql comment.id }
+      its([:board_id]){ is_expected.to eql comment.board_id }
+      its([:discussion_id]){ is_expected.to eql comment.discussion_id }
+      its([:focus_id]){ is_expected.to eql comment.focus_id }
+      its([:focus_type]){ is_expected.to eql comment.focus_type }
+      its([:project_id]){ is_expected.to eql comment.project_id }
+      its([:section]){ is_expected.to eql comment.section }
+      its([:created_at]){ is_expected.to eql comment.created_at.as_json }
       its([:user_id]){ is_expected.to be_a(String) }
-      its([:_ip_address]){ is_expected.to eql comment.user_ip }
+      its([:user_ip]){ is_expected.to eql comment.user_ip.to_s }
     end
   end
 end

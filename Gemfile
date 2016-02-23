@@ -19,8 +19,8 @@ gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
 gem 'newrelic_rpm', '~> 3.14'
 gem 'honeybadger', '~> 2.3.2'
-gem 'poseidon', '~> 0.0.5'
 gem 'logstasher', '~> 0.8.6'
+gem 'zoo_stream', '~> 1.0'
 
 group :production do
   gem 'puma', '~> 2.15.3'

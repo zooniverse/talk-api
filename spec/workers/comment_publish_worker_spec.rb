@@ -11,7 +11,7 @@ RSpec.describe CommentPublishWorker, type: :worker do
     end
     
     it 'should publish' do
-      expect(comment).to receive(:publish_to_kafka)
+      expect(comment).to receive(:publish_to_event_stream)
       subject.perform comment.id
     end
   end
