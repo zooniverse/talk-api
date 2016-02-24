@@ -2,7 +2,7 @@
   <%= h1 'Zooniverse Talk Notifications' %>
   <% if @system.any? %>
     <%= h2 'System' %>
-    
+
     <% @system.each_pair do |section, notifications| %>
       <%= container do %>
         <%= h2 do %>
@@ -12,7 +12,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-        
+
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
@@ -25,10 +25,10 @@
       <% end %>
     <% end %>
   <% end %>
-  
+
   <% if @moderations.any? %>
     <%= h2 'Moderation Reports' %>
-    
+
     <% @moderations.each_pair do |section, notifications| %>
       <%= container do %>
         <% project = notifications.first.project %>
@@ -39,7 +39,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-        
+
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
@@ -61,23 +61,23 @@
       <% end %>
     <% end %>
   <% end %>
-  
+
   <% if @messages.any? %>
     <%= h2 'Messages' %>
-    
+
     <% @messages.each_pair do |conversation, notifications| %>
       <%= container do %>
         <%= h3 do %>
           <%= link_to conversation.title, FrontEnd.link_to(conversation), style: link_style %>
         <% end %>
-        
+
         <h4>
           You have
           <%= pluralize notifications.length, 'New message' %>
           in conversation
           <%= link_to conversation.title, FrontEnd.link_to(conversation), style: link_style %>
         </h4>
-        
+
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
@@ -93,10 +93,10 @@
       <% end %>
     <% end %>
   <% end %>
-  
+
   <% if @mentions.any? %>
     <%= h2 'Mentions' %>
-    
+
     <% @mentions.each_pair do |section, notifications| %>
       <div>
         <% project = notifications.first.project %>
@@ -107,7 +107,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-        
+
         <div>
           <% notifications.each do |notification| %>
             <%= container do %>
@@ -123,10 +123,10 @@
       </div>
     <% end %>
   <% end %>
-  
+
   <% if @started_discussions.any? %>
     <%= h2 "Boards you're following" %>
-    
+
     <% @started_discussions.each_pair do |section, boards| %>
       <% project = boards.first.last.first.project %>
       <div>
@@ -137,7 +137,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-        
+
         <div>
           <% boards.each_pair do |board, notifications| %>
             <%= container do %>
@@ -146,7 +146,7 @@
                 on
                 <%= link_to board.title, FrontEnd.link_to(board, project), style: link_style %>
               </h4>
-              
+
               <div>
                 <% notifications.each do |notification| %>
                   <%= container do %>
@@ -162,10 +162,10 @@
       </div>
     <% end %>
   <% end %>
-  
+
   <% if @discussions.any? %>
     <%= h2 "Discussions you're following" %>
-    
+
     <% @discussions.each_pair do |section, discussions| %>
       <% project = discussions.first.last.first.project %>
       <div>
@@ -176,7 +176,7 @@
             <%= link_to 'Zooniverse', FrontEnd.zooniverse_talk, style: link_style %>
           <% end %>
         <% end %>
-        
+
         <div>
           <% discussions.each_pair do |discussion, notifications| %>
             <%= container do %>
@@ -185,7 +185,7 @@
                 on
                 <%= link_to discussion.title, FrontEnd.link_to(discussion, project), style: link_style %>
               </h4>
-              
+
               <div>
                 <% notifications.each do |notification| %>
                   <%= container do %>
@@ -204,7 +204,7 @@
       </div>
     <% end %>
   <% end %>
-  
+
   <footer style="margin-top: 30px">
     <p>You can <%= link_to 'manage your email preferences here', "#{ FrontEnd.host }/settings/email", style: link_style %></p>
     <p>Or <%= link_to 'click here to unsubscribe', Rails.application.routes.url_helpers.unsubscribe_url(token: UnsubscribeToken.for_user(@user).token), style: link_style %>

@@ -6,7 +6,7 @@ class InvalidSearchTypeError < StandardError
     else
       "The property #/types contains an invalid search type"
     end
-    
+
     super message
   end
 end

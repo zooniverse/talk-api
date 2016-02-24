@@ -17,14 +17,14 @@ Rails.application.configure do
     protocol: 'https',
     host: 'www.zooniverse.org'
   }
-  
+
   config.after_initialize do
     Rails.application.routes.default_url_options = {
       protocol: 'https',
       host: 'talk.zooniverse.org'
     }
   end
-  
+
   config.logstasher.enabled = true
   config.logstasher.log_controller_parameters = true
 end

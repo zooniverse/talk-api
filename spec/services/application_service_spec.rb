@@ -9,7 +9,7 @@ RSpec.describe ApplicationService, type: :service do
         def self.name; 'CommentService'; end
       end
     end
-    
+
     its(:model_class){ is_expected.to eql Comment }
     its(:schema_class){ is_expected.to eql CommentSchema }
   end

@@ -12,7 +12,7 @@ class Sugar
       password: ENV['SUGAR_PASSWORD'] || config.try(:[], 'password')
     }
   end
-  
+
   def self.connection
     @connection ||= Faraday.new "#{ config[:host] }" do |faraday|
       faraday.response :json, content_type: /\bjson$/
@@ -20,7 +20,7 @@ class Sugar
       faraday.adapter Faraday.default_adapter
     end
   end
-  
+
   def self.request(method, path, *args)
     connection.send(method, path, *args) do |req|
       req.headers['Accept'] = 'application/json'
@@ -30,11 +30,11 @@ class Sugar
   rescue URI::BadURIError => e
     ::Rails.logger.warn 'Sugar configuration is not valid'
   end
-  
+
   def self.notify(*notifications)
     request :post, '/notify', { notifications: notifications }.to_json
   end
-  
+
   def self.announce(*announcements)
     request :post, '/announce', { announcements: announcements }.to_json
   end

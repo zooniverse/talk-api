@@ -20,7 +20,7 @@ Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
 if ENV['EVIL_MODE']
   require 'open-uri'
-  
+
   File.open('spec/support/awful_strings.json', 'wb') do |out|
     open('https://raw.githubusercontent.com/minimaxir/big-list-of-naughty-strings/master/blns.json', 'rb') do |data|
       out.write data.read
@@ -31,18 +31,18 @@ end
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include JSON::SchemaBuilder::RSpecHelper, type: :schema
-  
+
   config.before(:suite){ WebMock.disable_net_connect! }
   config.after(:suite){ WebMock.allow_net_connect! }
-  
+
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
-  
+
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
-  
+
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_run :focus

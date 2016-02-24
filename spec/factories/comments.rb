@@ -5,7 +5,7 @@ FactoryGirl.define do
     user
     discussion
     user_ip '127.0.0.1'
-    
+
     factory :comment_for_focus do
       association :focus, factory: :subject
     end

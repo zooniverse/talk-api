@@ -1,6 +1,6 @@
 module BooleanCoercion
   extend ActiveSupport::Concern
-  
+
   included do
     columns_hash.each_pair do |attribute, adapter|
       next unless adapter.type == :boolean

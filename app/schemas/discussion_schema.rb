@@ -2,7 +2,7 @@ class DiscussionSchema
   include JSON::SchemaBuilder
   include FocusSchema
   root :discussions
-  
+
   def create
     root do |root_object|
       additional_properties false
@@ -14,14 +14,14 @@ class DiscussionSchema
       comments root_object
     end
   end
-  
+
   def owner_update
     root do |root_object|
       additional_properties false
       string :title, min_length: 3, max_length: 140
     end
   end
-  
+
   def update
     root do |root_object|
       additional_properties false
@@ -31,14 +31,14 @@ class DiscussionSchema
       sticky root_object
     end
   end
-  
+
   def sticky(obj)
     obj.boolean :sticky, default: false
     obj.entity :sticky_position do
       one_of number, null
     end
   end
-  
+
   def comments(obj)
     obj.array :comments, required: true, min_items: 1 do
       items type: :object do |comment_object|

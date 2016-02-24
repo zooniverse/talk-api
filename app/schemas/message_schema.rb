@@ -1,8 +1,8 @@
 class MessageSchema
   include JSON::SchemaBuilder
-  
+
   root :messages
-  
+
   def create
     root do
       additional_properties false
@@ -11,7 +11,7 @@ class MessageSchema
       string :body, required: true
     end
   end
-  
+
   def update
     root do |root_object|
       additional_properties false

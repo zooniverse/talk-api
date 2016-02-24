@@ -2,9 +2,9 @@ require 'sugar'
 
 class NotificationWorker
   include Sidekiq::Worker
-  
+
   sidekiq_options retry: true, backtrace: true
-  
+
   def perform(notification_id)
     notification = ::Notification.where(id: notification_id).eager_load(:subscription).first
     return unless notification

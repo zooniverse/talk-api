@@ -3,19 +3,19 @@ require 'digest'
 class Comment
   module Publishing
     extend ActiveSupport::Concern
-    
+
     included do
       after_commit :publish_to_event_stream_later, on: :create, if: :searchable?
     end
-    
+
     def publish_to_event_stream_later
       CommentPublishWorker.perform_async id
     end
-    
+
     def publish_to_event_stream
       ZooStream.publish event: 'comment', shard_by: discussion_id, data: to_event_stream
     end
-    
+
     def to_event_stream
       {
         id: id,

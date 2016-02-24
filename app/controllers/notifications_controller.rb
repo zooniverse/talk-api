@@ -1,7 +1,7 @@
 class NotificationsController < ApplicationController
   include TalkResource
   disallow :create, :destroy
-  
+
   def read
     raise Pundit::NotAuthorizedError.new('not logged in') unless current_user
     scoped = policy_scope model_class

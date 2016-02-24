@@ -12,17 +12,17 @@ class DiscussionService < ApplicationService
       discussion.comments << new_comment
     end
   end
-  
+
   def update
     find_resource unless resource
     self.action = :owner_update if !policy.admin? && !policy.moderator? && policy.owner?
     super
   end
-  
+
   def discussion_params
     unrooted_params.except :comments
   end
-  
+
   def comment_params
     ActionController::Parameters.new({
       comments: unrooted_params[:comments].first

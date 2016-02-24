@@ -4,7 +4,7 @@ class ChangeDiscussionStickyPosition < ActiveRecord::Migration
     remove_index :discussions, [:board_id, :sticky, :sticky_position]
     add_index :discussions, [:board_id, :sticky, :sticky_position], where: 'sticky = true'
   end
-  
+
   def down
     remove_index :discussions, [:board_id, :sticky, :sticky_position]
     add_index :discussions, [:board_id, :sticky, :sticky_position]

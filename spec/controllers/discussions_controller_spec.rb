@@ -9,20 +9,20 @@ RSpec.describe DiscussionsController, type: :controller do
   it_behaves_like 'a controller restricting',
     create: { status: 401, response: :error },
     update: { status: 401, response: :error }
-  
+
   context 'without an authorized user' do
     let(:user){ create :user }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
-    
+
     it_behaves_like 'a controller restricting',
       update: { status: 401, response: :error },
       destroy: { status: 401, response: :error }
   end
-  
+
   context 'with an authorized user' do
     let(:user){ create :moderator, section: 'zooniverse' }
     before(:each){ allow(subject).to receive(:current_user).and_return user }
-    
+
     it_behaves_like 'a controller rendering', :destroy
     it_behaves_like 'a controller creating' do
       let(:request_params) do
@@ -36,7 +36,7 @@ RSpec.describe DiscussionsController, type: :controller do
           }
         }
       end
-      
+
       it 'should set the user ip' do
         post :create, request_params.merge(format: :json)
         discussion_id = response.json['discussions'].first['id']
@@ -44,7 +44,7 @@ RSpec.describe DiscussionsController, type: :controller do
         expect(comment.user_ip).to eql request.remote_ip
       end
     end
-    
+
     it_behaves_like 'a controller updating' do
       let(:current_user){ user }
       let(:request_params) do
@@ -58,7 +58,7 @@ RSpec.describe DiscussionsController, type: :controller do
       end
     end
   end
-  
+
   context 'with the owner' do
     it_behaves_like 'a controller updating' do
       let(:current_user){ record.user }

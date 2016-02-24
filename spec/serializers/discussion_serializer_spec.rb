@@ -4,9 +4,9 @@ RSpec.describe DiscussionSerializer, type: :serializer do
   it_behaves_like 'a talk serializer', exposing: :all do
     subject{ json }
     it_behaves_like 'a serializer with embedded attributes', relations: [:project, :board]
-    
+
     its([:user_display_name]){ is_expected.to eql model_instance.user.display_name }
-    
+
     describe '.default_sort' do
       let(:board){ create :board }
       let!(:model_instance){ create :discussion, board: board, last_comment_created_at: 1.minute.ago.utc }
@@ -17,11 +17,11 @@ RSpec.describe DiscussionSerializer, type: :serializer do
       let(:policy_scope){ DiscussionPolicy::Scope.new nil, model.all }
       let(:json){ serializer.page({ sort: serializer.default_sort }, policy_scope.resolve) }
       subject{ json[:discussions].collect{ |d| d[:id] } }
-      
+
       it{ is_expected.to eql [sticky1.id, sticky2.id, discussion1.id, discussion2.id].collect(&:to_s) }
     end
   end
-  
+
   it_behaves_like 'a moderatable serializer' do
     let(:not_logged_in_actions){ [] }
     let(:logged_in_actions){ [:report] }

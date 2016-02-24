@@ -12,7 +12,7 @@ RSpec.describe SubscriptionService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', Subscription
     it_behaves_like 'a service updating', Subscription do
       let(:current_user){ record.user }

@@ -5,7 +5,7 @@ RSpec.shared_examples_for 'a serializer with embedded attributes' do |relations:
     Project.find_by_id(model_instance.project_id) ||
     create(:project, id: model_instance.project_id)
   end
-  
+
   if relations.include?(:board)
     describe '#board_attributes' do
       subject{ json }
@@ -20,7 +20,7 @@ RSpec.shared_examples_for 'a serializer with embedded attributes' do |relations:
       its([:board_permissions]){ is_expected.to eql model_instance.board.permissions.symbolize_keys }
     end
   end
-  
+
   if relations.include?(:discussion)
     describe '#discussion_attributes' do
       subject{ json }
@@ -32,7 +32,7 @@ RSpec.shared_examples_for 'a serializer with embedded attributes' do |relations:
       its([:discussion_locked]){ is_expected.to eql model_instance.discussion.locked }
     end
   end
-  
+
   if relations.include?(:project)
     describe '#project_attributes' do
       subject{ json }

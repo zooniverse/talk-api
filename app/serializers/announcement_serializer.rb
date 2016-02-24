@@ -1,7 +1,7 @@
 class AnnouncementSerializer
   include TalkSerializer
   include EmbeddedAttributes
-  
+
   all_attributes
   can_sort_by :created_at
   can_filter_by :section

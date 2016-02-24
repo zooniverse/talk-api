@@ -15,16 +15,16 @@ RSpec.describe DiscussionService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', Discussion
-    
+
     context 'creating the discussion' do
       before(:each){ service.create }
       subject{ service.resource }
       its(:title){ is_expected.to eql 'works' }
       its(:board){ is_expected.to eql board }
       its(:user){ is_expected.to eql current_user }
-      
+
       context 'with a comment' do
         subject{ service.resource.comments.first }
         its(:body){ is_expected.to eql 'works' }
@@ -33,7 +33,7 @@ RSpec.describe DiscussionService, type: :service do
         its(:user_ip){ is_expected.to eql '1.2.3.4' }
       end
     end
-    
+
     context 'with a focused comment' do
       let(:focus){ create :subject }
       let(:create_params) do
@@ -49,14 +49,14 @@ RSpec.describe DiscussionService, type: :service do
           }
         }
       end
-      
+
       before(:each){ service.create }
       subject{ service.resource }
-      
+
       its(:focus){ is_expected.to eql focus }
       its('comments.first.focus'){ is_expected.to eql focus }
     end
-    
+
     it_behaves_like 'a service updating', Discussion do
       let(:update_params) do
         {
@@ -67,7 +67,7 @@ RSpec.describe DiscussionService, type: :service do
         }
       end
     end
-    
+
     describe '#update' do
       let(:resource){ Discussion }
       let(:creation_service){ described_class.new **create_options }
@@ -75,7 +75,7 @@ RSpec.describe DiscussionService, type: :service do
       let(:params){ update_params }
       let(:options){ update_options }
       let(:current_user){ record.user }
-      
+
       let(:update_params) do
         {
           id: record.id,
@@ -84,7 +84,7 @@ RSpec.describe DiscussionService, type: :service do
           }
         }
       end
-      
+
       it 'should set the action to owner_update' do
         expect {
           service.update
@@ -92,10 +92,10 @@ RSpec.describe DiscussionService, type: :service do
           service.action
         }.to :owner_update
       end
-      
+
       context 'with a moderator' do
         let!(:role){ current_user.roles.create section: record.section, name: 'moderator' }
-        
+
         it 'should not change the action' do
           expect {
             service.update
@@ -104,10 +104,10 @@ RSpec.describe DiscussionService, type: :service do
           }
         end
       end
-      
+
       context 'with an admin' do
         let!(:role){ current_user.roles.create section: record.section, name: 'admin' }
-        
+
         it 'should not change the action' do
           expect {
             service.update

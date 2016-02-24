@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     resources :user_ip_bans
     resources :users
   end
-  
+
   root 'application#root'
   get '/searches' => 'searches#index'
   get '/unsubscribe' => 'unsubscribe#index'

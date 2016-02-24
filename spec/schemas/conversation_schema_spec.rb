@@ -5,17 +5,17 @@ RSpec.describe ConversationSchema, type: :schema do
     let(:schema_method){ :create }
     its(:type){ is_expected.to eql 'object' }
     its(:required){ is_expected.to eql ['conversations'] }
-    
+
     with 'properties .conversations' do
       its(:type){ is_expected.to eql 'object' }
       its(:required){ is_expected.to eql %w(title user_id body recipient_ids) }
       its(:additionalProperties){ is_expected.to be false }
-      
+
       with :properties do
         its(:title){ is_expected.to eql type: 'string' }
         its(:user_id){ is_expected.to eql id_schema }
         its(:body){ is_expected.to eql type: 'string' }
-        
+
         with :recipient_ids do
           its(:type){ is_expected.to eql 'array' }
           its(:uniqueItems){ is_expected.to eql true }
@@ -25,12 +25,12 @@ RSpec.describe ConversationSchema, type: :schema do
       end
     end
   end
-  
+
   describe '#update' do
     let(:schema_method){ :update }
     its(:type){ is_expected.to eql 'object' }
     its(:required){ is_expected.to eql ['conversations'] }
-    
+
     with 'properties .conversations' do
       its(:type){ is_expected.to eql 'object' }
       its(:additionalProperties){ is_expected.to be false }

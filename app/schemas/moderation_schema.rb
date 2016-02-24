@@ -1,8 +1,8 @@
 class ModerationSchema
   include JSON::SchemaBuilder
-  
+
   root :moderations
-  
+
   def create
     root do |root_object|
       additional_properties false
@@ -12,7 +12,7 @@ class ModerationSchema
       reports root_object
     end
   end
-  
+
   def update
     root do |root_object|
       additional_properties false
@@ -20,15 +20,15 @@ class ModerationSchema
       actions root_object
     end
   end
-  
+
   protected
-  
+
   def action(obj)
     obj.string :action do
       enum [:destroy, :ignore, :watch]
     end
   end
-  
+
   def reports(obj)
     obj.array :reports, min_items: 1 do
       items type: :object do
@@ -37,7 +37,7 @@ class ModerationSchema
       end
     end
   end
-  
+
   def actions(obj)
     obj.array :actions, min_items: 1 do
       items type: :object do |item|
