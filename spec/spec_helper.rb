@@ -4,10 +4,7 @@ require 'simplecov'
 require 'codeclimate-test-reporter'
 CodeClimate::TestReporter.start
 
-require 'bundler/setup'
-require 'aws-sdk'
 ENV.keys.grep(/aws/i).each{ |key| ENV.delete key }
-Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
@@ -18,6 +15,8 @@ require 'sidekiq/testing'
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 Sidekiq::Testing.fake!
+
+Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
 if ENV['EVIL_MODE']
   require 'open-uri'
