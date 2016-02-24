@@ -1,13 +1,13 @@
 class Search < ActiveRecord::Base
   include Searchable::Querying
-  
+
   class_attribute :serializers
   self.serializers = Hash.new do |hash, klass|
     hash[klass] = "#{ klass }Serializer".constantize
   end
-  
+
   belongs_to :searchable, polymorphic: true
-  
+
   scope :of_type, ->(types){ where searchable_type: types }
   scope :in_section, ->(section){ where('sections @> array[?]::varchar[]', section) }
   scope :with_content, ->(terms) {
@@ -15,14 +15,14 @@ class Search < ActiveRecord::Base
     where('content @@ to_tsquery(?)', query)
       .order("ts_rank(content, #{ connection.quote query }) desc")
   }
-  
+
   def self.serialize_search
     list = all.to_a
     ids_by_type = result_ids_by_type list
     results = load_results ids_by_type
     reorder_results list, results
   end
-  
+
   def self.result_ids_by_type(list)
     { }.tap do |types|
       list.each do |search|
@@ -31,7 +31,7 @@ class Search < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.load_results(ids_by_type)
     { }.tap do |results|
       ids_by_type.each_pair do |type, searchable_ids|
@@ -43,7 +43,7 @@ class Search < ActiveRecord::Base
       end
     end
   end
-  
+
   def self.reorder_results(list, results)
     [].tap do |reordered|
       list.each do |search|

@@ -10,7 +10,7 @@ class RemoveDenormalizedAttributes < ActiveRecord::Migration
     remove_column :discussions, :last_comment
     remove_column :boards, :last_comment
   end
-  
+
   def down
     add_column :comments, :discussion_title, :string
     add_column :comments, :board_id, :integer

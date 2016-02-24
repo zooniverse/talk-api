@@ -6,7 +6,7 @@ end
 
 RSpec.shared_examples_for 'a controller rendering' do |*actions|
   let(:record){ create resource }
-  
+
   if :index.in? actions
     describe '#index' do
       it_behaves_like 'a rendered action' do
@@ -16,14 +16,14 @@ RSpec.shared_examples_for 'a controller rendering' do |*actions|
         let(:authorizable){ resource }
         let(:status){ 200 }
       end
-      
+
       it 'should paginate the serializer' do
         expect(subject.serializer_class).to receive(:page).and_call_original
         get :index
       end
     end
   end
-  
+
   if :show.in? actions
     describe '#show' do
       it_behaves_like 'a rendered action' do
@@ -33,14 +33,14 @@ RSpec.shared_examples_for 'a controller rendering' do |*actions|
         let(:authorizable){ resource.where(id: record.id) }
         let(:status){ 200 }
       end
-      
+
       it 'should serialize the resource' do
         expect(subject.serializer_class).to receive(:resource).and_call_original
         get :show, id: record.id
       end
     end
   end
-  
+
   if :destroy.in? actions
     describe '#destroy' do
       it_behaves_like 'a rendered action' do

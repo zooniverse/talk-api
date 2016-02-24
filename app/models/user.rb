@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include Moderatable
-  
+
   has_many :mentions, as: :mentionable
   has_many :roles
   has_many :user_conversations
@@ -10,28 +10,28 @@ class User < ActiveRecord::Base
   has_many :subscription_preferences
   has_many :blocked_users
   has_one :unsubscribe_token
-  
+
   scope :with_roles, ->(*roles, on:){ joins(:roles).merge Role.where(section: on, name: roles) }
   scope :admins, ->(on:){ with_roles 'admin', on: on }
   scope :moderators, ->(on:){ with_roles 'moderator', on: on }
   scope :scientists, ->(on:){ with_roles 'scientist', on: on }
   singleton_class.send :alias_method, :researchers, :scientists
   scope :team, ->(on:){ with_roles 'moderator', 'admin', 'scientist', 'team', on: on }
-  
+
   moderatable_with :ignore, by: [:moderator, :admin]
   moderatable_with :report, by: [:all]
   moderatable_with :watch, by: [:moderator, :admin]
-  
+
   def self.from_panoptes(bearer_token)
     token = OauthAccessToken.find_by_token bearer_token
     token.resource_owner
   rescue
     nil
   end
-  
+
   def mentioned_by(comment)
     subscription = subscribe_to comment.discussion, :mentions
-    
+
     Notification.create({
       source: comment,
       user_id: id,
@@ -41,10 +41,10 @@ class User < ActiveRecord::Base
       subscription: subscription
     }) if subscription.try(:enabled?)
   end
-  
+
   def group_mentioned_by(group_mention)
     subscription = subscribe_to group_mention.comment.discussion, :group_mentions
-    
+
     Notification.create({
       source: group_mention.comment,
       user_id: id,
@@ -54,11 +54,11 @@ class User < ActiveRecord::Base
       subscription: subscription
     }) if subscription.try(:enabled?)
   end
-  
+
   def preference_for(category)
     SubscriptionPreference.find_or_default_for self, category
   end
-  
+
   def subscribe_to(source, category)
     preference = preference_for category
     return unless preference.enabled?
@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   rescue
     nil
   end
-  
+
   def unsubscribe_from(source, category = nil)
     query = { user: self, source: source }
     query[:category] = Subscription.categories[category] if category

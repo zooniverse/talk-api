@@ -1,8 +1,8 @@
 class DataRequestSchema
   include JSON::SchemaBuilder
-  
+
   root :data_requests
-  
+
   def create
     root do
       additional_properties false
@@ -13,7 +13,7 @@ class DataRequestSchema
       end
     end
   end
-  
+
   def update
     root do |root_object|
       additional_properties false

@@ -6,7 +6,7 @@ class RemoveJsonb < ActiveRecord::Migration
     add_column :comments, :upvotes, :hstore, default: { }
     change_column_with_cast :users, :roles, :json, default: { }
   end
-  
+
   def down
     # change_column_with_cast :boards, :permissions, :jsonb, default: { }
     # remove_column :comments, :upvotes

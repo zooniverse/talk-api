@@ -7,7 +7,7 @@ class CreateSubscriptionPreferences < ActiveRecord::Migration
       t.boolean :enabled, null: false, default: true
       t.timestamps
     end
-    
+
     add_index :subscription_preferences, [:user_id, :category]
   end
 end

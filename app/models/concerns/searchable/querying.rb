@@ -1,12 +1,12 @@
 module Searchable
   module Querying
     extend ActiveSupport::Concern
-    
+
     module ClassMethods
       def search(terms)
         searchable_klass.with_content _parse_query(terms)
       end
-      
+
       def _parse_query(terms)
         terms[0..1000]
           .gsub(/\s+/m, ' ')                                            # replace all forms of whitespace with spaces
@@ -24,7 +24,7 @@ module Searchable
           .gsub(/(?<![\&\|])\s+\!/, ' & !')                             # replace negations not preceded by an AND or an OR
           .gsub(/((\&\s+){2,})|((\|\s+){2,})|((\!\s+){2,})/, '\2\4\6')  # replace repetitious booleans
       end
-      
+
       def _boolean(term)
         /(^|\s+)#{ term }(\s+|$)/i
       end

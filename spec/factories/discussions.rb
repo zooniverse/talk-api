@@ -4,13 +4,13 @@ FactoryGirl.define do
     section 'project-1'
     board
     user
-    
+
     factory :discussion_with_comments do
       transient do
         comment_count 2
         user_count 2
       end
-      
+
       after :create do |discussion, evaluator|
         commenting_users = create_list :user, evaluator.user_count
         evaluator.comment_count.times do |i|

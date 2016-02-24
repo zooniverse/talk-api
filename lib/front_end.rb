@@ -6,15 +6,15 @@ class FrontEnd
       'http://demo.zooniverse.org/panoptes-front-end'
     end
   end
-  
+
   def self.zooniverse_talk
     "#{ host }/talk"
   end
-  
+
   def self.project_talk(project)
     "#{ host }/projects/#{ project.slug }/talk"
   end
-  
+
   def self.talk_root_for(object, project = nil)
     if project
       project_talk project
@@ -24,7 +24,7 @@ class FrontEnd
       zooniverse_talk
     end
   end
-  
+
   def self.link_to(object, project = nil)
     case object
     when Board

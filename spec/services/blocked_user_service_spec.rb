@@ -10,7 +10,7 @@ RSpec.describe BlockedUserService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', BlockedUser
   end
 end

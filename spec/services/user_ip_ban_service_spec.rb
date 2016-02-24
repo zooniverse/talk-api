@@ -10,7 +10,7 @@ RSpec.describe UserIpBanService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', UserIpBan
   end
 end

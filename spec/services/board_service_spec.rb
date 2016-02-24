@@ -15,7 +15,7 @@ RSpec.describe BoardService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', Board
     it_behaves_like 'a service updating', Board do
       let(:update_params) do

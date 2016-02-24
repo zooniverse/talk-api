@@ -8,6 +8,6 @@ if Rails.env.staging? || Rails.env.production?
       http_read_timeout: 5
     })
   )
-  
+
   ZooStream.publisher = publisher
 end

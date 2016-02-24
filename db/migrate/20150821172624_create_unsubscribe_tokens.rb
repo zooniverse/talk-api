@@ -5,7 +5,7 @@ class CreateUnsubscribeTokens < ActiveRecord::Migration
       t.string :token, null: false
       t.datetime :expires_at, null: false
     end
-    
+
     add_index :unsubscribe_tokens, :token, unique: true
     add_index :unsubscribe_tokens, :user_id, unique: true
     add_index :unsubscribe_tokens, :expires_at

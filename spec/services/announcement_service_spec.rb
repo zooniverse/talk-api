@@ -12,7 +12,7 @@ RSpec.describe AnnouncementService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', Announcement
     it_behaves_like 'a service updating', Announcement do
       let(:current_user){ create :admin, section: 'zooniverse' }

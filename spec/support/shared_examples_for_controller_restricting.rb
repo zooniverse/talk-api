@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.shared_examples_for 'a restricted action' do
   it_behaves_like 'a controller action' do
     let(:resource_name){ resource.name.tableize.to_sym }
-    
+
     it 'should respond appropriately' do
       send_request
       case expected_response
@@ -18,7 +18,7 @@ end
 
 RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
   let(:record){ create resource }
-  
+
   if actions[:index]
     describe '#index' do
       it_behaves_like 'a restricted action' do
@@ -31,7 +31,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
       end
     end
   end
-  
+
   if actions[:show]
     describe '#show' do
       it_behaves_like 'a restricted action' do
@@ -44,7 +44,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
       end
     end
   end
-  
+
   if actions[:create]
     describe '#create' do
       it_behaves_like 'a restricted action' do
@@ -57,7 +57,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
       end
     end
   end
-  
+
   if actions[:update]
     describe '#update' do
       it_behaves_like 'a restricted action' do
@@ -71,7 +71,7 @@ RSpec.shared_examples_for 'a controller restricting' do |actions = { }|
       end
     end
   end
-  
+
   if actions[:destroy]
     describe '#destroy' do
       it_behaves_like 'a restricted action' do

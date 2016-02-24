@@ -4,7 +4,7 @@ class CreateUserIpBans < ActiveRecord::Migration
       t.cidr :ip, null: false
       t.timestamps
     end
-    
+
     add_index :user_ip_bans, :ip
   end
 end

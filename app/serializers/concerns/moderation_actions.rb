@@ -1,6 +1,6 @@
 module ModerationActions
   extend ActiveSupport::Concern
-  
+
   def custom_attributes
     moderation = Moderation.new target: model
     moderation.section = model.section if model.respond_to?(:section)

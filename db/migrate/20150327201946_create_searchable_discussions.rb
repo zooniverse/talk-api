@@ -6,7 +6,7 @@ class CreateSearchableDiscussions < ActiveRecord::Migration
       t.tsvector :content, null: false, default: ''
       t.string :section, null: false
     end
-    
+
     add_index :searchable_discussions, :content, using: :gin
     add_index :searchable_discussions, :section
   end

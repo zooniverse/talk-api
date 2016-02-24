@@ -1,16 +1,16 @@
 class AnnouncementSchema
   include JSON::SchemaBuilder
-  
+
   root :announcements
-  
+
   def create
     changes required: true
   end
-  
+
   def update
     changes
   end
-  
+
   def changes(required = { })
     root do
       additional_properties false

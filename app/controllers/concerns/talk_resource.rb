@@ -1,6 +1,6 @@
 module TalkResource
   extend ActiveSupport::Concern
-  
+
   included do
     class_attribute :model_class, :serializer_class, :schema_class, :serializer_class, :service_class
     self.model_class = name.sub(/Controller$/, '').singularize.constantize rescue nil
@@ -9,7 +9,7 @@ module TalkResource
     self.service_class = "#{ model_class.name }Service".constantize rescue ApplicationService
     attr_accessor :resource
   end
-  
+
   def service
     @service ||= service_class.new({
       params: params,
@@ -20,7 +20,7 @@ module TalkResource
       user_ip: current_user_ip
     })
   end
-  
+
   def resource_ids
     if params[:id].is_a? String
       params[:id].split(',').compact.collect &:to_i
