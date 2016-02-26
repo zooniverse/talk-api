@@ -11,14 +11,14 @@ gem 'sinatra', '~> 1.4'
 gem 'restpack_serializer', github: 'parrish/restpack_serializer', branch: 'dev', ref: '05331630f3'
 gem 'json-schema', '~> 2.5.2'
 gem 'json-schema_builder', '~> 0.0.8'
-gem 'aws-sdk', '~> 2.2.8'
+gem 'aws-sdk', '~> 2.2.20'
 gem 'faraday', '~> 0.9.2'
 gem 'faraday_middleware', '~> 0.10.0'
-gem 'pundit', '~> 1.0.1'
+gem 'pundit', '~> 1.1.0'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', group: :development
-gem 'newrelic_rpm', '~> 3.14'
-gem 'honeybadger', '~> 2.3.2'
+gem 'newrelic_rpm', '~> 3.15'
+gem 'honeybadger', '~> 2.5.1'
 gem 'logstasher', '~> 0.8.6'
 gem 'zoo_stream', '~> 1.0'
 
@@ -27,10 +27,10 @@ group :production do
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 3.4.0'
+  gem 'rspec-rails', '~> 3.4.2'
   gem 'rspec-its', '~> 1.2.0'
   gem 'spring-commands-rspec', '~> 1.0.4'
-  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'factory_girl_rails', '~> 4.6.0'
   gem 'guard-rspec', '~> 4.6.4'
   gem 'timecop'
   gem 'pry', '~> 0.10.3'
@@ -38,7 +38,7 @@ group :test, :development do
 end
 
 group :test do
-  gem 'webmock', '~> 1.22.3'
+  gem 'webmock', '~> 1.24'
   gem 'codeclimate-test-reporter', '~> 0.4.8'
-  gem 'simplecov', '~> 0.11.1'
+  gem 'simplecov', '~> 0.11.2'
 end
