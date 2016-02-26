@@ -1,6 +1,8 @@
 if Rails.env.staging? || Rails.env.production?
   require 'aws-sdk'
   require 'zoo_stream'
+  Aws.config.update region: 'us-east-1'
+  ZooStream.source = "talk-#{ Rails.env }"
   publisher = ZooStream::KinesisPublisher.new(
     stream_name: "zooniverse-#{ Rails.env }",
     client: Aws::Kinesis::Client.new({
