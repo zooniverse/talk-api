@@ -7,7 +7,7 @@ class CreateSubscriptions < ActiveRecord::Migration
       t.string :source_type, null: false
       t.timestamps
     end
-    
+
     add_index :subscriptions, [:source_id, :source_type]
     add_index :subscriptions, [:user_id, :category]
   end

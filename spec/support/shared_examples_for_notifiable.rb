@@ -4,7 +4,7 @@ RSpec.shared_examples_for 'a notifiable model' do
   let(:source){ create described_class }
   let!(:notification){ create :notification, source: source }
   subject{ source }
-  
+
   it 'should remove notifications when destroying the source' do
     expect {
       source.destroy

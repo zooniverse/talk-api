@@ -6,7 +6,7 @@ class CreateSearchableComments < ActiveRecord::Migration
       t.tsvector :content, null: false, default: ''
       t.string :section, null: false
     end
-    
+
     add_index :searchable_comments, :content, using: :gin
     add_index :searchable_comments, :section
   end

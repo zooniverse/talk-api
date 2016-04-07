@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.shared_context 'mangled params' do
   let(:awful_strings){ JSON.parse File.read Rails.root.join 'spec/support/awful_strings.json' }
-  
+
   def mangle(object)
     case object
     when Hash

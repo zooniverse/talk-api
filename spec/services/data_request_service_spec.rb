@@ -11,7 +11,7 @@ RSpec.describe DataRequestService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', DataRequest
   end
 end

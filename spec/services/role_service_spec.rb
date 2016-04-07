@@ -12,7 +12,7 @@ RSpec.describe RoleService, type: :service do
         }
       }
     end
-    
+
     it_behaves_like 'a service creating', Role
     it_behaves_like 'a service updating', Role do
       let(:current_user){ create :admin, section: 'project-1' }

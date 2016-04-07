@@ -2,7 +2,7 @@ class RemoveFocuses < ActiveRecord::Migration
   def up
     drop_table :focuses
   end
-  
+
   def down
     create_table :focuses do |t|
       t.string  :type

@@ -16,40 +16,40 @@ module Talk
     end
     alias_method :to_s, :message
   end
-  
+
   class BlockedUserError < StandardError
     def message
       'You have been blocked by that user'
     end
     alias_method :to_s, :message
   end
-  
+
   class UserBlockedError < StandardError
     def message
       'You have blocked that user'
     end
     alias_method :to_s, :message
   end
-  
+
   class InvalidParameterError < StandardError
     def initialize(param, expected, actual)
       @param = param
       @expected = expected
       @actual = actual
     end
-    
+
     def message
       "Expected #{ @param } to be #{ @expected }, but was #{ @actual }"
     end
     alias_method :to_s, :message
   end
-  
+
   def self.report_error(e)
     if Rails.env.staging? || Rails.env.production?
       Honeybadger.notify_or_ignore e
     end
   end
-  
+
   class Application < Rails::Application
     config.autoload_paths += [
       'lib',
@@ -62,7 +62,7 @@ module Talk
       'app/workers/concerns',
       'app/workers'
     ].collect{ |path| Rails.root.join path }
-    
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'

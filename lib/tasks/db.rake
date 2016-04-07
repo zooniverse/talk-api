@@ -28,7 +28,7 @@ namespace :panoptes do
             if (select count(*) from pg_extension where extname = 'postgres_fdw') = 0 then
               create extension postgres_fdw;
             end if;
-            
+
             if (select count(*) from pg_foreign_server where srvname = 'panoptes') = 0 then
               create server panoptes foreign data wrapper postgres_fdw options (
                 host 'localhost',
@@ -36,7 +36,7 @@ namespace :panoptes do
                 port '#{ panoptes_config.fetch('port', 5432) }',
                 use_remote_estimate 'true'
               );
-              
+
               create user mapping for #{ panoptes_config['username'] } server panoptes options (
                 user '#{ panoptes_config['username'] }',
                 password '#{ panoptes_config['password'] }'
@@ -46,7 +46,7 @@ namespace :panoptes do
         $$;
       SQL
     end
-    
+
     desc 'Creates foreign tables from Panoptes'
     task :create_foreign_tables => :environment do
       ActiveRecord::Base.establish_connection talk_config
@@ -57,7 +57,7 @@ namespace :panoptes do
           slug varchar(255),
           private bool
         ) server panoptes;
-        
+
         create foreign table if not exists collections (
           id int4,
           name varchar(255),
@@ -68,13 +68,13 @@ namespace :panoptes do
           display_name varchar(255),
           private bool
         ) server panoptes;
-        
+
         create foreign table if not exists collection_subjects (
           id int4,
           subject_id int4,
           collection_id int4
         ) server panoptes;
-        
+
         create foreign table if not exists subjects (
           id int4,
           zooniverse_id varchar(255),
@@ -83,7 +83,7 @@ namespace :panoptes do
           updated_at timestamp(6),
           project_id int4
         ) server panoptes;
-        
+
         create foreign table if not exists users (
           id int4,
           email varchar(255),
@@ -96,7 +96,7 @@ namespace :panoptes do
           admin bool,
           banned bool
         ) server panoptes;
-        
+
         create foreign table if not exists oauth_access_tokens (
           id int4,
           resource_owner_id int4,
@@ -110,7 +110,7 @@ namespace :panoptes do
         ) server panoptes;
       SQL
     end
-    
+
     desc 'Drops Panoptes foreign tables'
     task :drop_foreign_tables => :environment do
       Rake::Task['panoptes:db:drop_search_view'].invoke
@@ -119,10 +119,10 @@ namespace :panoptes do
         drop foreign table if exists projects, collections, collection_subjects, oauth_access_tokens, subjects, users;
       SQL
     end
-    
+
     desc 'Recreates Panoptes foreign tables'
     task :recreate_foreign_tables => [:drop_foreign_tables, :create_foreign_tables, :create_search_view, :create_popular_tags_view]
-    
+
     desc 'Creates the search view'
     task :drop_search_view => :environment do
       ActiveRecord::Base.establish_connection talk_config
@@ -131,7 +131,7 @@ namespace :panoptes do
         drop materialized view if exists searchable_collections cascade;
       SQL
     end
-    
+
     desc 'Creates the search view'
     task :create_search_view => :environment do
       ActiveRecord::Base.establish_connection talk_config
@@ -143,13 +143,13 @@ namespace :panoptes do
               select
                 collections.id as searchable_id,
                 'Collection'::text as searchable_type,
-                
+
                 setweight(to_tsvector(collections.name), 'B') ||
                 setweight(to_tsvector(coalesce(collections.display_name, '')), 'B') ||
                 setweight(to_tsvector(string_agg(coalesce(tags.name, ''), ' ')), 'A') ||
                 setweight(to_tsvector('C' || collections.id::text), 'A')
                 as content,
-                
+
                 array_agg('project-' || projects.id) as sections
               from collections
                 left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
@@ -158,12 +158,12 @@ namespace :panoptes do
                 collections.private is not true and projects.private is not true
               group by
                 collections.id, collections.name, collections.display_name;
-              
+
               create unique index search_collections_id_index on searchable_collections using btree(searchable_id);
               create index search_collections_index on searchable_collections using gin(content);
               create index search_collections_sections_index on searchable_collections using btree(sections, searchable_type);
             end if;
-            
+
             create or replace view searches as
               select * from searchable_boards
               union all
@@ -176,7 +176,7 @@ namespace :panoptes do
         $$;
       SQL
     end
-    
+
     desc 'Creates the popular tags view'
     task :create_popular_tags_view => :environment do
       ActiveRecord::Base.establish_connection talk_config
@@ -192,7 +192,7 @@ namespace :panoptes do
           group by section, project_id, name
           order by usages desc
       SQL
-      
+
       ActiveRecord::Base.connection.execute <<-SQL
         create or replace view popular_focus_tags as
           select
@@ -209,32 +209,32 @@ namespace :panoptes do
           order by usages desc
       SQL
     end
-    
+
     desc 'Create Panoptes tables for testing'
     task :create_tables => :environment do
       local_environment!
-      
+
       ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
         drop sequence if exists users_id_seq;
         create sequence users_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        
+
         drop sequence if exists oauth_access_tokens_id_seq;
         create sequence oauth_access_tokens_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        
+
         drop sequence if exists projects_id_seq;
         create sequence projects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        
+
         drop sequence if exists collections_id_seq;
         create sequence collections_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        
+
         drop sequence if exists subjects_id_seq;
         create sequence subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        
+
         drop sequence if exists collection_subjects_id_seq;
         create sequence collection_subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
       SQL
-      
+
       ActiveRecord::Base.establish_connection panoptes_config
       ActiveRecord::Base.connection.execute <<-SQL
         drop table if exists users;
@@ -271,7 +271,7 @@ namespace :panoptes do
           valid_email boolean default true not null,
           uploaded_subjects_count integer default 0
         );
-        
+
         drop table if exists oauth_access_tokens;
         drop sequence if exists oauth_access_tokens_id_seq;
         create sequence oauth_access_tokens_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
@@ -286,7 +286,7 @@ namespace :panoptes do
           created_at timestamp(6) not null default null,
           scopes varchar default null
         );
-        
+
         drop table if exists projects;
         drop sequence if exists projects_id_seq;
         create sequence projects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
@@ -310,7 +310,7 @@ namespace :panoptes do
           urls jsonb default '[]'::jsonb,
           migrated boolean default false
         );
-        
+
         drop table if exists collections;
         drop sequence if exists collections_id_seq;
         create sequence collections_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
@@ -326,7 +326,7 @@ namespace :panoptes do
           private boolean,
           lock_version integer default 0
         );
-        
+
         drop table if exists subjects;
         drop sequence if exists subjects_id_seq;
         create sequence subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
@@ -341,7 +341,7 @@ namespace :panoptes do
           lock_version integer default 0,
           upload_user_id character varying
         );
-        
+
         drop table if exists collection_subjects;
         drop sequence if exists collection_subjects_id_seq;
         create sequence collection_subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
@@ -352,7 +352,7 @@ namespace :panoptes do
         );
       SQL
     end
-    
+
     desc 'Loads Panoptes database'
     task :setup => [:setup_fdw, :create_foreign_tables, :create_search_view, :create_popular_tags_view]
   end
@@ -362,18 +362,18 @@ namespace :db do
   desc 'Loads development data'
   task :seed_dev => :environment do
     local_environment!
-    
+
     print "This will clear all data in the #{ Rails.env } environment, continue? (y/n): "
     unless STDIN.gets =~ /y/i
       puts 'aborting'
       exit
     end
-    
+
     ActiveRecord::Base.establish_connection talk_config
     Rake::Task['db:resync'].invoke
     load Rails.root.join('db/dev_seeds.rb')
   end
-  
+
   desc 'Reloads and setups the database'
   task :resync => :environment do
     local_environment!

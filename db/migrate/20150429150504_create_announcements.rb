@@ -6,7 +6,7 @@ class CreateAnnouncements < ActiveRecord::Migration
       t.datetime :expires_at, null: false
       t.timestamps
     end
-    
+
     add_index :announcements, [:section, :created_at]
     add_index :announcements, :created_at
     add_index :announcements, :expires_at

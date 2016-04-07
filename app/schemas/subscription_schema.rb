@@ -1,8 +1,8 @@
 class SubscriptionSchema
   include JSON::SchemaBuilder
-  
+
   root :subscriptions
-  
+
   # Currently creation is only allowed for
   # Discussion -> followed_discussions
   def create
@@ -19,7 +19,7 @@ class SubscriptionSchema
       end
     end
   end
-  
+
   def update
     root do
       additional_properties false

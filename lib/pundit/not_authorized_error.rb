@@ -11,10 +11,10 @@ module Pundit
         @policy = options[:policy]
         options.fetch(:message) { "not allowed to #{ query.sub /\?$/, '' } this #{ name_of record }" }
       end
-      
+
       super message
     end
-    
+
     def name_of(record)
       case record
       when ActiveRecord::Relation

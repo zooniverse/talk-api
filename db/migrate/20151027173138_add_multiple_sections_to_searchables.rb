@@ -9,7 +9,7 @@ class AddMultipleSectionsToSearchables < ActiveRecord::Migration
       add_index table_name, [:sections, :searchable_type]
     end
   end
-  
+
   def self.down
     %w(boards comments discussions).each do |kind|
       table_name = :"searchable_#{ kind }"

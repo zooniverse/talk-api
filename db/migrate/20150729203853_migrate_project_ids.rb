@@ -9,8 +9,8 @@ class MigrateProjectIds < ActiveRecord::Migration
       update tags set project_id = substring(section from 'project-(\\d+)')::int;
     SQL
   end
-  
+
   def down
-    
+
   end
 end

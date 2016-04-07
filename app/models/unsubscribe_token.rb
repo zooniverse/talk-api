@@ -4,7 +4,7 @@ class UnsubscribeToken < ActiveRecord::Base
   include Expirable
   belongs_to :user
   before_create :set_expiration, :set_token!
-  
+
   def self.for_user(user)
     tries = 0
     begin
@@ -16,7 +16,7 @@ class UnsubscribeToken < ActiveRecord::Base
       tries < 5 ? retry : raise(e)
     end
   end
-  
+
   def set_token!
     tries = 0
     begin
@@ -27,9 +27,9 @@ class UnsubscribeToken < ActiveRecord::Base
       tries < 5 ? retry : raise(e)
     end
   end
-  
+
   protected
-  
+
   def set_expiration
     self.expires_at ||= 1.month.from_now.utc
   end

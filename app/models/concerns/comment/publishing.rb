@@ -1,45 +1,34 @@
-require 'kafka'
 require 'digest'
 
 class Comment
   module Publishing
     extend ActiveSupport::Concern
-    
+
     included do
-      after_commit :publish_to_kafka_later, on: :create, if: :searchable?
+      after_commit :publish_to_event_stream_later, on: :create, if: :searchable?
     end
-    
-    def publish_to_kafka_later
+
+    def publish_to_event_stream_later
       CommentPublishWorker.perform_async id
     end
-    
-    def publish_to_kafka
-      Kafka.publish 'events', to_kafka, kafka_id
+
+    def publish_to_event_stream
+      ZooStream.publish event: 'comment', shard_by: discussion_id, data: to_event_stream
     end
-    
-    def kafka_id
-      "comment.#{ id }"
-    end
-    
-    def kafka_data
-      attributes.slice(*%w(
-        board_id
-        discussion_id
-        focus_id
-        focus_type
-        project_id
-        section
-      )).symbolize_keys
-    end
-    
-    def to_kafka
+
+    def to_event_stream
       {
-        event_id: kafka_id,
-        event_time: created_at.as_json,
-        event_type: 'talk.comment',
+        id: id,
+        board_id: board_id,
+        discussion_id: discussion_id,
+        focus_id: focus_id,
+        focus_type: focus_type,
+        project_id: project_id,
+        section: section,
         user_id: Digest::SHA1.hexdigest(user_id.to_s),
-        _ip_address: user_ip,
-      }.merge kafka_data
+        user_ip: user_ip,
+        created_at: created_at.as_json
+      }
     end
   end
 end

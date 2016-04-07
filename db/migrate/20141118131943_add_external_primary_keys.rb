@@ -5,7 +5,7 @@ class AddExternalPrimaryKeys < ActiveRecord::Migration
       ALTER TABLE focuses ADD PRIMARY KEY (id);
     SQL
   end
-    
+
   def down
     execute <<-SQL
       ALTER TABLE users DROP CONSTRAINT users_pkey;

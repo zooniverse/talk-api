@@ -3,12 +3,12 @@ require 'spec_helper'
 RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
   subject{ described_class }
   let(:resource_schema){ "#{ resource.name }Schema".constantize }
-  
+
   let(:create_params){ { resource.table_name => { } } }
   let(:update_params){ { resource.table_name => { } } }
   let(:params){ create_params }
   let(:current_user){ create :user }
-  
+
   let(:update_options) do
     {
       params: ActionController::Parameters.new(update_params),
@@ -17,7 +17,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
       user_ip: '1.2.3.4'
     }
   end
-  
+
   let(:create_options) do
     {
       params: ActionController::Parameters.new(create_params),
@@ -26,13 +26,13 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
       user_ip: '1.2.3.4'
     }
   end
-  
+
   let(:options){ create_options }
   let(:service){ described_class.new **options }
-  
+
   its(:model_class){ is_expected.to eql resource }
   its(:schema_class){ is_expected.to eql resource_schema }
-  
+
   describe '#initialize' do
     subject{ service }
     its(:params){ is_expected.to eql options[:params] }
@@ -41,43 +41,43 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
     its(:model_class){ is_expected.to eql resource }
     its(:schema_class){ is_expected.to eql resource_schema }
   end
-  
+
   describe '#permitted_params' do
     it 'should permit the params' do
       expect(service.params).to receive(:permitted?).and_return false
       expect(service.params).to receive :permit!
       service.permitted_params
     end
-    
+
     it 'should not permit the params multiple times' do
       expect(service.params).to receive(:permitted?).and_return true
       expect(service.params).to_not receive :permit!
       service.permitted_params
     end
   end
-  
+
   describe '#rooted_params' do
     let(:create_params){ { resource.table_name => { foo: 1 } } }
     subject{ service.rooted_params }
     it{ is_expected.to include resource.table_name => { 'foo' => 1 } }
-    
+
     it 'should permit the params' do
       expect(service).to receive(:permitted_params).and_call_original
       subject
     end
   end
-  
+
   describe '#unrooted_params' do
     let(:create_params){ { resource.table_name => { foo: 1 } } }
     subject{ service.unrooted_params }
     it{ is_expected.to include 'foo' => 1 }
-    
+
     it 'should permit the params' do
       expect(service).to receive(:permitted_params).and_call_original
       subject
     end
   end
-  
+
   if sets_user
     describe '#set_user' do
       context 'without a user' do
@@ -86,7 +86,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
           expect{ service.set_user }.to raise_error Pundit::NotAuthorizedError
         end
       end
-      
+
       context 'without valid params' do
         it 'should raise an error' do
           expect{
@@ -96,7 +96,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
           }.to raise_error TalkService::ParameterError
         end
       end
-      
+
       it 'should set the user id' do
         expect{
           service.set_user
@@ -104,7 +104,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
           service.unrooted_params[:user_id]
         }.from(nil).to current_user.id
       end
-      
+
       it 'should accept a block' do
         expect{
           service.set_user{ unrooted_params[:foo] = 123 }
@@ -114,7 +114,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
       end
     end
   end
-  
+
   describe '#policy' do
     it 'should use the Pundit policy' do
       service.build
@@ -123,7 +123,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
       service.policy
     end
   end
-  
+
   describe '#authorize' do
     it 'should authorize the action' do
       policy = double
@@ -131,7 +131,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
       expect(service).to receive(:policy).and_return policy
       service.authorize
     end
-    
+
     it 'should raise an error if unauthorized' do
       expect(service).to receive(:policy)
         .and_return double "#{ options[:action] }?" => false
@@ -139,7 +139,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
         service.authorize
       }.to raise_error Pundit::NotAuthorizedError
     end
-    
+
     it 'should be authorized' do
       expect(service).to receive(:policy)
         .and_return double "#{ options[:action] }?" => true
@@ -159,7 +159,7 @@ RSpec.shared_examples_for 'a service creating' do |resource|
       2.times{ service.authorize }
     end
   end
-  
+
   describe '#validate' do
     it 'should build the schema' do
       expect(service.schema_class).to receive(:new)
@@ -167,13 +167,13 @@ RSpec.shared_examples_for 'a service creating' do |resource|
         .and_call_original
       service.validate
     end
-    
+
     it 'should use the schema action' do
       expect_any_instance_of(service.schema_class)
         .to receive(options[:action]).and_call_original
       service.validate
     end
-    
+
     it 'should validate the schema' do
       schema = double create: double
       expect(service.schema_class).to receive(:new).and_return schema
@@ -181,7 +181,7 @@ RSpec.shared_examples_for 'a service creating' do |resource|
         .with(service.rooted_params)
       service.validate
     end
-    
+
     it 'should be validated' do
       expect {
         service.validate
@@ -190,23 +190,23 @@ RSpec.shared_examples_for 'a service creating' do |resource|
       }.from(false).to true
     end
   end
-  
+
   describe '#create' do
     it 'should build the resource' do
       expect(service).to receive(:build).once.and_call_original
       2.times{ service.create }
     end
-    
+
     it 'should authorize the action' do
       expect(service).to receive(:authorize).once.and_call_original
       2.times{ service.create }
     end
-    
+
     it 'should validate the params' do
       expect(service).to receive(:validate).once.and_call_original
       2.times{ service.create }
     end
-    
+
     it 'should save the resource' do
       service.build
       expect(service.resource).to receive :save!
@@ -220,16 +220,16 @@ RSpec.shared_examples_for 'a service updating' do |resource|
   let(:record){ create resource }
   let(:params){ update_params }
   let(:options){ update_options }
-  
+
   describe '#validate' do
     before(:each){ service.find_resource }
-    
+
     it 'should use the schema action' do
       expect_any_instance_of(service.schema_class)
         .to receive(:update).and_return double :validate! => true
       service.validate
     end
-    
+
     it 'should validate the schema' do
       schema = double update: double
       expect(service.schema_class).to receive(:new).and_return schema
@@ -237,11 +237,11 @@ RSpec.shared_examples_for 'a service updating' do |resource|
         .with(service.rooted_params)
       service.validate
     end
-    
+
     it 'should be validated' do
       expect_any_instance_of(service.schema_class)
         .to receive(:update).and_return double :validate! => true
-      
+
       expect {
         service.validate
       }.to change {
@@ -249,14 +249,14 @@ RSpec.shared_examples_for 'a service updating' do |resource|
       }.from(false).to true
     end
   end
-  
+
   describe '#find_resource' do
     it 'should find the resource' do
       expect(service.model_class).to receive(:find).with record.id
       service.find_resource
     end
   end
-  
+
   describe '#update_resource' do
     it 'should assign the attributes' do
       service.find_resource
@@ -264,29 +264,29 @@ RSpec.shared_examples_for 'a service updating' do |resource|
       service.update_resource
     end
   end
-  
+
   describe '#update' do
     it 'should find the resource' do
       expect(service.model_class).to receive(:find)
         .with(record.id).once.and_call_original
       2.times{ service.update }
     end
-    
+
     it 'should authorize the action' do
       expect(service).to receive(:authorize).once.and_call_original
       2.times{ service.update }
     end
-    
+
     it 'should validate the params' do
       expect(service).to receive(:validate).once.and_call_original
       2.times{ service.update }
     end
-    
+
     it 'should update the record attributes' do
       expect(service).to receive(:update_resource).once.and_call_original
       service.update
     end
-    
+
     it 'should update the record' do
       service.find_resource
       expect(service.resource).to receive :save!

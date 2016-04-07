@@ -1,6 +1,6 @@
 module Searchable
   extend ActiveSupport::Concern
-  
+
   included do
     include Searchable::Querying
     class_attribute :searchable_klass
@@ -10,14 +10,14 @@ module Searchable
     else
       Object.const_set klass_name, _searchable_model
     end
-    
+
     after_create :create_searchable, if: :searchable?
     after_update :update_searchable, if: :searchable?
     after_update :destroy_searchable, unless: :searchable?
     after_destroy :destroy_searchable
     has_one :searchable, class_name: searchable_klass.name, foreign_key: :searchable_id
   end
-  
+
   module ClassMethods
     def _searchable_model
       klass = self
@@ -27,19 +27,19 @@ module Searchable
       end
     end
   end
-  
+
   def searchable?
     true # by default
   end
-  
+
   def create_searchable
     searchable_klass.create searchable: self
   end
-  
+
   def update_searchable
     searchable ? searchable.set_content : create_searchable
   end
-  
+
   def destroy_searchable
     searchable.try :destroy
   end

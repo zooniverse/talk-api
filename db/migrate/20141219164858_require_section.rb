@@ -7,7 +7,7 @@ class RequireSection < ActiveRecord::Migration
     change_column :moderations, :section, :string, null: false
     change_column :tags,        :section, :string, null: false
   end
-  
+
   def down
     change_column :boards,      :section, :string
     change_column :comments,    :section, :string

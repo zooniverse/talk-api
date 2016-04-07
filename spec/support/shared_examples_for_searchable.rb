@@ -3,36 +3,36 @@ require 'spec_helper'
 RSpec.shared_examples_for 'a searchable model' do
   let(:search_klass_name){ "Searchable#{ described_class.name }" }
   let(:search_klass){ Object.const_get search_klass_name }
-  
+
   context 'including Searchable' do
     subject{ described_class }
-    
+
     it 'should define a search class' do
       expect(Object.const_defined?(search_klass_name)).to be true
     end
-    
+
     its(:searchable_klass){ is_expected.to eql search_klass }
   end
-  
+
   describe '._searchable_model' do
     subject{ described_class._searchable_model }
-    
+
     it{ is_expected.to eql search_klass }
     its(:searchable_klass){ is_expected.to eql described_class }
   end
-  
+
   describe '#searchable?' do
     context 'when searchable' do
       subject{ searchable }
       it{ is_expected.to be_searchable }
     end
-    
+
     context 'when not searchable' do
       subject{ unsearchable }
       it{ is_expected.to_not be_searchable }
     end
   end
-  
+
   describe '#create_searchable' do
     context 'when searchable' do
       it 'should be called' do
@@ -41,7 +41,7 @@ RSpec.shared_examples_for 'a searchable model' do
         searchable
       end
     end
-    
+
     context 'when not searchable' do
       it 'should not be called' do
         expect(subject).to_not receive :create_searchable
@@ -49,7 +49,7 @@ RSpec.shared_examples_for 'a searchable model' do
       end
     end
   end
-  
+
   describe '#update_searchable' do
     context 'when searchable' do
       context 'when searchable exists' do
@@ -59,7 +59,7 @@ RSpec.shared_examples_for 'a searchable model' do
           searchable.update_searchable
         end
       end
-      
+
       context 'when searchable does not exist' do
         it 'should create the searchable' do
           searchable.searchable.destroy
@@ -70,7 +70,7 @@ RSpec.shared_examples_for 'a searchable model' do
         end
       end
     end
-    
+
     context 'when not searchable' do
       it 'should not be called' do
         expect(subject).to_not receive :update_searchable
@@ -78,7 +78,7 @@ RSpec.shared_examples_for 'a searchable model' do
       end
     end
   end
-  
+
   describe '#destroy_searchable' do
     context 'when becoming unsearchable' do
       it 'should remove the searchable' do
@@ -87,7 +87,7 @@ RSpec.shared_examples_for 'a searchable model' do
         searchable.save
       end
     end
-    
+
     context 'when searchable' do
       it 'should not be called' do
         expect(searchable.searchable).to_not receive :destroy
@@ -95,7 +95,7 @@ RSpec.shared_examples_for 'a searchable model' do
         searchable.save
       end
     end
-    
+
     context 'when destroying the searchable model' do
       it 'should remove the searchable' do
         model_instance = searchable
@@ -107,24 +107,24 @@ RSpec.shared_examples_for 'a searchable model' do
       end
     end
   end
-  
+
   describe "Searchable#{ described_class.name }" do
     let(:searchable_model){ searchable.searchable }
-    
+
     it 'should belong to a searchable model' do
       # yeah... in other words
       #   board.searchable should be a SearchableBoard
       #   board.searchable.searchable should be a board
       expect(searchable.searchable.searchable).to eql searchable
     end
-    
+
     describe '.with_content' do
       it 'should query content' do
         sql = search_klass.with_content('testing').to_sql
         expect(sql).to match /WHERE \(content @@ to_tsquery\('testing'\)\)/
       end
     end
-    
+
     describe '#set_content' do
       it 'should update the content' do
         expect(searchable_model.class.connection).to receive(:execute)
@@ -132,11 +132,11 @@ RSpec.shared_examples_for 'a searchable model' do
         searchable_model.set_content
       end
     end
-    
+
     describe '#_denormalize' do
       subject{ searchable_model }
       its(:searchable_type){ is_expected.to eql searchable.class.name }
-      
+
       it 'should set the section(s)' do
         if searchable.respond_to?(:sections)
           expect(searchable_model.sections).to match_array searchable.sections

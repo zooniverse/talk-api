@@ -1,6 +1,6 @@
 module SubscriptionCategories
   extend ActiveSupport::Concern
-  
+
   included do
     validates :category, inclusion: {
       in: [
@@ -14,7 +14,7 @@ module SubscriptionCategories
         'started_discussions'
       ]
     }
-    
+
     enum category: {
       participating_discussions: 0,
       mentions: 1,

@@ -1,25 +1,25 @@
 class CommentExportWorker
   include ::DataExportWorker
-  
+
   def perform(data_request_id)
     self.data_request = ::DataRequest.find data_request_id
     @view_name = "#{ data_request.section.gsub /\-/, '_' }_comments"
     create_view
     super
   end
-  
+
   def find_each(&block)
     view_model.find_each batch_size: batch_size, &block
   end
-  
+
   def row_count
     view_model.count
   end
-  
+
   def row_from(row)
     row.as_json
   end
-  
+
   def create_view
     view_model.connection.query <<-SQL
       create or replace view #{ @view_name } as
@@ -42,7 +42,7 @@ class CommentExportWorker
       where boards.section = '#{ data_request.section }';
     SQL
   end
-  
+
   def view_model
     return @_view_model if @_view_model
     view_model_name = @view_name
