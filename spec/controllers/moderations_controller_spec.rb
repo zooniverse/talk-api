@@ -55,6 +55,15 @@ RSpec.describe ModerationsController, type: :controller do
           expect(message).to eql "Expected state to be in #{ Moderation.states.keys }, but was foo"
         end
       end
+
+      context 'with all states' do
+        let(:state){ 'all' }
+
+        it 'should filter' do
+          states = response.json[:moderations].map{ |moderation| moderation[:state] }
+          expect(states).to match_array %w(watched closed)
+        end
+      end
     end
 
     it_behaves_like 'a controller creating' do
