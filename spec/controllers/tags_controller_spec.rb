@@ -64,5 +64,27 @@ RSpec.describe TagsController, type: :controller do
         it{ is_expected.to eql %w(subject_most subject_least) }
       end
     end
+
+    context 'with a tag name' do
+      include_context 'TagsController#popular'
+      let(:params){ { section: section, taggable_type: 'Subject', name: 'subject_most' } }
+      it{ is_expected.to be_successful }
+
+      describe 'response' do
+        subject{ tag_names }
+        it{ is_expected.to eql ['subject_most'] }
+      end
+    end
+
+    context 'with a mixed case tag name' do
+      include_context 'TagsController#popular'
+      let(:params){ { section: section, taggable_type: 'Subject', name: 'SUBJECT_Most' } }
+      it{ is_expected.to be_successful }
+
+      describe 'response' do
+        subject{ tag_names }
+        it{ is_expected.to eql ['subject_most'] }
+      end
+    end
   end
 end
