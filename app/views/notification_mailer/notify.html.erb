@@ -151,6 +151,10 @@
                 <% notifications.each do |notification| %>
                   <%= container do %>
                     <div><%= notification.message %></div>
+                    <div>
+                      <% first_comment = notification.source.comments.order(:created_at).first %>
+                      <%= MarkdownApi.markdown(first_comment.body, slug: project.try(:slug)).html_safe %>
+                    </div>
                     <div><%= time_ago_in_words notification.source.created_at %> ago</div>
                     <%= link_to 'View on talk', notification.url, style: link_style %>
                   <% end %>

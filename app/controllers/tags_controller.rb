@@ -3,6 +3,7 @@ class TagsController < ApplicationController
   disallow :create, :update, :destroy
 
   def popular
+    params[:name].try :downcase!
     render json: popular_serializer.resource(params, nil, current_user: current_user)
   end
 
