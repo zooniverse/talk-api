@@ -19,6 +19,7 @@ class ModerationsController < ApplicationController
   end
 
   def invert_enums
+    return params.delete :state if params[:state] == 'all'
     inverted_state = Moderation.states[params[:state]]
     raise Talk::InvalidParameterError.new(:state, "in #{ Moderation.states.keys }", params[:state]) unless inverted_state
     params[:state] = inverted_state
