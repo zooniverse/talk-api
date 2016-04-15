@@ -17,7 +17,7 @@ class Comment
     /imx
 
     included do
-      before_save :parse_mentions
+      before_create :parse_mentions
       before_update :parse_mentions, :update_mentions, :update_group_mentions
     end
 
@@ -40,7 +40,7 @@ class Comment
 
     def update_mentions
       removed_from(:mentioning).each_pair do |mention, hash|
-        Mention.where(comment_id: id, mentionable_id: hash['id']).destroy_all
+        Mention.where(comment_id: id, mentionable_id: hash['id'], mentionable_type: hash['type']).destroy_all
       end
     end
 
