@@ -395,15 +395,32 @@ RSpec.describe Comment, type: :model do
     let(:collection_mention){ "^C#{ collection.id }" }
     let(:comment){ create :comment, body: "#{ subject_mention } #{ collection_mention }" }
 
-    it 'should remove mentions on update' do
-      comment.update! body: subject_mention
-      expect(comment.mentions.where(mentionable: collection).exists?).to be false
+    context 'when removing' do
+      before(:each){ comment.update! body: subject_mention }
+      it 'should destroy removed mentions on update' do
+        expect(comment.reload.mentions.where(mentionable: collection).exists?).to be false
+      end
+
+      it 'should keep non-removed mentions' do
+        expect(comment.reload.mentions.where(mentionable: subject).exists?).to be true
+      end
     end
 
-    it 'should add mentions on update' do
-      subject2 = create :subject
-      comment.update! body: "#{ comment.body } ^S#{ subject2.id }"
-      expect(comment.mentions.where(mentionable: subject2).exists?).to be true
+    context 'when adding' do
+      let(:subject2){ create :subject }
+      before(:each){ comment.update! body: "#{ subject_mention } ^S#{ subject2.id }" }
+
+      it 'should create added mentions on update' do
+        expect(comment.reload.mentions.where(mentionable: subject2).exists?).to be true
+      end
+
+      it 'should keep non-removed mentions' do
+        expect(comment.reload.mentions.where(mentionable: subject).exists?).to be true
+      end
+
+      it 'should destroy removed mentions' do
+        expect(comment.mentions.where(mentionable: collection).exists?).to be false
+      end
     end
   end
 
@@ -430,13 +447,34 @@ RSpec.describe Comment, type: :model do
     let(:comment){ create :comment, body: '#tag1 not#atag #Tag' }
 
     it 'should match tags' do
-      expect(comment.tagging).to eql '#tag1' => 'tag1', '#Tag' => 'tag'
+      expect(comment.tagging).to eql '#tag1' => 'tag1', '#tag' => 'tag'
     end
 
     it 'should create tags' do
       expect(comment.tags.where(name: 'tag1').exists?).to be true
       expect(comment.tags.where(name: 'tag').exists?).to be true
       expect(comment.tags.count).to eql 2
+    end
+
+    context 'with mixed case tags' do
+      let(:comment){ create :comment, body: '#TAG #tag' }
+
+      it 'should only create one tag' do
+        expect(comment.tags.count).to eql 1
+      end
+    end
+  end
+
+  describe '#update_tags' do
+    let(:comment){ create :comment, body: '#tag1 not#atag #Tag' }
+    before(:each){ comment.update_attributes body: '#TAG1' }
+
+    it 'should remove tags' do
+      expect(comment.reload.tags.length).to eql 1
+    end
+
+    it 'should maintain case' do
+      expect(comment.reload.tags.first.name).to eql 'tag1'
     end
   end
 

@@ -15,7 +15,7 @@ class Comment
     def parse_tags
       self.tagging = { }
       body.scan(MATCH_TAGS).each do |tag, name|
-        tagged tag, name.downcase
+        tagged tag.downcase, name.downcase
       end
     end
 
@@ -28,7 +28,8 @@ class Comment
     protected
 
     def tagged(tag, name)
-      self.tagging[tag] = name.downcase
+      return if tagging[tag]
+      self.tagging[tag] = name
       tags.build(name: name) if added_to(:tagging)[tag]
     end
   end
