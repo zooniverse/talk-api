@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160111193434) do
+ActiveRecord::Schema.define(version: 20160415181535) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,7 +158,7 @@ ActiveRecord::Schema.define(version: 20160111193434) do
     t.datetime "updated_at"
   end
 
-  add_index "group_mentions", ["comment_id", "name"], name: "index_group_mentions_on_comment_id_and_name", using: :btree
+  add_index "group_mentions", ["comment_id", "name"], name: "index_group_mentions_on_comment_id_and_name", unique: true, using: :btree
   add_index "group_mentions", ["comment_id"], name: "index_group_mentions_on_comment_id", using: :btree
 
   create_table "mentions", force: :cascade do |t|
@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(version: 20160111193434) do
 
   add_index "mentions", ["board_id"], name: "index_mentions_on_board_id", using: :btree
   add_index "mentions", ["comment_id"], name: "index_mentions_on_comment_id", using: :btree
+  add_index "mentions", ["mentionable_id", "mentionable_type", "comment_id"], name: "index_mentions_on_unique_per_comment", unique: true, using: :btree
   add_index "mentions", ["mentionable_id", "mentionable_type", "created_at"], name: "mentionable_created_at", using: :btree
   add_index "mentions", ["mentionable_id", "mentionable_type", "section", "created_at"], name: "mentionable_section_created_at", using: :btree
   add_index "mentions", ["mentionable_id", "mentionable_type"], name: "index_mentions_on_mentionable_id_and_mentionable_type", using: :btree
@@ -310,6 +311,7 @@ ActiveRecord::Schema.define(version: 20160111193434) do
     t.string   "user_login"
   end
 
+  add_index "tags", ["comment_id", "name"], name: "index_tags_on_comment_id_and_name", unique: true, using: :btree
   add_index "tags", ["comment_id"], name: "index_tags_on_comment_id", using: :btree
   add_index "tags", ["section", "taggable_type", "name"], name: "index_tags_on_section_and_taggable_type_and_name", using: :btree
   add_index "tags", ["section", "taggable_type"], name: "index_tags_on_section_and_taggable_type", using: :btree
