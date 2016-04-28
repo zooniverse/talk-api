@@ -5,13 +5,17 @@ connection = -> {
   Redis.new config
 }
 
+sidekiq_config = YAML.load_file('config/sidekiq.yml').fetch Rails.env, { }
+concurrency = sidekiq_config.fetch :concurrency, 5
+concurrency += 2 # for internal Sidekiq connections
+
 require 'sidekiq'
 Sidekiq.configure_client do |config|
-  config.redis = ConnectionPool.new size: 10, &connection
+  config.redis = ConnectionPool.new size: concurrency, &connection
 end
 
 Sidekiq.configure_server do |config|
-  config.redis = ConnectionPool.new size: 10, &connection
+  config.redis = ConnectionPool.new size: concurrency, &connection
   config.server_middleware do |chain|
     chain.add Sidekiq::Congestion::Limiter
   end
