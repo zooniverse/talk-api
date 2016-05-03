@@ -3,12 +3,12 @@ class Comment
     extend ActiveSupport::Concern
 
     MATCH_TAGS = /
-      (?:^|[^\w])         # match the beginning of the word
+      (?:^|\s)            # match the beginning of the word
       (\#([-\w\d]{3,40})) # match tags
     /imx
 
     included do
-      before_save :parse_tags
+      before_create :parse_tags
       before_update :parse_tags, :update_tags
     end
 
