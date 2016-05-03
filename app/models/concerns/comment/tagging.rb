@@ -8,7 +8,7 @@ class Comment
     /imx
 
     included do
-      before_save :parse_tags
+      before_create :parse_tags
       before_update :parse_tags, :update_tags
     end
 

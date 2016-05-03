@@ -477,12 +477,37 @@ RSpec.describe Comment, type: :model do
     let(:comment){ create :comment, body: '#tag1 not#atag #Tag' }
     before(:each){ comment.update_attributes body: '#TAG1' }
 
-    it 'should remove tags' do
-      expect(comment.reload.tags.length).to eql 1
-    end
-
     it 'should maintain case' do
       expect(comment.reload.tags.first.name).to eql 'tag1'
+    end
+
+    context 'when removing' do
+      before(:each){ comment.update_attributes body: '#tag1' }
+
+      it 'should destroy removed tags on update' do
+        expect(comment.reload.tags.where(name: 'tag').exists?).to be false
+      end
+
+      it 'should keep non-removed tags' do
+        expect(comment.reload.tags.where(name: 'tag1').exists?).to be true
+      end
+    end
+
+    context 'when adding' do
+      let(:subject2){ create :subject }
+      before(:each){ comment.update_attributes body: '#tag #newtag' }
+
+      it 'should create added tags on update' do
+        expect(comment.reload.tags.where(name: 'newtag').exists?).to be true
+      end
+
+      it 'should keep non-removed tags' do
+        expect(comment.reload.tags.where(name: 'tag').exists?).to be true
+      end
+
+      it 'should destroy removed tags' do
+        expect(comment.reload.tags.where(name: 'tag1').exists?).to be false
+      end
     end
   end
 
