@@ -1,3 +1,5 @@
+require 'honeybadger'
+
 module ActionRescuing
   extend ActiveSupport::Concern
 
@@ -42,6 +44,10 @@ module ActionRescuing
   end
 
   def unauthorized(exception)
+    Honeybadger.notify(exception, context: {
+      token: bearer_token,
+      found_token: OauthAccessToken.find_by_token(bearer_token).as_json
+    })
     render_exception :unauthorized, exception
   end
 
