@@ -463,6 +463,14 @@ RSpec.describe Comment, type: :model do
         expect(comment.tags.count).to eql 1
       end
     end
+
+    context 'with url anchors' do
+      let(:comment){ create :comment, body: '#test sentence #tag and url: http://docs.panoptes.apiary.io/#reference/user/users-collection/list-all-users' }
+
+      it 'should not parse anchors as tags' do
+        expect(comment.tags.map(&:name)).to match_array ['test', 'tag']
+      end
+    end
   end
 
   describe '#update_tags' do

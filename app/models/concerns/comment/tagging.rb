@@ -3,7 +3,7 @@ class Comment
     extend ActiveSupport::Concern
 
     MATCH_TAGS = /
-      (?:^|[^\w])         # match the beginning of the word
+      (?:^|\s)            # match the beginning of the word
       (\#([-\w\d]{3,40})) # match tags
     /imx
 
