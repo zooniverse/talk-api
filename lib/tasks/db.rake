@@ -189,7 +189,7 @@ namespace :panoptes do
             section,
             project_id
           from tags
-          group by section, project_id, name
+          group by section, project_id, name, taggable_id
           order by usages desc, taggable_id asc
       SQL
 
