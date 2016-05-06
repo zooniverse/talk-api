@@ -190,7 +190,7 @@ namespace :panoptes do
             project_id
           from tags
           group by section, project_id, name
-          order by usages desc
+          order by usages desc, taggable_id asc
       SQL
 
       ActiveRecord::Base.connection.execute <<-SQL
@@ -206,7 +206,7 @@ namespace :panoptes do
           from tags
           where taggable_type is not null
           group by section, project_id, taggable_type, taggable_id, name
-          order by usages desc
+          order by usages desc, taggable_id asc
       SQL
     end
 
