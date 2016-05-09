@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 20160415181535) do
   enable_extension "plpgsql"
   enable_extension "postgres_fdw"
   enable_extension "hstore"
+  enable_extension "pg_trgm"
 
   create_table "announcements", force: :cascade do |t|
     t.text     "message",    null: false
