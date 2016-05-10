@@ -55,15 +55,15 @@ class UsernameCompletion
       (
         #{ matching_messages }
 
-        union
+        union all
 
         #{ matching_mentions }
 
-        union
+        union all
 
         #{ matching_group_mentions }
 
-        union
+        union all
 
         #{ all_matching_users }
       ) matches
