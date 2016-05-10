@@ -32,7 +32,11 @@ Rails.application.routes.draw do
       end
     end
     resources :user_ip_bans
-    resources :users
+    resources :users do
+      collection do
+        get :autocomplete
+      end
+    end
   end
 
   root 'application#root'

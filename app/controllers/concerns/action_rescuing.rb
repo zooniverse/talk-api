@@ -43,6 +43,10 @@ module ActionRescuing
     end
   end
 
+  def require_user!
+    raise Pundit::NotAuthorizedError.new('not logged in') unless current_user
+  end
+
   def required_param(name)
     raise ActionController::ParameterMissing.new(name) unless params[name].present?
     params[name]
