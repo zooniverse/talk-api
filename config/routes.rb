@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     resources :tags do
       collection do
         get :popular
+        get :autocomplete
       end
     end
     resources :user_ip_bans

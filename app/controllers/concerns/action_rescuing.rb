@@ -43,6 +43,11 @@ module ActionRescuing
     end
   end
 
+  def required_param(name)
+    raise ActionController::ParameterMissing.new(name) unless params[name].present?
+    params[name]
+  end
+
   def unauthorized(exception)
     Honeybadger.notify(exception, context: {
       token: bearer_token,

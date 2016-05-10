@@ -87,4 +87,37 @@ RSpec.describe TagsController, type: :controller do
       end
     end
   end
+
+  describe '#autocomplete' do
+    let!(:tag){ create :tag, name: 'foo' }
+    let(:params){ { } }
+    subject{ response }
+    before(:each){ get :autocomplete, params }
+
+    context 'without a search' do
+      let(:params){ { search: 'f' } }
+      it{ is_expected.to be_unprocessable }
+    end
+
+    context 'without a section' do
+      let(:params){ { section: 'f' } }
+      it{ is_expected.to be_unprocessable }
+    end
+
+    context 'with valid params' do
+      let(:params){ { section: 'project-1', search: 'f' } }
+      it{ is_expected.to be_successful }
+
+      it 'should return the tags' do
+        expect(response.json[:tags]).to match_array [{ 'name' => 'foo' }]
+      end
+
+      it 'should use the completer' do
+        completer = double results: []
+        expect(TagCompletion).to receive(:new).with('f', 'project-1').and_return completer
+        expect(completer).to receive :results
+        get :autocomplete, params
+      end
+    end
+  end
 end
