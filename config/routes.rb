@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resources :roles
     resources :subscription_preferences
     resources :subscriptions
+    resources :suggested_tags
     resources :tags do
       collection do
         get :popular
