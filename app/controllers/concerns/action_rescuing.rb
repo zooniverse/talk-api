@@ -48,7 +48,7 @@ module ActionRescuing
   end
 
   def required_param(name)
-    raise ActionController::ParameterMissing.new(name) unless params[name].present?
+    raise ActionController::ParameterMissing.new(name) unless params[name]
     params[name]
   end
 

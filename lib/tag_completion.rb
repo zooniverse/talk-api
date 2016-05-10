@@ -1,5 +1,8 @@
 # Finds similar (trigram) tags
-# prioritized by similarity and usage
+# prioritized by
+#   - team suggested
+#   - similarity
+#   - usage
 class TagCompletion
   def initialize(name, section, limit: 10)
     @name = name&.gsub /[^-\w\d]/, ''
@@ -8,9 +11,12 @@ class TagCompletion
   end
 
   def results
-    return [] unless @name.present?
-    @name = sanitize @name
-    connection.execute(query).to_a
+    if @name.present?
+      @name = sanitize @name
+      connection.execute(query).to_a
+    else
+      connection.execute(suggested_tags).to_a
+    end
   end
 
   # Note:
@@ -22,9 +28,64 @@ class TagCompletion
       select set_limit(0.01);
 
       select
-        name
+        name,
+        score
 
-      from tags
+      from
+        (#{ unique_matching_tags }) unique_matching_tags
+
+      order by
+        score desc,
+        name asc
+
+      limit
+        #{ @limit }
+    SQL
+  end
+
+  def unique_matching_tags
+    <<-SQL
+      select
+        distinct on (name)
+        name,
+        score
+
+      from
+        (#{ matching_tags }) matching_tags
+    SQL
+  end
+
+  def matching_tags
+    <<-SQL
+      select
+        name,
+        score
+
+      from
+        (#{ matching_suggested_tags }) matching_suggested_tags
+
+      union
+
+      select
+        name,
+        score
+
+      from
+        (#{ popular_matching_tags }) popular_matching_tags
+
+      order by
+        score desc
+    SQL
+  end
+
+  def popular_matching_tags
+    <<-SQL
+      select
+        name,
+        similarity(name, #{ @name }) * count(distinct(user_id)) score
+
+      from
+        tags
 
       where
         section = #{ @section } and
@@ -34,9 +95,44 @@ class TagCompletion
         section, name
 
       order by
-        similarity(name, #{ @name }) * count(distinct(user_id)) desc
+        score desc
+    SQL
+  end
 
-      limit #{ @limit }
+  def matching_suggested_tags
+    <<-SQL
+      select
+        name,
+        50 score
+
+      from
+        suggested_tags
+
+      where
+        section = #{ @section } and
+        name % #{ @name }
+
+      order by
+        score desc
+    SQL
+  end
+
+  def suggested_tags
+    <<-SQL
+      select
+        name
+
+      from
+        suggested_tags
+
+      where
+        section = #{ @section }
+
+      order by
+        name
+
+      limit
+        #{ @limit }
     SQL
   end
 
