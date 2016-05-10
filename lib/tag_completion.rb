@@ -13,7 +13,9 @@ class TagCompletion
   def results
     if @name.present?
       @name = sanitize @name
-      connection.execute(query).to_a
+      connection.execute(query).to_a.map do |tag|
+        tag.except 'score'
+      end
     else
       connection.execute(suggested_tags).to_a
     end
