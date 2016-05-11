@@ -70,11 +70,6 @@ class SearchesController < ApplicationController
     required_param :query
   end
 
-  def required_param(name)
-    raise ActionController::ParameterMissing.new(name) unless params[name]
-    params[name]
-  end
-
   def permit_params
     params.permit :page, :page_size, :section, :query, types: []
   end

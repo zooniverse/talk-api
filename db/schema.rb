@@ -11,12 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160415181535) do
+ActiveRecord::Schema.define(version: 20160510181813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgres_fdw"
   enable_extension "hstore"
+  enable_extension "pg_trgm"
 
   create_table "announcements", force: :cascade do |t|
     t.text     "message",    null: false
@@ -297,6 +298,15 @@ ActiveRecord::Schema.define(version: 20160415181535) do
   add_index "subscriptions", ["user_id", "category"], name: "index_subscriptions_on_user_id_and_category", using: :btree
   add_index "subscriptions", ["user_id", "source_id", "source_type", "category"], name: "index_subscriptions_uniquely", unique: true, using: :btree
   add_index "subscriptions", ["user_id", "source_id", "source_type"], name: "index_subscriptions_on_user_id_and_source_id_and_source_type", using: :btree
+
+  create_table "suggested_tags", force: :cascade do |t|
+    t.string   "name"
+    t.string   "section"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "suggested_tags", ["name", "section"], name: "index_suggested_tags_on_name_and_section", unique: true, using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string   "name",          null: false
