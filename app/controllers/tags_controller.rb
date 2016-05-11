@@ -14,4 +14,10 @@ class TagsController < ApplicationController
       PopularTagSerializer
     end
   end
+
+  def autocomplete
+    render json: {
+      tags: TagCompletion.new(required_param(:search), required_param(:section)).results
+    }
+  end
 end

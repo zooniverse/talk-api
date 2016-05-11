@@ -25,13 +25,19 @@ Rails.application.routes.draw do
     resources :roles
     resources :subscription_preferences
     resources :subscriptions
+    resources :suggested_tags
     resources :tags do
       collection do
         get :popular
+        get :autocomplete
       end
     end
     resources :user_ip_bans
-    resources :users
+    resources :users do
+      collection do
+        get :autocomplete
+      end
+    end
   end
 
   root 'application#root'
