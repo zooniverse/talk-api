@@ -114,7 +114,7 @@ RSpec.describe TagsController, type: :controller do
 
       it 'should use the completer' do
         completer = double results: []
-        expect(TagCompletion).to receive(:new).with('f', 'project-1').and_return completer
+        expect(TagCompletion).to receive(:new).with('f', 'project-1', limit: 5).and_return completer
         expect(completer).to receive :results
         get :autocomplete, params
       end
