@@ -58,7 +58,7 @@ RSpec.describe UsersController, type: :controller do
 
       it 'should use the completer' do
         completer = double results: []
-        expect(UsernameCompletion).to receive(:new).with(current_user, 'f').and_return completer
+        expect(UsernameCompletion).to receive(:new).with(current_user, 'f', limit: 5).and_return completer
         expect(completer).to receive :results
         get :autocomplete, params
       end

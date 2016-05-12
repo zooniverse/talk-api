@@ -1,5 +1,6 @@
 Rails.application.configure do
   config.cache_classes = true
+  config.cache_store = :memory_store, { size: 64.megabytes }
   config.eager_load = true
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true

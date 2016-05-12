@@ -1,5 +1,6 @@
 Rails.application.configure do
   config.cache_classes = true
+  config.cache_store = :null_store
   config.eager_load = false
   config.serve_static_files = true
   config.static_cache_control = 'public, max-age=3600'
