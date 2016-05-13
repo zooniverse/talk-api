@@ -53,11 +53,11 @@ class UsernameCompletion
   def matching_users
     <<-SQL
       (
-        #{ matching_messages }
+        #{ matching_mentions }
 
         union all
 
-        #{ matching_mentions }
+        #{ matching_messages }
 
         union all
 
@@ -70,6 +70,39 @@ class UsernameCompletion
     SQL
   end
 
+  def matching_mentions
+    <<-SQL
+      (
+        select
+          users.id,
+          users.login,
+          users.display_name,
+          3 priority
+
+        from
+          mentions, users
+
+        where
+          users.id = mentions.mentionable_id and
+          mentions.user_id = #{ @current_user.id } and
+          mentions.mentionable_type = 'User' and
+          #{ users_match }
+
+        group by
+          mentions.mentionable_id,
+          users.id,
+          users.login,
+          users.display_name
+
+        order by
+          count(users.id) desc
+
+        limit
+          #{ @limit }
+      )
+    SQL
+  end
+
   def matching_messages
     <<-SQL
       (
@@ -78,7 +111,7 @@ class UsernameCompletion
           users.id,
           users.login,
           users.display_name,
-          3 priority
+          2 priority
 
         from
           users
@@ -98,39 +131,6 @@ class UsernameCompletion
               select #{ @current_user.id }
         ) and
         #{ users_match }
-
-        limit
-          #{ @limit }
-      )
-    SQL
-  end
-
-  def matching_mentions
-    <<-SQL
-      (
-        select
-          users.id,
-          users.login,
-          users.display_name,
-          2 priority
-
-        from
-          mentions, users
-
-        where
-          users.id = mentions.mentionable_id and
-          mentions.user_id = #{ @current_user.id } and
-          mentions.mentionable_type = 'User' and
-          #{ users_match }
-
-        group by
-          mentions.mentionable_id,
-          users.id,
-          users.login,
-          users.display_name
-
-        order by
-          count(users.id) desc
 
         limit
           #{ @limit }
