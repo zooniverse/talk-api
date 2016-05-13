@@ -36,19 +36,23 @@ RSpec.describe UsernameCompletion, type: :lib do
   end
 
   context 'when sanitizing input' do
+    let(:prioritized_users) do
+      %w(messaged mentioned admins moderators researchers scientists team)
+    end
+
     context 'when the pattern is empty' do
       let(:search){ '%' }
-      it{ is_expected.to be_empty }
+      it{ is_expected.to all be_in prioritized_users }
     end
 
     context 'when the pattern is nil' do
       let(:search){ nil }
-      it{ is_expected.to be_empty }
+      it{ is_expected.to all be_in prioritized_users }
     end
 
     context 'when the pattern is invalid' do
       let(:search){ '#.\'\\\\)\'' }
-      it{ is_expected.to be_empty }
+      it{ is_expected.to all be_in prioritized_users }
     end
   end
 end
