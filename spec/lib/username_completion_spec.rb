@@ -21,7 +21,7 @@ RSpec.describe UsernameCompletion, type: :lib do
 
   context 'when matching login' do
     let(:search){ 'm' }
-    it{ is_expected.to eql %w(messaged mentioned moderators michael) }
+    it{ is_expected.to eql %w(mentioned messaged moderators michael) }
   end
 
   context 'when matching display_name' do
@@ -32,7 +32,7 @@ RSpec.describe UsernameCompletion, type: :lib do
   context 'when limiting results' do
     let(:limit){ 1 }
     let(:search){ 'm' }
-    it{ is_expected.to eql ['messaged'] }
+    it{ is_expected.to eql ['mentioned'] }
   end
 
   context 'when sanitizing input' do
