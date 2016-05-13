@@ -7,12 +7,12 @@
 class UsernameCompletion
   def initialize(current_user, pattern, limit: 10)
     @current_user = current_user
-    @pattern = pattern&.gsub '%', ''
+    @pattern = pattern&.gsub /[^\w\d\-]/, ''
+    @emptyPattern = @pattern.blank?
     @limit = limit
   end
 
   def results
-    return [] unless @pattern.present?
     @pattern = sanitize "#{ @pattern }%"
     connection.execute(query).to_a
   end
@@ -186,6 +186,7 @@ class UsernameCompletion
   end
 
   def all_matching_users
+    return '(select null, null, null, null limit 0)' if @emptyPattern
     <<-SQL
       (
         select
@@ -207,6 +208,7 @@ class UsernameCompletion
   end
 
   def users_match(table = 'users')
+    return 'true' if @emptyPattern
     <<-SQL
       (
         lower(#{ table }.login) like #{ @pattern } or
