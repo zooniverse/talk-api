@@ -16,8 +16,19 @@ class TagsController < ApplicationController
   end
 
   def autocomplete
+    params[:search].try :downcase!
     render json: {
-      tags: TagCompletion.new(required_param(:search), required_param(:section)).results
+      tags: cached_completion(required_param(:search), required_param(:section))
     }
+  end
+
+  def cached_completion(search, section)
+    Rails.cache.fetch(completion_cache_key, expires_in: 1.hour) do
+      TagCompletion.new(search, section, limit: 5).results
+    end
+  end
+
+  def completion_cache_key
+    "tag-completion-#{ params[:section] }-#{ params[:search] }"
   end
 end

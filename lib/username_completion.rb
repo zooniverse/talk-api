@@ -7,12 +7,12 @@
 class UsernameCompletion
   def initialize(current_user, pattern, limit: 10)
     @current_user = current_user
-    @pattern = pattern&.gsub '%', ''
+    @pattern = pattern&.gsub /[^\w\d\-]/, ''
+    @emptyPattern = @pattern.blank?
     @limit = limit
   end
 
   def results
-    return [] unless @pattern.present?
     @pattern = sanitize "#{ @pattern }%"
     connection.execute(query).to_a
   end
@@ -53,11 +53,11 @@ class UsernameCompletion
   def matching_users
     <<-SQL
       (
-        #{ matching_messages }
+        #{ matching_mentions }
 
         union all
 
-        #{ matching_mentions }
+        #{ matching_messages }
 
         union all
 
@@ -70,6 +70,39 @@ class UsernameCompletion
     SQL
   end
 
+  def matching_mentions
+    <<-SQL
+      (
+        select
+          users.id,
+          users.login,
+          users.display_name,
+          3 priority
+
+        from
+          mentions, users
+
+        where
+          users.id = mentions.mentionable_id and
+          mentions.user_id = #{ @current_user.id } and
+          mentions.mentionable_type = 'User' and
+          #{ users_match }
+
+        group by
+          mentions.mentionable_id,
+          users.id,
+          users.login,
+          users.display_name
+
+        order by
+          count(users.id) desc
+
+        limit
+          #{ @limit }
+      )
+    SQL
+  end
+
   def matching_messages
     <<-SQL
       (
@@ -78,7 +111,7 @@ class UsernameCompletion
           users.id,
           users.login,
           users.display_name,
-          3 priority
+          2 priority
 
         from
           users
@@ -98,39 +131,6 @@ class UsernameCompletion
               select #{ @current_user.id }
         ) and
         #{ users_match }
-
-        limit
-          #{ @limit }
-      )
-    SQL
-  end
-
-  def matching_mentions
-    <<-SQL
-      (
-        select
-          users.id,
-          users.login,
-          users.display_name,
-          2 priority
-
-        from
-          mentions, users
-
-        where
-          users.id = mentions.mentionable_id and
-          mentions.user_id = #{ @current_user.id } and
-          mentions.mentionable_type = 'User' and
-          #{ users_match }
-
-        group by
-          mentions.mentionable_id,
-          users.id,
-          users.login,
-          users.display_name
-
-        order by
-          count(users.id) desc
 
         limit
           #{ @limit }
@@ -186,6 +186,7 @@ class UsernameCompletion
   end
 
   def all_matching_users
+    return '(select null, null, null, null limit 0)' if @emptyPattern
     <<-SQL
       (
         select
@@ -207,6 +208,7 @@ class UsernameCompletion
   end
 
   def users_match(table = 'users')
+    return 'true' if @emptyPattern
     <<-SQL
       (
         lower(#{ table }.login) like #{ @pattern } or
