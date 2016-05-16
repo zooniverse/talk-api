@@ -53,10 +53,6 @@ module ActionRescuing
   end
 
   def unauthorized(exception)
-    Honeybadger.notify(exception, context: {
-      token: bearer_token,
-      found_token: OauthAccessToken.find_by_token(bearer_token).as_json
-    }) if bearer_token
     render_exception :unauthorized, exception
   end
 
