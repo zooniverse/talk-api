@@ -107,7 +107,6 @@ class UsernameCompletion
     <<-SQL
       (
         select
-          distinct on (users.id)
           users.id,
           users.login,
           users.display_name,
@@ -119,7 +118,7 @@ class UsernameCompletion
         where
           id in (
             select
-              unnest(participant_ids)
+              distinct(unnest(participant_ids))
 
             from
               conversations
