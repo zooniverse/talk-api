@@ -192,23 +192,7 @@ namespace :panoptes do
             project_id
           from tags
           group by section, project_id, name
-          order by usages desc
-      SQL
-
-      # Unique tags on focuses for a section ordered by usages
-      ActiveRecord::Base.connection.execute <<-SQL
-        create or replace view popular_section_focus_tags as
-          select
-            name || '-' || taggable_type || '-' || section as id,
-            name,
-            count(name) as usages,
-            taggable_type,
-            section,
-            project_id
-          from tags
-          where taggable_type is not null
-          group by section, project_id, taggable_type, name
-          order by usages desc
+          order by usages desc, id asc
       SQL
 
       # Tags for a focus ordered by usages
