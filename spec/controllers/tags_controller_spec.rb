@@ -80,7 +80,7 @@ RSpec.describe TagsController, type: :controller do
     end
 
     context 'with a type' do
-      it_behaves_like 'TagsController#popular', serializer: PopularSectionFocusTagSerializer do
+      it_behaves_like 'TagsController#popular', serializer: PopularFocusTagSerializer do
         let(:params){ { section: section, taggable_type: 'Subject' } }
         it{ is_expected.to be_successful }
 
@@ -92,7 +92,7 @@ RSpec.describe TagsController, type: :controller do
     end
 
     context 'with a tag name' do
-      it_behaves_like 'TagsController#popular', serializer: PopularSectionFocusTagSerializer do
+      it_behaves_like 'TagsController#popular', serializer: PopularFocusTagSerializer do
         let(:params){ { section: section, taggable_type: 'Subject', name: 'subject_most' } }
         it{ is_expected.to be_successful }
 
@@ -104,7 +104,7 @@ RSpec.describe TagsController, type: :controller do
     end
 
     context 'with a mixed case tag name' do
-      it_behaves_like 'TagsController#popular', serializer: PopularSectionFocusTagSerializer do
+      it_behaves_like 'TagsController#popular', serializer: PopularFocusTagSerializer do
         let(:params){ { section: section, taggable_type: 'Subject', name: 'SUBJECT_Most' } }
         it{ is_expected.to be_successful }
 
