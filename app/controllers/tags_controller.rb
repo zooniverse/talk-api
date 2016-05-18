@@ -3,15 +3,18 @@ class TagsController < ApplicationController
   disallow :create, :update, :destroy
 
   def popular
+    required_param :section
     params[:name].try :downcase!
     render json: popular_serializer.resource(params, nil, current_user: current_user)
   end
 
   def popular_serializer
-    if params[:taggable_id] || params[:taggable_type]
+    if !params[:taggable_id] && params[:taggable_type]
+      PopularSectionFocusTagSerializer
+    elsif params[:taggable_id] || params[:taggable_type]
       PopularFocusTagSerializer
     else
-      PopularTagSerializer
+      PopularSectionTagSerializer
     end
   end
 

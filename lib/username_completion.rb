@@ -210,8 +210,8 @@ class UsernameCompletion
     return 'true' if @emptyPattern
     <<-SQL
       (
-        lower(#{ table }.login) like #{ @pattern } or
-        lower(#{ table }.display_name) like #{ @pattern }
+        lower(#{ table }.login::text) like #{ @pattern }::text or
+        lower(#{ table }.display_name::text) like #{ @pattern }::text
       )
     SQL
   end

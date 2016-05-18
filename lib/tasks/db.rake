@@ -180,8 +180,10 @@ namespace :panoptes do
     desc 'Creates the popular tags view'
     task :create_popular_tags_view => :environment do
       ActiveRecord::Base.establish_connection talk_config
+
+      # Unique tags for a section ordered by usages
       ActiveRecord::Base.connection.execute <<-SQL
-        create or replace view popular_tags as
+        create or replace view popular_section_tags as
           select
             name || '-' || section as id,
             name,
@@ -189,10 +191,27 @@ namespace :panoptes do
             section,
             project_id
           from tags
-          group by section, project_id, name, taggable_id
-          order by usages desc, taggable_id asc
+          group by section, project_id, name
+          order by usages desc
       SQL
 
+      # Unique tags on focuses for a section ordered by usages
+      ActiveRecord::Base.connection.execute <<-SQL
+        create or replace view popular_section_focus_tags as
+          select
+            name || '-' || taggable_type || '-' || section as id,
+            name,
+            count(name) as usages,
+            taggable_type,
+            section,
+            project_id
+          from tags
+          where taggable_type is not null
+          group by section, project_id, taggable_type, name
+          order by usages desc
+      SQL
+
+      # Tags for a focus ordered by usages
       ActiveRecord::Base.connection.execute <<-SQL
         create or replace view popular_focus_tags as
           select
