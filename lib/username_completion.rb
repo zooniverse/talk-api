@@ -13,6 +13,7 @@ class UsernameCompletion
   end
 
   def results
+    @search = sanitize @pattern
     @pattern = sanitize "#{ @pattern }%"
     connection.execute(query).to_a
   end
@@ -199,6 +200,10 @@ class UsernameCompletion
 
         where
           #{ users_match }
+
+        order by
+          similarity(users.login, #{ @search }) +
+          similarity(users.display_name, #{ @search }) desc
 
         limit
           #{ @limit }
