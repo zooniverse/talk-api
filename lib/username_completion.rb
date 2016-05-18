@@ -186,7 +186,7 @@ class UsernameCompletion
   end
 
   def all_matching_users
-    return '(select null, null, null, null limit 0)' if @emptyPattern
+    return empty_result_set if @emptyPattern
     matched = PanoptesUser.connection.query <<-SQL
       (
         select
@@ -210,6 +210,8 @@ class UsernameCompletion
       )
     SQL
 
+    return empty_result_set if matched.empty?
+
     matched.map do |row|
       id, login, display_name = row
       "(select #{ id }, #{ sanitize login }, #{ sanitize display_name }, 0)"
@@ -224,6 +226,10 @@ class UsernameCompletion
         lower(#{ table }.display_name::text) like #{ @pattern }::text
       )
     SQL
+  end
+
+  def empty_result_set
+    '(select null, null, null, null limit 0)'
   end
 
   def sanitize(string)
