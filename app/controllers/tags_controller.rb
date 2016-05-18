@@ -9,9 +9,7 @@ class TagsController < ApplicationController
   end
 
   def popular_serializer
-    if !params[:taggable_id] && params[:taggable_type]
-      PopularSectionFocusTagSerializer
-    elsif params[:taggable_id] || params[:taggable_type]
+    if params[:taggable_id] || params[:taggable_type]
       PopularFocusTagSerializer
     else
       PopularSectionTagSerializer
