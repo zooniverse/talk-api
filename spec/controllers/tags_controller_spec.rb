@@ -24,66 +24,106 @@ RSpec.describe TagsController, type: :controller do
       create_list :tag, 3, taggable_section: section, taggable: tagged_collection, name: 'collection_most'
     end
 
-    RSpec.shared_context 'TagsController#popular' do
+    RSpec.shared_examples 'TagsController#popular' do |serializer: nil|
+      let(:tag_serializer){ serializer }
       let(:params){ { } }
       subject{ response }
       let(:tags){ response.json['popular'] }
       let(:tag_names){ tags.collect{ |h| h['name'] } }
-      before(:each){ get :popular, params }
+      before(:each) do
+        if serializer
+          allow(serializer).to receive(:resource).and_call_original
+        end
+        get :popular, params
+      end
+
+      it 'should use the correct serializer' do
+        if serializer
+          expect(serializer).to have_received :resource
+        end
+      end
+    end
+
+    context 'without a section' do
+      it_behaves_like 'TagsController#popular' do
+        it{ is_expected.to be_unprocessable }
+
+        describe 'response' do
+          subject{ response.json['error'] }
+          it{ is_expected.to eql 'param is missing or the value is empty: section' }
+        end
+      end
     end
 
     context 'with an empty section' do
-      include_context 'TagsController#popular'
-      let(:params){ { section: 'project-1' } }
-      it{ is_expected.to be_successful }
+      it_behaves_like 'TagsController#popular', serializer: PopularSectionTagSerializer do
+        let(:params){ { section: 'project-1' } }
+        it{ is_expected.to be_successful }
 
-      describe 'response' do
-        subject{ tag_names }
-        it{ is_expected.to eql [] }
+        describe 'response' do
+          subject{ tag_names }
+          it{ is_expected.to eql [] }
+        end
       end
     end
 
     context 'with a section' do
-      include_context 'TagsController#popular'
-      let(:params){ { section: section } }
-      it{ is_expected.to be_successful }
+      it_behaves_like 'TagsController#popular', serializer: PopularSectionTagSerializer do
+        let(:params){ { section: section } }
+        it{ is_expected.to be_successful }
 
-      describe 'response' do
-        subject{ tag_names }
-        it{ is_expected.to eql %w(subject_most collection_most subject_least collection_least) }
+        describe 'response' do
+          subject{ tag_names }
+          it{ is_expected.to eql %w(subject_most collection_most subject_least collection_least) }
+        end
       end
     end
 
     context 'with a type' do
-      include_context 'TagsController#popular'
-      let(:params){ { section: section, taggable_type: 'Subject' } }
-      it{ is_expected.to be_successful }
+      it_behaves_like 'TagsController#popular', serializer: PopularSectionFocusTagSerializer do
+        let(:params){ { section: section, taggable_type: 'Subject' } }
+        it{ is_expected.to be_successful }
 
-      describe 'response' do
-        subject{ tag_names }
-        it{ is_expected.to eql %w(subject_most subject_least) }
+        describe 'response' do
+          subject{ tag_names }
+          it{ is_expected.to eql %w(subject_most subject_least) }
+        end
       end
     end
 
     context 'with a tag name' do
-      include_context 'TagsController#popular'
-      let(:params){ { section: section, taggable_type: 'Subject', name: 'subject_most' } }
-      it{ is_expected.to be_successful }
+      it_behaves_like 'TagsController#popular', serializer: PopularSectionFocusTagSerializer do
+        let(:params){ { section: section, taggable_type: 'Subject', name: 'subject_most' } }
+        it{ is_expected.to be_successful }
 
-      describe 'response' do
-        subject{ tag_names }
-        it{ is_expected.to eql ['subject_most'] }
+        describe 'response' do
+          subject{ tag_names }
+          it{ is_expected.to eql ['subject_most'] }
+        end
       end
     end
 
     context 'with a mixed case tag name' do
-      include_context 'TagsController#popular'
-      let(:params){ { section: section, taggable_type: 'Subject', name: 'SUBJECT_Most' } }
-      it{ is_expected.to be_successful }
+      it_behaves_like 'TagsController#popular', serializer: PopularSectionFocusTagSerializer do
+        let(:params){ { section: section, taggable_type: 'Subject', name: 'SUBJECT_Most' } }
+        it{ is_expected.to be_successful }
 
-      describe 'response' do
-        subject{ tag_names }
-        it{ is_expected.to eql ['subject_most'] }
+        describe 'response' do
+          subject{ tag_names }
+          it{ is_expected.to eql ['subject_most'] }
+        end
+      end
+    end
+
+    context 'with a specific focus' do
+      it_behaves_like 'TagsController#popular', serializer: PopularFocusTagSerializer do
+        let(:params){ { section: section, taggable_type: 'Subject', taggable_id: tagged_subject.id } }
+        it{ is_expected.to be_successful }
+
+        describe 'response' do
+          subject{ tag_names }
+          it{ is_expected.to eql ['subject_most', 'subject_least'] }
+        end
       end
     end
   end
