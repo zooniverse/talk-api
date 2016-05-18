@@ -187,7 +187,7 @@ class UsernameCompletion
 
   def all_matching_users
     return '(select null, null, null, null limit 0)' if @emptyPattern
-    <<-SQL
+    matched = PanoptesUser.connection.query <<-SQL
       (
         select
           users.id,
@@ -209,6 +209,11 @@ class UsernameCompletion
           #{ @limit }
       )
     SQL
+
+    matched.map do |row|
+      id, login, display_name = row
+      "(select #{ id }, #{ sanitize login }, #{ sanitize display_name }, 0)"
+    end.join ' union all'
   end
 
   def users_match(table = 'users')
