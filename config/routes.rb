@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         put :read
       end
     end
+    resources :projects
     resources :roles
     resources :subscription_preferences
     resources :subscriptions
