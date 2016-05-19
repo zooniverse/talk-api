@@ -55,7 +55,9 @@ namespace :panoptes do
           id int4,
           display_name varchar(255),
           slug varchar(255),
-          private bool
+          private bool,
+          launch_approved bool,
+          launched_row_order int4
         ) server panoptes;
 
         create foreign table if not exists collections (
@@ -317,7 +319,8 @@ namespace :panoptes do
           private boolean,
           lock_version integer default 0,
           configuration jsonb,
-          approved boolean default false,
+          launch_approved boolean default false,
+          launched_row_order integer,
           beta boolean default false,
           live boolean default false not null,
           urls jsonb default '[]'::jsonb,
