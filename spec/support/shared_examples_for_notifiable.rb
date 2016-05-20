@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.shared_examples_for 'a notifiable model' do
-  let(:source){ create described_class }
+  let(:source){ create described_class.name.tableize.singularize.to_sym }
   let!(:notification){ create :notification, source: source }
   subject{ source }
 

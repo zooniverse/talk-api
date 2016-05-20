@@ -186,6 +186,11 @@ class UsernameCompletion
   end
 
   def all_matching_users
+    key = "username-completion-all-users-#{ @search }"
+    Rails.cache.fetch(key, expires_in: 1.hour){ _all_matching_users }
+  end
+
+  def _all_matching_users
     return empty_result_set if @emptyPattern
     matched = PanoptesUser.connection.query <<-SQL
       (

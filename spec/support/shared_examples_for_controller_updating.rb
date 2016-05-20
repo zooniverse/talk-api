@@ -4,7 +4,7 @@ RSpec.shared_examples_for 'a controller updating' do
   let(:current_user){ create :user }
   let(:request_params){ raise 'No request params set' }
   let(:schema_method){ :update }
-  let(:record){ create resource }
+  let(:record){ create resource.name.tableize.singularize.to_sym }
 
   before :each do
     allow(subject).to receive(:current_user).and_return current_user

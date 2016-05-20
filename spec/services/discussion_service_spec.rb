@@ -71,7 +71,7 @@ RSpec.describe DiscussionService, type: :service do
     describe '#update' do
       let(:resource){ Discussion }
       let(:creation_service){ described_class.new **create_options }
-      let(:record){ create resource }
+      let(:record){ create :discussion }
       let(:params){ update_params }
       let(:options){ update_options }
       let(:current_user){ record.user }
