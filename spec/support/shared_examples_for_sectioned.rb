@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.shared_examples_for 'a sectioned model' do
   let!(:project){ create :project }
-  let(:instance){ build described_class }
+  let(:instance){ build described_class.name.tableize.singularize.to_sym }
   before(:each){ instance.project_id = nil }
 
   context 'with a project' do

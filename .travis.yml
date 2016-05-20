@@ -3,7 +3,7 @@ sudo: false
 cache:
   - bundler
 rvm:
-- 2.3.0
+- 2.3.1
 before_script:
   - rename 's/\.yml.travis$/\.yml/' config/*.yml.travis
   - psql -U postgres -c 'create database travis_ci_test;'

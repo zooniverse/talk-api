@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.shared_examples_for 'a moderatable serializer' do
   let(:model_klass){ described_class.model_class }
-  let(:record){ create model_klass }
+  let(:record){ create model_klass.name.tableize.singularize.to_sym }
   let(:resource){ described_class.resource({ id: record.id }, nil, current_user: current_user) }
   let(:current_user){ }
 

@@ -75,15 +75,17 @@ RSpec.describe Sugar, type: :lib do
   end
 
   shared_examples_for 'a sugar request' do
-    let(:base_url) do
-      "http://#{ Sugar.config[:username] }:#{ Sugar.config[:password] }@sugar.localhost"
+    let(:authorization) do
+      credentials = "#{ Sugar.config[:username] }:#{ Sugar.config[:password] }"
+      Base64.encode64(credentials).chomp
     end
 
     let!(:stubbed_request) do
-      stub_request(:post, "#{ base_url }/#{ method }")
+      stub_request(:post, "http://sugar.localhost/#{ method }")
         .with body: body.to_json, headers: {
           'Content-Type' => 'application/json',
-          'Accept' => 'application/json'
+          'Accept' => 'application/json',
+          'Authorization' => "Basic #{ authorization }"
         }
     end
 
