@@ -217,7 +217,7 @@ end
 
 RSpec.shared_examples_for 'a service updating' do |resource|
   let(:creation_service){ described_class.new **create_options }
-  let(:record){ create resource }
+  let(:record){ create resource.name.tableize.singularize.to_sym }
   let(:params){ update_params }
   let(:options){ update_options }
 

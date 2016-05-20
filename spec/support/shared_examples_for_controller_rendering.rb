@@ -5,7 +5,7 @@ RSpec.shared_examples_for 'a rendered action' do
 end
 
 RSpec.shared_examples_for 'a controller rendering' do |*actions|
-  let(:record){ create resource }
+  let(:record){ create resource.name.tableize.singularize.to_sym }
 
   if :index.in? actions
     describe '#index' do
