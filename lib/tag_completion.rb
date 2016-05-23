@@ -27,7 +27,7 @@ class TagCompletion
   # `where similarity(name, 'foo') > n`
   def query
     <<-SQL
-      select set_limit(0.01);
+      select set_limit(0.1);
 
       select
         name,
