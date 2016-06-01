@@ -11,7 +11,8 @@ module Searchable
         terms[0..1000]
           .gsub(/\s+/m, ' ')                                            # replace all forms of whitespace with spaces
           .gsub(/[^ \-[:word:]\&\|\!]/u, '')                            # remove all invalid characters
-          .gsub(/([\&\|\!])(?!\s)/, '\1 ')                              # replace all unspaced booleans
+          .gsub(/([\&\|\!])(?!\s)/, '\1 ')                              # replace all leading unspaced booleans
+          .gsub(/(?!\s)([\&\|\!])/, ' \1')                              # replace all trailing unspaced booleans
           .strip                                                        # remove all leading and trailing whitespace
           .gsub(_boolean('and'), '\1&\2')                               # replace all human terms with booleans
           .gsub(_boolean('or'), '\1|\2')
