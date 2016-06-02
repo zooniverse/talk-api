@@ -13,6 +13,7 @@ class TagCompletion
   def results
     if @name.present?
       @name = sanitize @name
+      @max_usages = _find_max_usages
       connection.execute(query).to_a.map do |tag|
         tag.except 'score'
       end
@@ -84,7 +85,7 @@ class TagCompletion
     <<-SQL
       select
         name,
-        similarity(name, #{ @name }) * count(distinct(user_id)) score
+        similarity(name, #{ @name }) + (count(distinct(user_id)) / #{ @max_usages }) score
 
       from
         tags
@@ -105,7 +106,7 @@ class TagCompletion
     <<-SQL
       select
         name,
-        50 score
+        #{ @max_usages } score
 
       from
         suggested_tags
@@ -136,6 +137,24 @@ class TagCompletion
       limit
         #{ @limit }
     SQL
+  end
+
+  def _find_max_usages
+    connection.execute(
+      <<-SQL
+        select set_limit(0.1);
+        select max(usages)
+        from (
+        select count(distinct(user_id)) usages
+
+        from tags
+
+        where
+          section = #{ @section } and
+          name % #{ @name }
+        ) matching
+      SQL
+    ).to_a.first['max']
   end
 
   def sanitize(string)

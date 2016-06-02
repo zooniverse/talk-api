@@ -72,7 +72,7 @@ RSpec.shared_examples_for 'a search query parser' do
       end
 
       it 'should handle insane syntax' do
-        expect_parsed '$_={/^r/&&<$_>};print;', '_r& _print'
+        expect_parsed '$_={/^r/&&<$_>};print;', '_r & _print'
       end
 
       it 'should handle utf-8' do
@@ -163,6 +163,10 @@ RSpec.shared_examples_for 'a search query parser' do
 
       it 'should repair x & ! & & & ' do
         expect_parsed 'x & ! & & & ', 'x'
+      end
+
+      it 'should repair x! y' do
+        expect_parsed 'x! y', 'x & ! y'
       end
     end
   end
