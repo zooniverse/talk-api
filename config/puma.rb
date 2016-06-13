@@ -1,6 +1,8 @@
 #!/usr/bin/env puma
 
-directory '/rails_app'
+if ENV['RAILS_ENV'] !~ /development|test/
+  directory '/rails_app'
+end
 
 if ENV['RAILS_ENV'] == 'staging'
   threads 2, 5
