@@ -76,6 +76,10 @@ module TalkSerializer
       scope = scope.eager_load(*eager_loads) if eager_loads.any?
       scope
     end
+
+    def filterable_by
+      super - [:project_id]
+    end
   end
 
   def links
