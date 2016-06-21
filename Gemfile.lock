@@ -56,6 +56,7 @@ GEM
     aws-sdk-resources (2.3.7)
       aws-sdk-core (= 2.3.7)
     benchmark-ips (2.6.1)
+    buftok (0.2.0)
     builder (3.2.2)
     celluloid (0.17.3)
       celluloid-essentials
@@ -78,6 +79,8 @@ GEM
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.2)
+    concurrent-ruby-ext (1.0.2)
+      concurrent-ruby (~> 1.0.2)
     congestion (0.0.3)
       connection_pool (>= 2.0)
       redis (>= 3.1)
@@ -86,6 +89,9 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    domain_name (0.5.20160615)
+      unf (>= 0.0.5, < 1.0.0)
+    equalizer (0.0.10)
     erubis (2.7.0)
     factory_girl (4.7.0)
       activesupport (>= 3.0.0)
@@ -117,6 +123,15 @@ GEM
     hashdiff (0.3.0)
     hitimes (1.2.4)
     honeybadger (2.6.0)
+    http (1.0.4)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 1.0.1)
+      http_parser.rb (~> 0.6.0)
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
+    http-form_data (1.0.1)
+    http_parser.rb (0.6.0)
     i18n (0.7.0)
     ice_cube (0.13.3)
     jmespath (1.2.4)
@@ -146,6 +161,8 @@ GEM
     lumberjack (1.0.10)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
     mime-types (3.0)
       mime-types-data (~> 3.2015)
@@ -153,6 +170,7 @@ GEM
     mini_portile2 (2.0.0)
     minitest (5.9.0)
     multipart-post (2.0.0)
+    naught (1.1.0)
     nenv (0.3.0)
     newrelic_rpm (3.15.2.317)
     nokogiri (1.6.7.2)
@@ -247,6 +265,7 @@ GEM
       celluloid (>= 0.17.3)
       ice_cube (~> 0.13.2)
       sidekiq (>= 4.0.0)
+    simple_oauth (0.3.1)
     simplecov (0.11.2)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -273,14 +292,35 @@ GEM
     timecop (0.8.1)
     timers (4.1.1)
       hitimes
+    twitter (5.16.0)
+      addressable (~> 2.3)
+      buftok (~> 0.2.0)
+      equalizer (= 0.0.10)
+      faraday (~> 0.9.0)
+      http (~> 1.0)
+      http_parser.rb (~> 0.6.0)
+      json (~> 1.8)
+      memoizable (~> 0.4.0)
+      naught (~> 1.0)
+      simple_oauth (~> 0.3.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
     webmock (2.0.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
     zoo_stream (1.0.1)
       aws-sdk
+    zooniverse_social (0.1.0)
+      concurrent-ruby (~> 1.0)
+      concurrent-ruby-ext (~> 1.0)
+      faraday (~> 0.9)
+      puma (~> 3.2)
+      sinatra (~> 1.4)
+      twitter (~> 5.16)
 
 PLATFORMS
   ruby
@@ -320,6 +360,7 @@ DEPENDENCIES
   timecop
   webmock (~> 2.0)
   zoo_stream (~> 1.0)
+  zooniverse_social (~> 0.1)
 
 BUNDLED WITH
-   1.11.2
+   1.12.4

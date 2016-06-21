@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'zooniverse_social'
 
 Rails.application.routes.draw do
   defaults format: 'json' do
@@ -45,5 +46,6 @@ Rails.application.routes.draw do
   get '/searches' => 'searches#index'
   get '/unsubscribe' => 'unsubscribe#index'
   mount Sidekiq::Web => '/sidekiq'
+  mount ZooniverseSocial::Server => '/social'
   match "*path", to: "application#sinkhole", via: :all
 end
