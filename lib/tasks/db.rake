@@ -101,7 +101,7 @@ namespace :panoptes do
           id int4,
           resource_owner_id int4,
           application_id int4,
-          token varchar(255),
+          token text,
           refresh_token varchar(255),
           expires_in int4,
           revoked_at timestamp(6),
