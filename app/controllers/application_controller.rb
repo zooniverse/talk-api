@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
     def bearer_token
       return @bearer_token if @bearer_token
       auth = request.headers.fetch 'Authorization', ''
-      _, @bearer_token = *auth.match(/^Bearer (\w+)$/i)
+      _, @bearer_token = *auth.match(/^Bearer ([\w\-\.]+)$/i)
       @bearer_token
     end
   end
