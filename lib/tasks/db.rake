@@ -279,7 +279,7 @@ namespace :panoptes do
           id integer primary key default nextval('oauth_access_tokens_id_seq'),
           resource_owner_id int4 default null,
           application_id int4 default null,
-          token varchar not null default null,
+          token text not null default null,
           refresh_token varchar default null,
           expires_in int4 default null,
           revoked_at timestamp(6) null default null,
