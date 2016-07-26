@@ -314,7 +314,7 @@ GEM
       hashdiff
     zoo_stream (1.0.1)
       aws-sdk
-    zooniverse_social (1.0.2)
+    zooniverse_social (1.0.3)
       concurrent-ruby (~> 1.0)
       concurrent-ruby-ext (~> 1.0)
       faraday (~> 0.9)
@@ -360,7 +360,7 @@ DEPENDENCIES
   timecop
   webmock (~> 2.0)
   zoo_stream (~> 1.0)
-  zooniverse_social (~> 1.0.2)
+  zooniverse_social (~> 1.0.3)
 
 BUNDLED WITH
    1.12.4
