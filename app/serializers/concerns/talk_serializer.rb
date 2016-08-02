@@ -69,6 +69,12 @@ module TalkSerializer
       super params, scope_preloading_for(scope), context.merge(params: params)
     end
 
+    def page_with_options(options)
+      super.tap do |results|
+        results[:links].reject!{ |k, v| k =~ /users?$/ } if results[:links]
+      end
+    end
+
     def scope_preloading_for(scope)
       scope ||= model_class.all
       scope = scope.includes(*includes) if includes.any?
