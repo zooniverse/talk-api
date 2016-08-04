@@ -15,12 +15,12 @@ module ActionRendering
 
   def create
     service.create
-    render json: serializer_class.resource(service.resource, nil, current_user: current_user)
+    render json: serializer_class.resource({ id: service.resource.id }, nil, current_user: current_user)
   end
 
   def update
     service.update
-    render json: serializer_class.resource(service.resource, nil, current_user: current_user)
+    render json: serializer_class.resource({ id: service.resource.id }, nil, current_user: current_user)
   end
 
   def destroy
