@@ -5,7 +5,7 @@ class ModerationsController < ApplicationController
 
   def create
     service.create
-    render json: serializer_class.resource(service.resource, nil, current_user: current_user, **sanitize_resource)
+    render json: serializer_class.resource({ id: service.resource.id }, nil, current_user: current_user, **sanitize_resource)
   end
 
   protected
