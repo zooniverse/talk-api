@@ -7,7 +7,7 @@ end
 if ENV['RAILS_ENV'] == 'staging'
   threads 2, 5
 else
-  threads 2, 16
+  threads 2, 8
 end
 
 worker_timeout 10
