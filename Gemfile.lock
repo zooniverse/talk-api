@@ -9,6 +9,20 @@ GIT
       activesupport (>= 4.0.3, < 5.0)
       kaminari (~> 0.16.1)
 
+GIT
+  remote: git://github.com/zooniverse/Social.git
+  revision: eb1b3f8dc0ef9ca173346b3efddb49ad59893caa
+  ref: eb1b3f8dc0
+  branch: master
+  specs:
+    zooniverse_social (1.0.4)
+      concurrent-ruby (~> 1.0)
+      concurrent-ruby-ext (~> 1.0)
+      faraday (~> 0.9)
+      puma (~> 3.2)
+      sinatra (~> 1.4)
+      twitter (~> 5.16)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -89,7 +103,7 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20160615)
+    domain_name (0.5.20161021)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.10)
     erubis (2.7.0)
@@ -128,7 +142,7 @@ GEM
       http-cookie (~> 1.0)
       http-form_data (~> 1.0.1)
       http_parser.rb (~> 0.6.0)
-    http-cookie (1.0.2)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (1.0.1)
     http_parser.rb (0.6.0)
@@ -314,13 +328,6 @@ GEM
       hashdiff
     zoo_stream (1.0.1)
       aws-sdk
-    zooniverse_social (1.0.4)
-      concurrent-ruby (~> 1.0)
-      concurrent-ruby-ext (~> 1.0)
-      faraday (~> 0.9)
-      puma (~> 3.2)
-      sinatra (~> 1.4)
-      twitter (~> 5.16)
 
 PLATFORMS
   ruby
@@ -360,7 +367,7 @@ DEPENDENCIES
   timecop
   webmock (~> 2.0)
   zoo_stream (~> 1.0)
-  zooniverse_social (~> 1.0.4)
+  zooniverse_social!
 
 BUNDLED WITH
-   1.12.4
+   1.13.6
