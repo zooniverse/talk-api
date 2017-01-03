@@ -62,10 +62,10 @@ RSpec.describe NotificationsController, type: :controller do
     end
 
     describe '#read' do
-      let!(:record){ create :notification }
-      let!(:record2){ create :notification, user: record.user }
-      let!(:record3){ create :notification, user: record.user }
-      let!(:others){ create_list :notification, 2 }
+      let!(:record){ create :notification, section: 'project-1' }
+      let!(:record2){ create :notification, user: record.user, section: 'project-1' }
+      let!(:record3){ create :notification, user: record.user, section: 'other' }
+      let!(:others){ create_list :notification, 2, section: 'project-1' }
 
       it 'should scope updates to the user with specified ids' do
         put :read, { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
@@ -94,6 +94,22 @@ RSpec.describe NotificationsController, type: :controller do
         put :read, { format: :json }
         other_statuses = others.map{ |notification| notification.reload.delivered }
         expect(other_statuses).to all be false
+      end
+
+      it 'should scope updates to the user with the specified section' do
+        put :read, { format: :json, section: 'project-1' }
+        section_statuses = [record, record2].map{ |notification| notification.reload.delivered }
+        expect(section_statuses).to all be true
+      end
+
+      it 'should not update other sections for the user' do
+        put :read, { format: :json, section: 'project-1' }
+        expect(record3.reload).to_not be_delivered
+      end
+
+      it 'should not update for other users in the section' do
+        put :read, { format: :json, section: 'project-1' }
+        expect(others.map(&:reload).map(&:delivered)).to all be false
       end
     end
   end

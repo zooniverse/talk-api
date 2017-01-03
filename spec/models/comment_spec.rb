@@ -698,6 +698,7 @@ RSpec.describe Comment, type: :model do
       its([:focus_type]){ is_expected.to eql comment.focus_type }
       its([:project_id]){ is_expected.to eql comment.project_id }
       its([:section]){ is_expected.to eql comment.section }
+      its([:body]){ is_expected.to eql comment.body }
       its([:created_at]){ is_expected.to eql comment.created_at.as_json }
       its([:user_id]){ is_expected.to be_a(String) }
       its([:user_ip]){ is_expected.to eql comment.user_ip.to_s }
