@@ -7,6 +7,6 @@ module BooleanCoercion
       define_method "#{ attribute }=" do |value|
         super !!value
       end
-    end
+    end if table_exists?
   end
 end
