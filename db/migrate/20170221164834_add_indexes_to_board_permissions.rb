@@ -3,11 +3,11 @@ class AddIndexesToBoardPermissions < ActiveRecord::Migration
 
   def up
     execute <<-SQL
-      CREATE INDEX CONCURRENTLY boards_read_permission_index ON boards ((permissions->>'read'))
+      CREATE INDEX CONCURRENTLY IF NOT EXISTS boards_read_permission_index ON boards ((permissions->>'read'))
     SQL
 
     execute <<-SQL
-      CREATE INDEX CONCURRENTLY boards_write_permission_index ON boards ((permissions->>'write'))
+      CREATE INDEX CONCURRENTLY IF NOT EXISTS boards_write_permission_index ON boards ((permissions->>'write'))
     SQL
   end
 
