@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -ex
 
 if [ -z "$VAGRANT_APP" ]
 then
