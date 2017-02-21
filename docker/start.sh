@@ -5,5 +5,4 @@ then
     ln -s /rails_conf/* /rails_app/config/
 fi
 
-
-exec puma
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
