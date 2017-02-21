@@ -5,6 +5,4 @@ then
     ln -s /rails_conf/* /rails_app/config/
 fi
 
-bundle install --without test development
-rake db:migrate
-puma
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
