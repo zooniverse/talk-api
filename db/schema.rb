@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160510181813) do
+ActiveRecord::Schema.define(version: 20170221164834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "postgres_fdw"
   enable_extension "hstore"
   enable_extension "pg_trgm"
+  enable_extension "postgres_fdw"
 
   create_table "announcements", force: :cascade do |t|
     t.text     "message",    null: false
