@@ -22,6 +22,7 @@ gem 'honeybadger', '~> 2.6.0'
 gem 'logstasher', '~> 0.9.0'
 gem 'zoo_stream', '~> 1.0'
 gem 'zooniverse_social', '1.0.5'
+gem 'schema_plus_pg_indexes', '~> 0.1.12'
 
 group :production do
   gem 'puma', '~> 3.4.0'
