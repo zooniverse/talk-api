@@ -2,22 +2,28 @@ class AddIndexesToBoardPermissions < ActiveRecord::Migration
   disable_ddl_transaction!
 
   def up
-    execute <<-SQL
-      CREATE INDEX CONCURRENTLY IF NOT EXISTS boards_read_permission_index ON boards ((permissions->>'read'))
-    SQL
-
-    execute <<-SQL
-      CREATE INDEX CONCURRENTLY IF NOT EXISTS boards_write_permission_index ON boards ((permissions->>'write'))
-    SQL
+    indexes.each do |name, perms|
+      unless index_exists?(:boards, nil, name: name)
+        add_index :boards,
+          name: name,
+          expression: "(permissions->>'#{perms}')",
+          algorithm: :concurrently
+      end
+    end
   end
 
- def down
-    execute <<-SQL
-      DROP INDEX boards_read_permission_index
-    SQL
+  def down
+    indexes.keys.each do |name|
+      remove_index(:boards, name: name) if index_exists?(:boards, nil, name: name)
+    end
+  end
 
-    execute <<-SQL
-      DROP INDEX boards_write_permission_index
-    SQL
+  private
+
+  def indexes
+    {
+      "boards_read_permission_index" => 'read',
+      "boards_write_permission_index" => 'write'
+    }
   end
 end
