@@ -1,10 +1,5 @@
-#!/bin/bash
+#!/bin/bash -ex
 
-if [ -z "$VAGRANT_APP" ]
-then
-    ln -s /rails_conf/* /rails_app/config/
-fi
+ln -s /rails_conf/* /rails_app/config/ || true
 
-bundle install --without test development
-rake db:migrate
-puma
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/talk.conf
