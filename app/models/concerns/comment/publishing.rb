@@ -28,7 +28,8 @@ class Comment
         body: body,
         user_id: user_id.to_s,
         user_ip: user_ip,
-        created_at: created_at.as_json
+        created_at: created_at.as_json,
+        url: url
       }
     end
   end

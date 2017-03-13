@@ -129,4 +129,8 @@ class Comment < ActiveRecord::Base
   def clear_replies
     replies.update_all reply_id: nil
   end
+
+  def url
+    "#{FrontEnd.project_talk(project)}/#{board_id}/#{discussion_id}?comment=#{id}"
+  end
 end
