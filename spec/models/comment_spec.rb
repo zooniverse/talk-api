@@ -700,7 +700,7 @@ RSpec.describe Comment, type: :model do
           "#{FrontEnd.project_talk(comment.project)}/#{comment.board_id}/#{comment.discussion_id}?comment=#{comment.id}"
         end
 
-        it "should have the correct payload" do
+        it "should have the correct payload", :aggregate_failures do
           expect(payload[:id]).to eql comment.id
           expect(payload[:board_id]).to eql comment.board_id
           expect(payload[:discussion_id]).to eql comment.discussion_id
