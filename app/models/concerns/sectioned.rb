@@ -7,8 +7,14 @@ module Sectioned
   end
 
   def set_project_id
-    self.project_id = section.match(/project-(\d+)/)[1].to_i
+    self.project_id = project_section_match[1].to_i
   rescue
     nil
+  end
+
+  private
+
+  def project_section_match
+    section.match(/project-(\d+)/)
   end
 end
