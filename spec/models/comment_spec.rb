@@ -692,6 +692,9 @@ RSpec.describe Comment, type: :model do
         end
 
         it 'should not raise error if not linked to a project' do
+          # not being able to set the model data...
+          # one of the reasons why i dislike model callbacks that change state
+          allow(comment).to receive(:section).and_return("zooniverse")
           expect { comment.publish_to_event_stream }.not_to raise_error
         end
       end
