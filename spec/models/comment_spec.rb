@@ -654,8 +654,7 @@ RSpec.describe Comment, type: :model do
   end
 
   describe Comment::Publishing do
-    let!(:comment){ create :comment }
-    subject{ comment }
+    let(:comment){ create :comment }
 
     describe '#publish_to_event_stream_later' do
       it 'should be triggered after a commit' do
@@ -680,28 +679,42 @@ RSpec.describe Comment, type: :model do
       end
     end
 
-    describe '#publish_to_event_stream' do
-      it 'should publish' do
-        expect(ZooStream).to receive(:publish).with event: 'comment',
-          data: comment.to_event_stream,
-          shard_by: comment.discussion_id
-        comment.publish_to_event_stream
+    context "with a linked project" do
+      let(:project) { double(slug: "user1/project-1") }
+      let(:payload) { comment.to_event_stream }
+      before do
+        allow(comment).to receive(:project).and_return(project)
       end
-    end
 
-    describe '#to_event_stream' do
-      subject{ comment.to_event_stream }
-      its([:id]){ is_expected.to eql comment.id }
-      its([:board_id]){ is_expected.to eql comment.board_id }
-      its([:discussion_id]){ is_expected.to eql comment.discussion_id }
-      its([:focus_id]){ is_expected.to eql comment.focus_id }
-      its([:focus_type]){ is_expected.to eql comment.focus_type }
-      its([:project_id]){ is_expected.to eql comment.project_id }
-      its([:section]){ is_expected.to eql comment.section }
-      its([:body]){ is_expected.to eql comment.body }
-      its([:created_at]){ is_expected.to eql comment.created_at.as_json }
-      its([:user_id]){ is_expected.to be_a(String) }
-      its([:user_ip]){ is_expected.to eql comment.user_ip.to_s }
+      describe '#publish_to_event_stream' do
+        it 'should publish' do
+          expect(ZooStream).to receive(:publish).with event: 'comment',
+            data: comment.to_event_stream,
+            shard_by: comment.discussion_id
+          comment.publish_to_event_stream
+        end
+      end
+
+      describe '#to_event_stream' do
+        let(:url) do
+          "#{FrontEnd.project_talk(comment.project)}/#{comment.board_id}/#{comment.discussion_id}?comment=#{comment.id}"
+        end
+
+        it "should have the correct payload", :aggregate_failures do
+          expect(payload[:id]).to eql comment.id
+          expect(payload[:board_id]).to eql comment.board_id
+          expect(payload[:discussion_id]).to eql comment.discussion_id
+          expect(payload[:focus_id]).to eql comment.focus_id
+          expect(payload[:focus_type]).to eql comment.focus_type
+          expect(payload[:project_id]).to eql comment.project_id
+          expect(payload[:section]).to eql comment.section
+          expect(payload[:body]).to eql comment.body
+          expect(payload[:created_at]).to eql comment.created_at.as_json
+          expect(payload[:user_id]).to be_a(String)
+          expect(payload[:user_ip]).to eql comment.user_ip.to_s
+          expect(payload[:url]).to eql url
+        end
+      end
     end
   end
 end

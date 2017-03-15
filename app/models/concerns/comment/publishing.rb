@@ -26,9 +26,10 @@ class Comment
         project_id: project_id,
         section: section,
         body: body,
-        user_id: Digest::SHA1.hexdigest(user_id.to_s),
+        user_id: user_id.to_s,
         user_ip: user_ip,
-        created_at: created_at.as_json
+        created_at: created_at.as_json,
+        url: url
       }
     end
   end
