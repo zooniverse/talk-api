@@ -679,28 +679,30 @@ RSpec.describe Comment, type: :model do
       end
     end
 
-    context "with a linked project" do
+    describe 'event stream publishing' do
       let(:project) { double(slug: "user1/project-1") }
-      let(:payload) { comment.to_event_stream }
-      before do
-        allow(comment).to receive(:project).and_return(project)
-      end
 
       describe '#publish_to_event_stream' do
         it 'should publish' do
+          allow(comment).to receive(:project).and_return(project)
           expect(ZooStream).to receive(:publish).with event: 'comment',
             data: comment.to_event_stream,
             shard_by: comment.discussion_id
           comment.publish_to_event_stream
         end
+
+        it 'should not raise error if not linked to a project' do
+          expect { comment.publish_to_event_stream }.not_to raise_error
+        end
       end
 
       describe '#to_event_stream' do
-        let(:url) do
-          "#{FrontEnd.project_talk(comment.project)}/#{comment.board_id}/#{comment.discussion_id}?comment=#{comment.id}"
-        end
+        let(:payload) { comment.to_event_stream }
+        let(:comment_suffix) { "#{comment.board_id}/#{comment.discussion_id}?comment=#{comment.id}" }
+        let(:url) { "#{FrontEnd.project_talk(comment.project)}/#{comment_suffix}" }
 
         it "should have the correct payload", :aggregate_failures do
+          allow(comment).to receive(:project).and_return(project)
           expect(payload[:id]).to eql comment.id
           expect(payload[:board_id]).to eql comment.board_id
           expect(payload[:discussion_id]).to eql comment.discussion_id
@@ -713,6 +715,15 @@ RSpec.describe Comment, type: :model do
           expect(payload[:user_id]).to be_a(String)
           expect(payload[:user_ip]).to eql comment.user_ip.to_s
           expect(payload[:url]).to eql url
+        end
+
+        context "when the comment doesn't belong to a project" do
+          let(:comment) { build(:comment, section: "zooniverse") }
+
+          it "should have an zoo wide talk url" do
+            url = "#{FrontEnd.zooniverse_talk}/#{comment_suffix}"
+            expect(payload[:url]).to eql url
+          end
         end
       end
     end

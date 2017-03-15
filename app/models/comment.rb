@@ -131,6 +131,11 @@ class Comment < ActiveRecord::Base
   end
 
   def url
-    "#{FrontEnd.project_talk(project)}/#{board_id}/#{discussion_id}?comment=#{id}"
+    prefix = if section.match(/zooniverse/i)
+      FrontEnd.zooniverse_talk
+    else
+      FrontEnd.project_talk(project)
+    end
+    "#{prefix}/#{board_id}/#{discussion_id}?comment=#{id}"
   end
 end
