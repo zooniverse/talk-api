@@ -79,8 +79,8 @@ GEM
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.4)
-    concurrent-ruby-ext (1.0.2)
-      concurrent-ruby (~> 1.0.2)
+    concurrent-ruby-ext (1.0.4)
+      concurrent-ruby (= 1.0.4)
     congestion (0.0.3)
       connection_pool (>= 2.0)
       redis (>= 3.1)
@@ -89,7 +89,7 @@ GEM
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20161021)
+    domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.10)
     erubis (2.7.0)
@@ -312,7 +312,7 @@ GEM
     timecop (0.8.1)
     timers (4.1.1)
       hitimes
-    twitter (5.16.0)
+    twitter (5.17.0)
       addressable (~> 2.3)
       buftok (~> 0.2.0)
       equalizer (= 0.0.10)
@@ -327,14 +327,14 @@ GEM
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.2)
+    unf_ext (0.0.7.4)
     webmock (2.0.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
     zoo_stream (1.0.1)
       aws-sdk
-    zooniverse_social (1.0.5)
+    zooniverse_social (1.0.6)
       concurrent-ruby (~> 1.0)
       concurrent-ruby-ext (~> 1.0)
       faraday (~> 0.9)
@@ -381,7 +381,7 @@ DEPENDENCIES
   timecop
   webmock (~> 2.0)
   zoo_stream (~> 1.0)
-  zooniverse_social (= 1.0.5)
+  zooniverse_social (= 1.0.6)
 
 BUNDLED WITH
-   1.14.5
+   1.14.6
