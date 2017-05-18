@@ -16,8 +16,6 @@ RSpec.describe MessageService, type: :service do
     it_behaves_like 'a service creating', Message do
       let(:recipients){ conversation.users - [current_user] }
 
-
-
       it 'should set the user ip' do
         expect(service.build.user_ip).to eql '1.2.3.4'
       end
@@ -42,7 +40,7 @@ RSpec.describe MessageService, type: :service do
       subject{ service.resource }
       its(:user){ is_expected.to eql current_user }
       it 'should change the conversations updated_at timestamp' do
-        expect { service.build }.to change { conversation.updated_at }
+        expect { service.build }.to change { conversation.reload.updated_at }
       end
     end
   end
