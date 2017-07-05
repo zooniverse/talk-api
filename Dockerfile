@@ -8,9 +8,14 @@ ENV LC_ALL en_US.UTF-8
 WORKDIR /rails_app
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y supervisor git libpq-dev && \
-    apt-get clean
+    apt-get install -y \
+        supervisor \
+        git \
+        libpq-dev \
+        tmpreaper \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 
 ADD ./Gemfile /rails_app/
