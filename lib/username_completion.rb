@@ -7,7 +7,7 @@
 class UsernameCompletion
   def initialize(current_user, pattern, limit: 10)
     @current_user = current_user
-    @pattern = pattern&.gsub /[^\w\d\-]/, ''
+    @pattern = pattern&.gsub /[^#{User::ALLOWED_LOGIN_CHARACTERS}]/, ''
     @emptyPattern = @pattern.blank?
     @limit = limit
   end

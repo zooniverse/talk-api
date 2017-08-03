@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include Moderatable
 
+  ALLOWED_LOGIN_CHARACTERS = '\w\-\.'.freeze
+
   has_many :mentions, as: :mentionable
   has_many :roles
   has_many :user_conversations

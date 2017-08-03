@@ -13,7 +13,7 @@ class Comment
           team
         )
       ) |
-      ( @([-\w\d]+) )     # match mentioned users
+      ( @([#{User::ALLOWED_LOGIN_CHARACTERS}]+) )     # match mentioned users
     /imx
 
     included do
