@@ -3,7 +3,7 @@ class FrontEnd
     if Rails.env.production?
       'https://www.zooniverse.org'
     else
-      'http://demo.zooniverse.org/panoptes-front-end'
+      'https://pfe-preview.zooniverse.org'
     end
   end
 
