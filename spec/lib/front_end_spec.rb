@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe FrontEnd, type: :lib do
   subject{ FrontEnd }
   let(:production_host){ 'https://www.zooniverse.org' }
-  let(:other_host){ 'http://demo.zooniverse.org/panoptes-front-end' }
+  let(:other_host){ 'https://pfe-preview.zooniverse.org' }
 
   describe '.host' do
     before(:each){ allow(Rails.env).to receive(:production?).and_return is_production }
