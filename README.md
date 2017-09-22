@@ -51,7 +51,9 @@ Then start everything up with
 ```
 
 If you're running outside of vagrant and just want to run the specs ensure you've created the foreign
-data tables not in the *schema.rb* file via `RACK_ENV=test bundle exec rake panoptes:db:create_tables`, see *.travis.yml* for more details.
+data tables not in the *schema.rb* file via the following (see *.travis.yml* for more details):
+  0. `RACK_ENV=test bundle exec rake panoptes:db:create_tables`
+  0. `RACK_ENV=test bundle exec rake panoptes:db:setup`
 
 ## Layout
 
