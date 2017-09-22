@@ -77,7 +77,7 @@ class TagCompletion
         (#{ popular_matching_tags }) popular_matching_tags
 
       order by
-        score desc
+        name, score desc
     SQL
   end
 
@@ -143,18 +143,15 @@ class TagCompletion
     connection.execute(
       <<-SQL
         select set_limit(0.1);
-        select max(usages)
-        from (
-        select count(distinct(user_id)) usages
+        select count(distinct(user_id)) max_usages
 
         from tags
 
         where
           section = #{ @section } and
           name % #{ @name }
-        ) matching
       SQL
-    ).to_a.first['max']
+    ).to_a.first['max_usages']
   end
 
   def sanitize(string)
