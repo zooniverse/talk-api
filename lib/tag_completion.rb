@@ -77,7 +77,7 @@ class TagCompletion
         (#{ popular_matching_tags }) popular_matching_tags
 
       order by
-        score desc
+        name, score desc
     SQL
   end
 
