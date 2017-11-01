@@ -13,7 +13,7 @@ RSpec.describe RoleSchema, type: :schema do
 
         with :name do
           its(:type){ is_expected.to eql 'string' }
-          its(:enum){ is_expected.to eql %w(admin moderator scientist team) }
+          its(:enum){ is_expected.to eql %w(admin moderator scientist team translator) }
         end
       end
     end
