@@ -23,7 +23,7 @@ class RoleSchema
 
   def role_names(obj)
     obj.string :name, required: true do
-      enum [:admin, :moderator, :scientist, :team]
+      enum [:admin, :moderator, :scientist, :team, :translator]
     end
   end
 end
