@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221164834) do
+ActiveRecord::Schema.define(version: 20180206081616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 20170221164834) do
     t.float    "sticky_position"
     t.boolean  "subject_default",         :default=>false, :null=>false
     t.integer  "project_id"
-    t.integer  "focus_id"
+    t.integer  "focus_id",                :index=>{:name=>"index_discussions_on_focus_id_and_focus_type", :with=>["focus_type"]}
     t.string   "focus_type"
     t.datetime "last_comment_created_at"
   end
