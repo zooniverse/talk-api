@@ -2,7 +2,7 @@ class Message < ActiveRecord::Base
   include Notifiable
 
   belongs_to :user, required: true
-  belongs_to :conversation, required: true
+  belongs_to :conversation, required: true, touch: true
   has_many :user_conversations, through: :conversation
   has_many :users, through: :user_conversations
 

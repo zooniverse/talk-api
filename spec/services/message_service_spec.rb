@@ -36,9 +36,15 @@ RSpec.describe MessageService, type: :service do
     end
 
     context 'creating the message' do
-      before(:each){ service.create }
-      subject{ service.resource }
-      its(:user){ is_expected.to eql current_user }
+      it "should set the current user" do
+        service.create
+        expect(service.resource.user).to eql(current_user)
+      end
+
+      it 'should update the conversations timestamp' do
+        conversation
+        expect { service.create }.to change { conversation.reload.updated_at }
+      end
     end
   end
 end
