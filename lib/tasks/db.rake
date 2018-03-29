@@ -60,27 +60,6 @@ namespace :panoptes do
           launched_row_order int4
         ) server panoptes;
 
-        create foreign table if not exists collections (
-          id int4,
-          name varchar(255),
-          slug varchar(255),
-          created_at timestamp(6),
-          updated_at timestamp(6),
-          display_name varchar(255),
-          private bool
-        ) server panoptes;
-
-        create foreign table if not exists collection_subjects (
-          id int4,
-          subject_id int4,
-          collection_id int4
-        ) server panoptes;
-
-        create foreign table if not exists collections_projects (
-          collection_id int4,
-          project_id int4
-        ) server panoptes;
-
         create foreign table if not exists subjects (
           id int4,
           zooniverse_id varchar(255),
@@ -122,7 +101,7 @@ namespace :panoptes do
       Rake::Task['panoptes:db:drop_search_view'].invoke
       ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
-        drop foreign table if exists projects, collections, collections_projects, collection_subjects, oauth_access_tokens, subjects, users;
+        drop foreign table if exists projects, oauth_access_tokens, subjects, users;
       SQL
     end
 
@@ -134,7 +113,6 @@ namespace :panoptes do
       ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
         drop view if exists searches;
-        drop materialized view if exists searchable_collections cascade;
       SQL
     end
 
@@ -144,37 +122,8 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         do language plpgsql $$
           begin
-            if (select count(*) from pg_matviews where matviewname = 'searchable_collections') = 0 then
-              create materialized view searchable_collections as
-              select
-                collections.id as searchable_id,
-                'Collection'::text as searchable_type,
-
-                setweight(to_tsvector(collections.name), 'B') ||
-                setweight(to_tsvector(coalesce(collections.display_name, '')), 'B') ||
-                setweight(to_tsvector(string_agg(coalesce(tags.name, ''), ' ')), 'A') ||
-                setweight(to_tsvector('C' || collections.id::text), 'A')
-                as content,
-
-                array_agg('project-' || projects.id) as sections
-              from collections
-                left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
-                inner join collections_projects ON collections_projects.collection_id = collections.id
-                join projects on projects.id = collections_projects.project_id
-              where
-                collections.private is not true and projects.private is not true
-              group by
-                collections.id, collections.name, collections.display_name;
-
-              create unique index search_collections_id_index on searchable_collections using btree(searchable_id);
-              create index search_collections_index on searchable_collections using gin(content);
-              create index search_collections_sections_index on searchable_collections using btree(sections, searchable_type);
-            end if;
-
             create or replace view searches as
               select * from searchable_boards
-              union all
-              select * from searchable_collections
               union all
               select * from searchable_comments
               union all
@@ -235,14 +184,8 @@ namespace :panoptes do
         drop sequence if exists projects_id_seq;
         create sequence projects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
 
-        drop sequence if exists collections_id_seq;
-        create sequence collections_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-
         drop sequence if exists subjects_id_seq;
         create sequence subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-
-        drop sequence if exists collection_subjects_id_seq;
-        create sequence collection_subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
       SQL
 
       ActiveRecord::Base.establish_connection panoptes_config
@@ -332,21 +275,6 @@ namespace :panoptes do
           migrated boolean default false
         );
 
-        drop table if exists collections;
-        drop sequence if exists collections_id_seq;
-        create sequence collections_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        create table collections (
-          id integer primary key default nextval('collections_id_seq'),
-          name character varying,
-          slug character varying,
-          created_at timestamp without time zone,
-          updated_at timestamp without time zone,
-          activated_state integer default 0 not null,
-          display_name character varying,
-          private boolean,
-          lock_version integer default 0
-        );
-
         drop table if exists subjects;
         drop sequence if exists subjects_id_seq;
         create sequence subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
@@ -361,22 +289,6 @@ namespace :panoptes do
           lock_version integer default 0,
           upload_user_id character varying
         );
-
-        drop table if exists collection_subjects;
-        drop sequence if exists collection_subjects_id_seq;
-        create sequence collection_subjects_id_seq start with 1 increment by 1 no minvalue no maxvalue cache 1;
-        create table collection_subjects (
-          id integer primary key default nextval('collection_subjects_id_seq'),
-          subject_id int4 not null,
-          collection_id int4 not null
-        );
-
-        DROP TABLE IF EXISTS collections_projects;
-        CREATE TABLE collections_projects (
-          collection_id integer NOT NULL,
-          project_id integer NOT NULL
-        );
-
       SQL
     end
 

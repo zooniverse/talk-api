@@ -84,7 +84,6 @@ The app is built to conform to the [JSON API spec](http://jsonapi.org/)
 ## Resources
 
 * Board
-* Collection
 * Comment
 * Conversation
 * Discussion
@@ -99,7 +98,7 @@ Talk is built to integrate with [Panoptes](https://github.com/zooniverse/panopte
 
 Authentication is provided by signing your requests with a Bearer-Token
 
-Some resources ([User](app/models/user.rb), [Collection](app/models/collection.rb), [Subject](app/models/subject.rb)) are proxied from Panoptes
+Some resources ([User](app/models/user.rb), [Subject](app/models/subject.rb)) are proxied from Panoptes
 
 
 ## To-Do

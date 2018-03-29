@@ -22,6 +22,7 @@ module Focusable
   end
 
   def mentioned_by(comment)
-    # TO-DO: notification for collection mentions?
+    # Nobody to notify, really. Best we could do is notify whoever uploaded the subject
+    # when it gets mentioned, but that doesn't seem right.
   end
 end
