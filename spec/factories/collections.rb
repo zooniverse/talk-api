@@ -6,7 +6,9 @@ FactoryGirl.define do
     slug{ "#{ create(:user).login.parameterize }/#{ display_name.parameterize }" }
 
     before :create do |collection, evaluator|
-      collection.project_ids ||= create_list(:project, 2).map(&:id)
+      unless collection.projects.present?
+        collection.projects = create_list(:project, 2)
+      end
     end
   end
 end

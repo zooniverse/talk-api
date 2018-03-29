@@ -7,7 +7,7 @@ def talk_config
 end
 
 def db_config(key)
-  config = YAML.load_file(Rails.root.join('config/database.yml'))[key]
+  config = Rails.configuration.database_configuration[key]
   raise "database.yml does not configure #{ key }\n\n" unless config
   config
 end
@@ -64,7 +64,6 @@ namespace :panoptes do
           id int4,
           name varchar(255),
           slug varchar(255),
-          project_ids int4[],
           created_at timestamp(6),
           updated_at timestamp(6),
           display_name varchar(255),
@@ -75,6 +74,11 @@ namespace :panoptes do
           id int4,
           subject_id int4,
           collection_id int4
+        ) server panoptes;
+
+        create foreign table if not exists collections_projects (
+          collection_id int4,
+          project_id int4
         ) server panoptes;
 
         create foreign table if not exists subjects (
@@ -118,7 +122,7 @@ namespace :panoptes do
       Rake::Task['panoptes:db:drop_search_view'].invoke
       ActiveRecord::Base.establish_connection talk_config
       ActiveRecord::Base.connection.execute <<-SQL
-        drop foreign table if exists projects, collections, collection_subjects, oauth_access_tokens, subjects, users;
+        drop foreign table if exists projects, collections, collections_projects, collection_subjects, oauth_access_tokens, subjects, users;
       SQL
     end
 
@@ -155,7 +159,8 @@ namespace :panoptes do
                 array_agg('project-' || projects.id) as sections
               from collections
                 left join tags on tags.taggable_id = collections.id and tags.taggable_type = 'Collection'
-                join projects on projects.id = any(collections.project_ids)
+                inner join collections_projects ON collections_projects.collection_id = collections.id
+                join projects on projects.id = collections_projects.project_id
               where
                 collections.private is not true and projects.private is not true
               group by
@@ -333,7 +338,6 @@ namespace :panoptes do
         create table collections (
           id integer primary key default nextval('collections_id_seq'),
           name character varying,
-          project_ids integer[],
           slug character varying,
           created_at timestamp without time zone,
           updated_at timestamp without time zone,
@@ -366,6 +370,13 @@ namespace :panoptes do
           subject_id int4 not null,
           collection_id int4 not null
         );
+
+        DROP TABLE IF EXISTS collections_projects;
+        CREATE TABLE collections_projects (
+          collection_id integer NOT NULL,
+          project_id integer NOT NULL
+        );
+
       SQL
     end
 

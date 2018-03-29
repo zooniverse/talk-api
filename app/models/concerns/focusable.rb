@@ -14,7 +14,7 @@ module Focusable
   end
 
   def section
-    if self[:project_ids]
+    if self.respond_to?(:project_ids) && self.project_ids
       project_ids.collect{ |project_id| "project-#{ project_id }" }
     else
       "project-#{ project.id }"
