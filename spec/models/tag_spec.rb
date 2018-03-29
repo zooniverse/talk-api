@@ -14,10 +14,13 @@ RSpec.describe Tag, type: :model do
 
   describe '.of_type' do
     let(:subject_focus){ create :subject }
+    let(:collection){ create :collection }
     let!(:subject_tag){ create :tag, taggable: subject_focus }
+    let!(:collection_tag){ create :tag, taggable: collection }
     subject{ Tag.of_type 'subject' }
 
     it{ is_expected.to include subject_tag }
+    it{ is_expected.to_not include collection_tag }
   end
 
   describe '.popular' do

@@ -55,7 +55,7 @@ class SearchesController < ApplicationController
   end
 
   def models
-    types = params.fetch(:types, %w(boards comments discussions))
+    types = params.fetch(:types, %w(boards collections comments discussions))
     types = types.split(',') if types.is_a?(String)
     types.collect(&:classify).collect(&:constantize).collect &:name
   rescue NameError => e

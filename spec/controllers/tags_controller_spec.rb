@@ -15,10 +15,13 @@ RSpec.describe TagsController, type: :controller do
     let(:project){ create :project, display_name: 'tagged' }
     let(:section){ "project-#{ project.id }" }
     let(:tagged_subject){ create :subject }
+    let(:tagged_collection){ create :collection }
 
     before :each do
       create_list :tag, 2, taggable_section: section, taggable: tagged_subject,    name: 'subject_least'
       create_list :tag, 4, taggable_section: section, taggable: tagged_subject,    name: 'subject_most'
+      create_list :tag, 1, taggable_section: section, taggable: tagged_collection, name: 'collection_least'
+      create_list :tag, 3, taggable_section: section, taggable: tagged_collection, name: 'collection_most'
     end
 
     RSpec.shared_examples 'TagsController#popular' do |serializer: nil|
@@ -71,7 +74,7 @@ RSpec.describe TagsController, type: :controller do
 
         describe 'response' do
           subject{ tag_names }
-          it{ is_expected.to eql %w(subject_most subject_least) }
+          it{ is_expected.to eql %w(subject_most collection_most subject_least collection_least) }
         end
       end
     end
