@@ -4,7 +4,7 @@ class Comment
 
     MATCH_MENTIONS = /
       (?:^|\s)            # match the beginning of the word
-      ( \^([SC])(\d+) ) | # match mentioned focuses
+      ( \^([S])(\d+) )  | # match mentioned focuses
       ( @(                # match group mentions
           admins |
           moderators |
@@ -26,7 +26,7 @@ class Comment
       self.group_mentioning = { }
       body.scan(MATCH_MENTIONS).each do |focus_mention, focus_type, focus_id, group_mention, group_name, user_mention, login|
         if focus_mention
-          focus_klass = { 'S' => Subject, 'C' => Collection }[focus_type]
+          focus_klass = { 'S' => Subject }[focus_type]
           next unless focus_klass.present? && focus_id.present?
           mentioned focus_mention, focus_klass.find_by_id(focus_id)
         elsif group_mention

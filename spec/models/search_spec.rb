@@ -2,7 +2,6 @@ require 'spec_helper'
 
 RSpec.describe Search, type: :model do
   it_behaves_like 'a search query parser'
-  before(:each){ Collection.refresh! }
 
   it 'should set the default page size' do
     expect(Search.default_per_page).to eql 10
@@ -52,11 +51,9 @@ RSpec.describe Search, type: :model do
     let!(:comment){ create :comment }
     let!(:board){ create :board }
     let!(:discussion){ create :discussion }
-    let!(:collection){ create :collection }
     let(:scope){ Search.order('searchable_id desc') }
     let(:list){ scope.all.to_a.collect{ |s| "#{ s.searchable_type }-#{ s.searchable_id }" } }
     let(:serialized){ scope.serialize_search.collect{ |h| "#{ h[:type] }-#{ h[:id] }" } }
-    before(:each){ Collection.refresh! }
 
     it 'find all results' do
       expect(serialized).to eql list
