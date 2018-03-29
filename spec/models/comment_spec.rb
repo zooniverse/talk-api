@@ -43,7 +43,7 @@ RSpec.describe Comment, type: :model do
       context 'when focus_id is present' do
         it 'should not permit a blank focus_type' do
           without_focus_type = build :comment, focus_id: create(:subject).id, focus_type: nil
-          expect(without_focus_type).to fail_validation focus_type: 'must be "Subject"'
+          expect(without_focus_type).to fail_validation focus_type: 'must be "Subject" or "Collection"'
         end
       end
     end
@@ -322,6 +322,9 @@ RSpec.describe Comment, type: :model do
     let(:subject){ create :subject }
     let(:subject_mention){ "^S#{ subject.id }" }
 
+    let(:collection){ create :collection }
+    let(:collection_mention){ "^C#{ collection.id }" }
+
     let(:user){ create :user }
     let(:user_mention){ "@#{ user.login }" }
     let(:group_mention){ "@admins" }
@@ -330,12 +333,18 @@ RSpec.describe Comment, type: :model do
     let(:board){ create :board }
     let(:discussion){ create :discussion, board: board }
 
-    let(:body){ "#{ subject_mention } should be added. right @#{ user.login } and @admins?" }
+    let(:body){ "#{ subject_mention } should be added to #{ collection_mention }, right @#{ user.login } and @admins?" }
     let(:comment){ create :comment, discussion: discussion, body: body }
 
     it 'should match subjects' do
       expect(comment.mentioning).to include subject_mention => {
         'id' => subject.id, 'type' => 'Subject'
+      }
+    end
+
+    it 'should match collections' do
+      expect(comment.mentioning).to include collection_mention => {
+        'id' => collection.id, 'type' => 'Collection'
       }
     end
 
@@ -351,6 +360,10 @@ RSpec.describe Comment, type: :model do
 
     it 'should create mentions for subjects' do
       expect(comment.mentions.where(mentionable: subject).exists?).to be true
+    end
+
+    it 'should create mentions for collections' do
+      expect(comment.mentions.where(mentionable: collection).exists?).to be true
     end
 
     it 'should create mentions for users' do
@@ -376,39 +389,37 @@ RSpec.describe Comment, type: :model do
   end
 
   describe '#update_mentions' do
-    def mention(subject)
-      "^S#{subject.id}"
-    end
-
-    let(:subject1){ create :subject }
-    let(:subject2){ create :subject }
-    let(:comment){ create :comment, body: "#{ mention(subject1) } #{ mention(subject2) } " }
+    let(:subject){ create :subject }
+    let(:subject_mention){ "^S#{ subject.id }" }
+    let(:collection){ create :collection }
+    let(:collection_mention){ "^C#{ collection.id }" }
+    let(:comment){ create :comment, body: "#{ subject_mention } #{ collection_mention }" }
 
     context 'when removing' do
-      before(:each){ comment.update! body: mention(subject1) }
+      before(:each){ comment.update! body: subject_mention }
       it 'should destroy removed mentions on update' do
-        expect(comment.reload.mentions.where(mentionable: subject2).exists?).to be false
+        expect(comment.reload.mentions.where(mentionable: collection).exists?).to be false
       end
 
       it 'should keep non-removed mentions' do
-        expect(comment.reload.mentions.where(mentionable: subject1).exists?).to be true
+        expect(comment.reload.mentions.where(mentionable: subject).exists?).to be true
       end
     end
 
     context 'when adding' do
-      let(:subject3){ create :subject }
-      before(:each){ comment.update! body: "#{ mention(subject1) } and #{ mention(subject3) }" }
+      let(:subject2){ create :subject }
+      before(:each){ comment.update! body: "#{ subject_mention } ^S#{ subject2.id }" }
 
       it 'should create added mentions on update' do
-        expect(comment.reload.mentions.where(mentionable: subject3).exists?).to be true
+        expect(comment.reload.mentions.where(mentionable: subject2).exists?).to be true
       end
 
       it 'should keep non-removed mentions' do
-        expect(comment.reload.mentions.where(mentionable: subject1).exists?).to be true
+        expect(comment.reload.mentions.where(mentionable: subject).exists?).to be true
       end
 
       it 'should destroy removed mentions' do
-        expect(comment.mentions.where(mentionable: subject2).exists?).to be false
+        expect(comment.mentions.where(mentionable: collection).exists?).to be false
       end
     end
   end

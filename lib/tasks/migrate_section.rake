@@ -5,8 +5,10 @@ namespace :data do
 
     connection.execute <<-SQL
       drop view searches;
+      drop materialized view searchable_collections;
     SQL
     Rake::Task['panoptes:db:create_search_view'].invoke
+    ::Collection.refresh!
 
     tables = %w(
       announcements boards comments discussions moderations notifications roles

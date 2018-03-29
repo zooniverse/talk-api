@@ -19,6 +19,12 @@ projects.each.with_index do |project, project_index|
   2.times{ users << create(:scientist, section: section) }
   10.times{ users << create(:user) }
 
+  5.times do
+    project_ids = ([project.id] + projects.sample((rand * 5).round / 2).map(&:id)).uniq
+    id = Collection.connection.execute("select nextval('collections_id_seq') as id").first['id'].to_i
+    Collection.create id: id, name: "collection_#{ id }", project_ids: project_ids, display_name: "Collection #{ id }", private: rand < 0.5
+  end
+
   # ======================
   # = Discussion helpers =
   # ======================
@@ -49,7 +55,7 @@ projects.each.with_index do |project, project_index|
       discussion = create :discussion, board: board, user: users.sample, title: "Discussion #{ discussion_index } on #{ board.title }"
 
       25.times do |comment_index|
-        create :comment, discussion: discussion, body: random_comment.call, user: users.sample, focus: random_focus.call
+        comment = create :comment, discussion: discussion, body: random_comment.call, user: users.sample, focus: random_focus.call
       end
       print '.'
     end
