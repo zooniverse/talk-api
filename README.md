@@ -51,11 +51,11 @@ Then start everything up with
 ```
 
 If you're running outside of vagrant and just want to run the specs ensure you've created all the databases and tables(foreign) via the following commands:
-  0. `RACK_ENV=test bundle exec rake db:create`
-  0. `RACK_ENV=test bundle exec rake db:schema:load`
-  0. `RACK_ENV=panoptes_test bundle exec rake db:create`
-  0. `RACK_ENV=test bundle exec rake panoptes:db:create_tables`
-  0. `RACK_ENV=test bundle exec rake panoptes:db:setup`
+1. `RACK_ENV=test bundle exec rake db:create`
+0. `RACK_ENV=test bundle exec rake db:schema:load`
+0. `RACK_ENV=panoptes_test bundle exec rake db:create`
+0. `RACK_ENV=test bundle exec rake panoptes:db:create_tables`
+0. `RACK_ENV=test bundle exec rake panoptes:db:setup`
 
 See *.travis.yml* for more details.
 
