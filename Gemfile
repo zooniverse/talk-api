@@ -36,7 +36,7 @@ group :test, :development do
   gem 'guard', '~> 2.14.0'
   gem 'guard-rspec', '~> 4.6.5'
   gem 'timecop'
-  gem 'pry', '~> 0.10.3'
+  gem 'pry', '~> 0.11.3'
   gem 'benchmark-ips'
 end
 
