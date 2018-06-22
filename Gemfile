@@ -13,7 +13,7 @@ gem 'json-schema', '~> 2.6.2'
 gem 'json-schema_builder', '~> 0.0.8'
 gem 'aws-sdk', '~> 2.3.7'
 gem 'faraday', '~> 0.9.2'
-gem 'faraday_middleware', '~> 0.10.0'
+gem 'faraday_middleware', '~> 0.12.2'
 gem 'pundit', '~> 1.1.0'
 gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', '~> 1.7.1', group: :development
