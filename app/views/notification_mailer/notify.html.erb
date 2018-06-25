@@ -210,7 +210,7 @@
   <% end %>
 
   <footer style="margin-top: 30px">
-    <p><strong>Please note:</strong> Replies to this email will go to an unmonitored mailbox and will not be seen. Please visit Talk to reply.</p>
+    <p><strong>Note:</strong> Please do not reply directly to this email. Messages sent by email will not be delivered. Please visit <a href="https://www.zooniverse.org/">Zooniverse.org</a> to reply.</p>
     <p>You can <%= link_to 'manage your email preferences here', "#{ FrontEnd.host }/settings/email", style: link_style %></p>
     <p>Or <%= link_to 'click here to unsubscribe', Rails.application.routes.url_helpers.unsubscribe_url(token: UnsubscribeToken.for_user(@user).token), style: link_style %>
   </footer>
