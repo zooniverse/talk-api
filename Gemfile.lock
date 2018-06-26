@@ -54,7 +54,7 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.3.7)
       aws-sdk-core (= 2.3.7)
-    benchmark-ips (2.6.1)
+    benchmark-ips (2.7.2)
     buftok (0.2.0)
     builder (3.2.3)
     celluloid (0.17.3)
