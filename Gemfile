@@ -19,7 +19,7 @@ gem 'sdoc', '~> 0.4', group: :doc
 gem 'spring', '~> 1.7.1', group: :development
 gem 'newrelic_rpm', '~> 3.15'
 gem 'honeybadger', '~> 2.6.0'
-gem 'logstasher', '~> 0.9.0'
+gem 'logstasher', '~> 1.2.2'
 gem 'zoo_stream', '~> 1.0'
 gem 'zooniverse_social', '1.0.6'
 gem 'schema_plus_pg_indexes', '~> 0.1.12'
