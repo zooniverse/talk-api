@@ -37,6 +37,7 @@ RSpec.shared_examples_for 'a serializer with embedded attributes' do |relations:
     describe '#project_attributes' do
       subject{ json }
       its([:project_slug]){ is_expected.to eql model_instance.project.slug }
+      its([:project_title]){ is_expected.to eql model_instance.project.title }
     end
   end
 end
