@@ -16,7 +16,7 @@ gem 'faraday', '~> 0.9.2'
 gem 'faraday_middleware', '~> 0.12.2'
 gem 'pundit', '~> 1.1.0'
 gem 'sdoc', '~> 0.4', group: :doc
-gem 'spring', '~> 1.7.1', group: :development
+gem 'spring', '~> 2.0.2', group: :development
 gem 'newrelic_rpm', '~> 3.15'
 gem 'honeybadger', '~> 2.6.0'
 gem 'logstasher', '~> 0.9.0'
