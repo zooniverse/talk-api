@@ -43,5 +43,5 @@ end
 group :test do
   gem 'webmock', '~> 3.4'
   gem 'codeclimate-test-reporter', '~> 0.5'
-  gem 'simplecov', '~> 0.11.2'
+  gem 'simplecov', '~> 0.16.1'
 end
