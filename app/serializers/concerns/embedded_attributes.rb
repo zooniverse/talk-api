@@ -22,7 +22,7 @@ module EmbeddedAttributes
   end
 
   def project_attributes
-    %w(slug)
+    %w(slug title)
   end
 
   def custom_attributes
@@ -35,12 +35,27 @@ module EmbeddedAttributes
 
   def attributes_from(relation)
     { }.tap do |attrs|
-      record_attributes = model.send(relation).attributes rescue { }
+      record_attributes = relation_record_attributes_and_aliases(
+        model.send(relation)
+      )
+
       send("#{ relation }_attributes").each do |attr|
         value = record_attributes[attr]
         value = value.to_s if attr =~ /(_id)|(^id$)$/
         attrs[:"#{ relation }_#{ attr }"] = value
       end
+    end
+  end
+
+  def relation_record_attributes_and_aliases(relation_record)
+    if relation_record
+      aliased_attrs = {}
+      relation_record.attribute_aliases.each do |key, aliased_attr|
+        aliased_attrs[key] = relation_record.send(aliased_attr)
+      end
+      relation_record.attributes.merge(aliased_attrs)
+    else
+      {}
     end
   end
 end
