@@ -189,7 +189,7 @@ GEM
     puma (3.4.0)
     pundit (1.1.0)
       activesupport (>= 3.0.0)
-    rack (1.6.10)
+    rack (1.6.11)
     rack-cors (0.4.0)
     rack-protection (1.5.5)
       rack
