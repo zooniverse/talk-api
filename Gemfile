@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2.7'
+gem 'rails', '~> 4.2.11'
 gem 'rack-cors', '~> 0.4.0'
 gem 'pg', '~> 0.18.4'
 gem 'redis', '~> 3.3.0'
