@@ -34,7 +34,7 @@ group :test, :development do
   gem 'spring-commands-rspec', '~> 1.0.4'
   gem 'factory_girl_rails', '~> 4.7.0'
   gem 'guard', '~> 2.14.0'
-  gem 'guard-rspec', '~> 4.6.5'
+  gem 'guard-rspec', '~> 4.7.3'
   gem 'timecop'
   gem 'pry', '~> 0.11.3'
   gem 'benchmark-ips'
