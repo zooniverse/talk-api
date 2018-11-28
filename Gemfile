@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2.11'
-gem 'rack-cors', '~> 0.4.0'
+gem 'rack-cors', '~> 1.0.2'
 gem 'pg', '~> 0.18.4'
 gem 'redis', '~> 3.3.0'
 gem 'sidekiq', '~> 4.1.2'
