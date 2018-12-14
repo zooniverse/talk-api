@@ -31,8 +31,14 @@ Zooniverse Talk Notifications:
 <% end %>
 
 <% notifications.each do |notification| %>
-      <%= notification.message %>: <%= notification.url %>
+      <%= notification.message %>
+      View report moderation tools: <%= notification.url %>
+      <% if notification.source.target_type == 'Comment' %>
 
+        View comment on talk: <%= FrontEnd.link_to(notification.source.target) %>
+
+        <%= time_ago_in_words notification.source.created_at %> ago
+      <% end %>
 <% end %>
 <% end %>
 <% end %>
