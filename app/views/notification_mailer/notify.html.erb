@@ -44,7 +44,10 @@
           <% notifications.each do |notification| %>
             <%= container do %>
               <div>
-                <%= link_to notification.message, notification.url, style: link_style %>
+                <h4>notification.message</h4>
+                <div>
+                  <%= link_to 'View report moderation tools', notification.url, style: link_style %>
+                </div>
                 <% if notification.source.target_type == 'Comment' %>
                   <div>
                     <%= link_to 'View comment on talk', FrontEnd.link_to(notification.source.target), style: link_style %>
