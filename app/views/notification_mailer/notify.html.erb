@@ -44,7 +44,9 @@
           <% notifications.each do |notification| %>
             <%= container do %>
               <div>
-                <h4>notification.message</h4>
+                <h4>
+                  <%= notification.message %>
+                </h4>
                 <div>
                   <%= link_to 'View report moderation tools', notification.url, style: link_style %>
                 </div>
