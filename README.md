@@ -111,3 +111,5 @@ Check the [issues](https://github.com/zooniverse/Talk-Api/issues) for what's in 
 Copyright 2014-2015 by the Zooniverse
 
 Distributed under the Apache Public License v2. See [LICENSE](LICENSE)
+
+[![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
