@@ -1,32 +1,24 @@
-FROM zooniverse/ruby:2.3.1
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+FROM ruby:2.4
 
 WORKDIR /rails_app
 
 RUN apt-get update && \
-    apt-get install -y \
-        supervisor \
-        git \
-        libpq-dev \
-        tmpreaper \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
+    apt-get install --no-install-recommends -y \
+    supervisor \
+    git \
+    libpq-dev \
+    tmpreaper \
+    && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ADD ./Gemfile /rails_app/
 ADD ./Gemfile.lock /rails_app/
 
-RUN cd /rails_app && \
-    bundle install --without test development
-
-ADD ./ /rails_app
+RUN bundle config --global jobs `cat /proc/cpuinfo | grep processor | wc -l | xargs -I % expr % - 1`
+RUN bundle install --without development test
 
 ADD docker/supervisor.conf /etc/supervisor/conf.d/talk.conf
+ADD ./ /rails_app
 
 RUN (cd /rails_app && git log --format="%H" -n 1 > commit_id.txt && rm -rf .git)
 
