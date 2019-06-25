@@ -35,7 +35,7 @@ class BoardSchema
 
   def permission(obj, name)
     obj.entity name, required: true do
-      enum [:all, :team, :moderator, :admin]
+      enum [:all, :team, :moderator, :admin, :translator]
     end
   end
 end

@@ -20,8 +20,8 @@ RSpec.describe BoardSchema, type: :schema do
           its(:required){ is_expected.to eql %w(read write) }
 
           with :properties do
-            its(:read){ is_expected.to eql enum: %w(all team moderator admin) }
-            its(:write){ is_expected.to eql enum: %w(all team moderator admin) }
+            its(:read){ is_expected.to eql enum: %w(all team moderator admin translator) }
+            its(:write){ is_expected.to eql enum: %w(all team moderator admin translator) }
           end
         end
       end
