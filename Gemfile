@@ -25,7 +25,7 @@ gem 'zooniverse_social', '1.0.6'
 gem 'schema_plus_pg_indexes', '~> 0.1.12'
 
 group :production do
-  gem 'puma', '~> 3.12.1'
+  gem 'puma', '~> 3.12.3'
 end
 
 group :test, :development do
