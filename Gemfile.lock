@@ -1,13 +1,13 @@
 GIT
-  remote: https://github.com/parrish/restpack_serializer.git
-  revision: f2b93bb4159542cb57f3e81e003d05050d750414
-  ref: f2b93bb415
-  branch: dev
+  remote: https://github.com/zooniverse/restpack_serializer.git
+  revision: 637aaaf85eda4f467c034f19f52e3f0cb6b20112
+  ref: 637aaaf85e
+  branch: talk-api-version
   specs:
     restpack_serializer (0.5.9)
-      activerecord (>= 4.0.3, < 5.0)
-      activesupport (>= 4.0.3, < 5.0)
-      kaminari (~> 0.16.1)
+      activerecord (>= 4.0.3, < 6.0)
+      activesupport (>= 4.0.3, < 6.0)
+      kaminari (< 2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -145,9 +145,18 @@ GEM
       activesupport (~> 4.0)
       json-schema (~> 2.5)
     json_pure (1.8.3)
-    kaminari (0.16.3)
-      actionpack (>= 3.0.0)
-      activesupport (>= 3.0.0)
+    kaminari (1.2.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.1)
+      kaminari-activerecord (= 1.2.1)
+      kaminari-core (= 1.2.1)
+    kaminari-actionview (1.2.1)
+      actionview
+      kaminari-core (= 1.2.1)
+    kaminari-activerecord (1.2.1)
+      activerecord
+      kaminari-core (= 1.2.1)
+    kaminari-core (1.2.1)
     key_struct (0.4.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
