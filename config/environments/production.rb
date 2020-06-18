@@ -26,6 +26,12 @@ Rails.application.configure do
     }
   end
 
+  # Enable the logstasher logs for the current environment
   config.logstasher.enabled = true
+  # Enable logging of controller params
   config.logstasher.log_controller_parameters = true
+  # log to stdout
+  config.logstasher.logger = Logger.new(STDOUT)
+  # turn off rails logs
+  config.logstasher.suppress_app_log = true
 end
