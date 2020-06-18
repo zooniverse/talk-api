@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-production-app
+  labels:
+    app: talk-production-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: talk-production-app
+  template:
+    metadata:
+      labels:
+        app: talk-production-app
+    spec:
+      containers:
+        - name: talk-production-app
+          image: zooniverse/talk-api:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "10m"
+            limits:
+              memory: "750Mi"
+              cpu: "500m"
+          env:
+            - name: RAILS_ENV
+              value: production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-production-app
+spec:
+  selector:
+    app: talk-production-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort

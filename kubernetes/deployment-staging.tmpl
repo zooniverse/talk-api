@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-staging-app
+  labels:
+    app: talk-staging-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: talk-staging-app
+  template:
+    metadata:
+      labels:
+        app: talk-staging-app
+    spec:
+      containers:
+        - name: talk-staging-app
+          image: zooniverse/talk:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "10m"
+            limits:
+              memory: "200Mi"
+              cpu: "500m"
+          env:
+            - name: RAILS_ENV
+              value: staging
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-staging-app
+spec:
+  selector:
+    app: talk-staging-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
