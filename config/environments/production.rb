@@ -13,7 +13,18 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
   config.active_record.dump_schema_after_migration = false
   config.active_record.raise_in_transactional_callbacks = true
-  config.action_mailer.smtp_settings = YAML.load_file('config/mailer.yml')[Rails.env].symbolize_keys
+
+
+  config.action_mailer.smtp_settings = {
+    enable_starttls_auto: ENV.fetch('MAILER_ENABLE_STARTTLS_AUTO', true),
+    address: ENV['MAILER_ADDRESS'],
+    port: ENV.fetch('MAILER_PORT', 587).to_i,
+    domain: ENV['MAILER_DOMAIN'] || 'zooniverse.org',
+    authentication: ENV.fetch('MAILER_AUTHENTICATION', 'plain'),
+    user_name: ENV['MAILER_USER_NAME'],
+    password: ENV['MAILER_PASSWORD']
+  }
+
   config.action_mailer.default_url_options = {
     protocol: 'https',
     host: 'www.zooniverse.org'
