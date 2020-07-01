@@ -1,3 +1,44 @@
+apiVersion: v1
+data:
+  nginx.conf: |+
+    upstream docker-talk {
+      server localhost:81;
+    }
+
+    server {
+      server_name talk-staging.zooniverse.org;
+      include /etc/nginx/ssl.default.conf;
+
+      proxy_buffer_size 8k;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+
+      location = /commit_id.txt {
+        root /talk_rails_app_public/;
+        expires off;
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, HEAD';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+      }
+
+      location /_elb_health_check {
+        proxy_intercept_errors on;
+        proxy_pass http://docker-talk;
+        error_page 301 302 =200 @empty;
+      }
+
+      location @empty {
+        return 200 '';
+      }
+
+      location / {
+        proxy_pass http://docker-talk;
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: talk-nginx-conf-staging
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,6 +72,37 @@ spec:
               name: talk-staging-env-vars
           - configMapRef:
               name: talk-staging-shared
+        - name: talk-staging-nginx
+          image: zooniverse/nginx:1.19.0
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "10m"
+            limits:
+              memory: "100Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                # SIGTERM triggers a quick exit; gracefully terminate instead
+                command: ["/usr/sbin/nginx","-s","quit"]
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: talk-nginx-config
+              mountPath: "/etc/nginx-sites"
+      volumes:
+        - name: talk-nginx-config
+          configMap:
+            name: talk-nginx-conf-staging
 ---
 apiVersion: v1
 kind: ConfigMap
