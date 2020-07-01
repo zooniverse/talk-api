@@ -4,12 +4,10 @@ require 'faraday_middleware'
 class Sugar
   def self.config
     return @config if @config
-    config_file = Rails.root.join 'config/sugar.yml'
-    config = YAML.load(config_file.read)[Rails.env] if config_file.exist?
     @config = {
-      host: ENV['SUGAR_HOST'] || config.try(:[], 'host'),
-      username: ENV['SUGAR_USERNAME'] || config.try(:[], 'username'),
-      password: ENV['SUGAR_PASSWORD'] || config.try(:[], 'password')
+      host: ENV.fetch('SUGAR_HOST', 'host'),
+      username: ENV.fetch('SUGAR_USERNAME', 'username'),
+      password: ENV.fetch('SUGAR_PASSWORD', 'password')
     }
   end
 
