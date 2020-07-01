@@ -56,3 +56,88 @@ spec:
       port: 80
       targetPort: 80
   type: NodePort
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: talk-production-redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: azurefile
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-production-redis
+  labels:
+    app: talk-production-redis
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: talk-production-redis
+  template:
+    metadata:
+      labels:
+        app: talk-production-redis
+    spec:
+      tolerations:
+      - key: "servicelife"
+        operator: "Equal"
+        value: "longlife"
+        effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: servicelife
+                operator: In
+                values:
+                - longlife
+      initContainers:
+        - name: disable-thp
+          image: busybox
+          volumeMounts:
+            - name: host-sys
+              mountPath: /host-sys
+          command: ["sh", "-c", "echo never >/host-sys/kernel/mm/transparent_hugepage/enabled"]
+      containers:
+        - name: talk-production-redis
+          image: redis:6.0.5
+          resources:
+            requests:
+              memory: "2500Mi"
+              cpu: "500m"
+            limits:
+              memory: "2500Mi"
+              cpu: "1500m"
+          volumeMounts:
+          - name: talk-production-redis-data
+            mountPath: "/data"
+      volumes:
+        - name: talk-production-redis-data
+          persistentVolumeClaim:
+            claimName: talk-production-redis
+        - name: host-sys
+          hostPath:
+            path: /sys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: panoptes-production-redis
+spec:
+  selector:
+    app: panoptes-production-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: NodePort
