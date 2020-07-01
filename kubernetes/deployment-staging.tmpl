@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: talk-staging-app
-          image: zooniverse/talk:__IMAGE_TAG__
+          image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
               memory: "200Mi"
@@ -24,9 +24,25 @@ spec:
             limits:
               memory: "200Mi"
               cpu: "500m"
-          env:
-            - name: RAILS_ENV
-              value: staging
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-staging-env-vars
+          - configMapRef:
+              name: talk-staging-shared
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: talk-staging-shared
+data:
+  RAILS_ENV: staging
+  MAILER_ENABLE_STARTTLS_AUTO: 'true'
+  MAILER_PORT: '587'
+  MAILER_DOMAIN: zooniverse.org
+  MAILER_AUTHENTICATION: plain
+  SIDEKIQ_CONCURRENCY: '2'
 ---
 apiVersion: v1
 kind: Service

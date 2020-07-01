@@ -24,9 +24,25 @@ spec:
             limits:
               memory: "750Mi"
               cpu: "500m"
-          env:
-            - name: RAILS_ENV
-              value: production
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-production-env-vars
+          - configMapRef:
+              name: talk-production-shared
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: talk-production-shared
+data:
+  RAILS_ENV: production
+  MAILER_ENABLE_STARTTLS_AUTO: 'true'
+  MAILER_PORT: '587'
+  MAILER_DOMAIN: zooniverse.org
+  MAILER_AUTHENTICATION: plain
+  SIDEKIQ_CONCURRENCY: '16'
 ---
 apiVersion: v1
 kind: Service
