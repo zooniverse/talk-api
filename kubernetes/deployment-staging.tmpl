@@ -142,6 +142,53 @@ spec:
       targetPort: 80
   type: NodePort
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-staging-sidekiq
+  labels:
+    app: talk-staging-sidekiq
+spec:
+  selector:
+    matchLabels:
+      app: talk-staging-sidekiq
+  template:
+    metadata:
+      labels:
+        app: talk-staging-sidekiq
+    spec:
+      containers:
+        - name: talk-staging-sidekiq
+          image: zooniverse/talk-api:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "700Mi"
+              cpu: "50m"
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "700Mi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+          livenessProbe:
+            exec:
+              command:
+                - /rails_app/docker/sidekiq_status
+            initialDelaySeconds: 20
+          args: ["/rails_app/scripts/docker/start-sidekiq.sh"]
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-staging-env-vars
+          - configMapRef:
+              name: talk-staging-shared
+          volumeMounts:
+          - mountPath: /tmp
+            name: talk-staging-dumpworker-data
+      volumes:
+        - name: talk-staging-dumpworker-data
+          emptyDir: {}
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
