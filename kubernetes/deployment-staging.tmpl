@@ -116,6 +116,19 @@ data:
   MAILER_AUTHENTICATION: plain
   SIDEKIQ_CONCURRENCY: '2'
 ---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-staging-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-staging-app
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+---
 apiVersion: v1
 kind: Service
 metadata:
