@@ -1,8 +1,8 @@
 postgres:
   image: postgres
   environment:
-    - "POSTGRES_USER=talk_staging"
-    - "POSTGRES_PASSWORD=talk_staging"
+    - "POSTGRES_USER=talkapi"
+    - "POSTGRES_PASSWORD=talkapi"
   ports:
     - "5432:5432"
 
@@ -29,17 +29,17 @@ talkapi:
     - postgres:pg
     - redis
 
-  sidekiq:
-    image: talk-api:local
-    volumes:
-      - ./:/rails_app
-    command: ["/rails_app/docker/start-sidekiq.sh"]
-    environment:
-      - "RAILS_ENV=development"
-      - "DATABASE_URL=postgresql://panoptes:panoptes@pg"
-      - "REDIS_URL=redis://redis:6379/0"
-      - "DISABLE_SPRING=true"
-      - "SIDEKIQ_VERBOSE=true"
-    links:
-      - redis:redis
-      - postgres:pg
+sidekiq:
+  image: talk-api:local
+  volumes:
+    - ./:/rails_app
+  command: ["/rails_app/docker/start-sidekiq.sh"]
+  environment:
+    - "RAILS_ENV=development"
+    - "DATABASE_URL=postgresql://panoptes:panoptes@pg"
+    - "REDIS_URL=redis://redis:6379/0"
+    - "DISABLE_SPRING=true"
+    - "SIDEKIQ_VERBOSE=true"
+  links:
+    - redis:redis
+    - postgres:pg
