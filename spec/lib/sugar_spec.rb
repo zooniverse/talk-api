@@ -3,9 +3,6 @@ require 'spec_helper'
 RSpec.describe Sugar, type: :lib do
   subject{ Sugar }
 
-  # before(:each){ reset_config }
-  # after(:each){ reset_config }
-
   before(:each) do
     allow(Sugar).to receive(:config).and_return({
       host: 'http://sugar.localhost/',
