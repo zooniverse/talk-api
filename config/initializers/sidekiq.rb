@@ -1,25 +1,23 @@
-require 'redis'
-
 module SidekiqConfig
   def self.redis_url
     ENV.fetch('REDIS_URL', 'redis://localhost:6379/0')
   end
+
+  def self.concurrency
+    ENV.fetch('REDIS_CONCURRENCY', 5).to_i + 2
+  end
 end
 
-Sidekiq.configure_client do |config|
-  config.redis = { url: SidekiqConfig.redis_url }
-end
+connection = -> {
+  Redis.new({ url: SidekiqConfig.redis_url })
+}
 
-concurrency = ENV.fetch('REDIS_CONCURRENCY', 5)
-concurrency += 2 # for internal Sidekiq connections
-
-require 'sidekiq'
 Sidekiq.configure_client do |config|
-  config.redis = ConnectionPool.new size: concurrency, &connection
+  config.redis = ConnectionPool.new size: SidekiqConfig.concurrency, &connection
 end
 
 Sidekiq.configure_server do |config|
-  config.redis = ConnectionPool.new size: concurrency, &connection
+  config.redis = ConnectionPool.new size: SidekiqConfig.concurrency, &connection
   config.server_middleware do |chain|
     chain.add Sidekiq::Congestion::Limiter
   end
