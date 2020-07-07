@@ -26,11 +26,6 @@ RSpec.describe Uploader, type: :lib do
         Uploader.bucket_path
       }.from(nil).to 'a/bucket/path'
     end
-
-    it 'should configure AWS' do
-      expect(Aws.config).to receive(:update).with region: 'us-east-1'
-      Uploader.initialize_s3
-    end
   end
 
   describe '#initialize' do
