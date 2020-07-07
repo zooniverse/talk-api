@@ -8,7 +8,7 @@ RSpec.describe Sugar, type: :lib do
 
   before(:each) do
     allow(Sugar).to receive(:config).and_return({
-      host: 'host',
+      host: 'http://sugar.localhost/',
       username: 'username',
       password: 'password'
     })
