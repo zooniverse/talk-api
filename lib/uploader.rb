@@ -7,8 +7,8 @@ class Uploader
 
   def self.initialize_s3
     return if @_configured
-    self.bucket = ENV.fetch('AWS_BUCKET', '')
-    self.bucket_path = ENV.fetch('AWS_BUCKET_PATH', '')
+    self.bucket = ENV.fetch('AWS_BUCKET', 'a-bucket')
+    self.bucket_path = ENV.fetch('AWS_BUCKET_PATH', 'a/bucket/path')
     @_configured = true
   end
 
