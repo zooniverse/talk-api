@@ -294,6 +294,21 @@ spec:
       targetPort: 6379
   type: NodePort
 ---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: talk-production-tls
+  labels:
+    use-azuredns-solver: "true"
+spec:
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  secretName: talk-production-tls
+  dnsNames:
+    - talk.zooniverse.org
+    - talk.azure.zooniverse.org
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -308,7 +323,8 @@ spec:
   tls:
   - hosts:
     - talk.zooniverse.org
-    secretName: talk-production-tls-secret
+    - talk.azure.zooniverse.org
+    secretName: talk-production-tls
   rules:
   - host: talk.zooniverse.org
     http:
