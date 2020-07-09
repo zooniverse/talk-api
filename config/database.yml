@@ -1,0 +1,33 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 8
+  url: <%= ENV.fetch('DATABASE_URL', 'postgresql://talk:talk@localhost') %>
+
+development:
+  <<: *default
+  database: talk_development
+
+panoptes_development:
+  <<: *default
+  database: talk_panoptes_development
+
+test:
+  <<: *default
+  database: talk_test
+
+panoptes_test:
+  <<: *default
+  database: talk_panoptes_test
+
+staging:
+  <<: *default
+
+panoptes_staging:
+  <<: *default
+
+production:
+  <<: *default
+
+panoptes_production:
+  <<: *default
