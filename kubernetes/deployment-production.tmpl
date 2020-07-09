@@ -55,6 +55,21 @@ spec:
             limits:
               memory: "750Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
           envFrom:
           - secretRef:
               name: talk-common-env-vars
