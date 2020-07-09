@@ -36,7 +36,6 @@ metadata:
   labels:
     app: talk-production-app
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: talk-production-app
@@ -210,6 +209,19 @@ spec:
     requests:
       storage: 5Gi
 ---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-production-sidekiq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-production-sidekiq
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -217,7 +229,6 @@ metadata:
   labels:
     app: talk-production-redis
 spec:
-  replicas: 1
   strategy:
     type: Recreate
   selector:

@@ -36,7 +36,6 @@ metadata:
   labels:
     app: talk-staging-app
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: talk-staging-app
@@ -210,6 +209,19 @@ spec:
     requests:
       storage: 1Gi
 ---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-staging-sidekiq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-staging-sidekiq
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -217,7 +229,6 @@ metadata:
   labels:
     app: talk-staging-redis
 spec:
-  replicas: 1
   strategy:
     type: Recreate
   selector:
