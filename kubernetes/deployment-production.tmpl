@@ -188,7 +188,10 @@ spec:
             name: talk-production-dumpworker-data
       volumes:
         - name: talk-production-dumpworker-data
-          emptyDir: {}
+          hostPath:
+            # directory location on host node temp disk
+            path: /mnt/talk-production-dumpworker-data
+            type: DirectoryOrCreate
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
