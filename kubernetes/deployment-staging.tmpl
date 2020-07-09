@@ -21,16 +21,6 @@ data:
         add_header 'Access-Control-Allow-Credentials' 'true';
       }
 
-      location /_elb_health_check {
-        proxy_intercept_errors on;
-        proxy_pass http://docker-talk;
-        error_page 301 302 =200 @empty;
-      }
-
-      location @empty {
-        return 200 '';
-      }
-
       location / {
         proxy_pass http://docker-talk;
       }
