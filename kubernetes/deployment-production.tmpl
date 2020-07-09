@@ -333,3 +333,10 @@ spec:
           serviceName: talk-production-app
           servicePort: 80
         path: /(.*)
+  - host: talk.azure.zooniverse.org
+    http:
+      paths:
+      - backend:
+          serviceName: talk-production-app
+          servicePort: 80
+        path: /(.*)
