@@ -11,6 +11,7 @@ development:
 panoptes_development:
   <<: *default
   database: talk_panoptes_development
+  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 test:
   <<: *default
@@ -19,15 +20,18 @@ test:
 panoptes_test:
   <<: *default
   database: talk_panoptes_test
+  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 staging:
   <<: *default
 
 panoptes_staging:
   <<: *default
+  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 production:
   <<: *default
 
 panoptes_production:
   <<: *default
+  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
