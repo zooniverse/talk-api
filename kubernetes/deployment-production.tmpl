@@ -93,6 +93,14 @@ spec:
                  - name: X-Forwarded-Proto
                    value: https
             initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
           lifecycle:
             preStop:
               exec:
