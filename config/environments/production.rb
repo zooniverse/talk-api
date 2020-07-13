@@ -14,7 +14,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   config.active_record.raise_in_transactional_callbacks = true
 
-
   config.action_mailer.smtp_settings = {
     enable_starttls_auto: ENV.fetch('MAILER_ENABLE_STARTTLS_AUTO', true),
     address: ENV['MAILER_ADDRESS'],
