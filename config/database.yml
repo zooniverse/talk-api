@@ -4,6 +4,10 @@ default: &default
   pool: <%= (ENV['PG_POOL_SIZE'] || ENV.fetch('RAILS_MAX_THREADS', 8)).to_i %>
   url: <%= ENV.fetch('DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
+panoptes_default: &panoptes_default
+  <<: *default
+  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
+
 development:
   <<: *default
   database: talk_development
@@ -11,27 +15,23 @@ development:
 panoptes_development:
   <<: *default
   database: talk_panoptes_development
-  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 test:
   <<: *default
   database: talk_test
 
 panoptes_test:
-  <<: *default
+  <<: *panoptes_default
   database: talk_panoptes_test
-  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 staging:
   <<: *default
 
 panoptes_staging:
-  <<: *default
-  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
+  <<: *panoptes_default
 
 production:
   <<: *default
 
 panoptes_production:
-  <<: *default
-  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
+  <<: *panoptes_default
