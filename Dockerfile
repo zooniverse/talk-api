@@ -22,4 +22,4 @@ RUN (cd /rails_app && git log --format="%H" -n 1 > commit_id.txt && rm -rf .git)
 
 EXPOSE 81
 
-ENTRYPOINT /rails_app/docker/start.sh
+CMD [ "/rails_app/docker/start.sh" ]
