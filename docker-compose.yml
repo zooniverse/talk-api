@@ -21,8 +21,25 @@ talkapi:
     - "3000:3000"
   environment:
     - "RAILS_ENV=development"
+    - "DATABASE_URL=postgresql://talkapi:talkapi@pg"
+    - "REDIS_URL=redis://redis:6379/0"
   # external_links:
   #   - external_postgres_container:pg
   links:
     - postgres:pg
     - redis
+
+sidekiq:
+  image: talk-api:local
+  volumes:
+    - ./:/rails_app
+  command: ["/rails_app/docker/start-sidekiq.sh"]
+  environment:
+    - "RAILS_ENV=development"
+    - "DATABASE_URL=postgresql://talkapi:talkapi@pg"
+    - "REDIS_URL=redis://redis:6379/0"
+    - "DISABLE_SPRING=true"
+    - "SIDEKIQ_VERBOSE=true"
+  links:
+    - redis:redis
+    - postgres:pg

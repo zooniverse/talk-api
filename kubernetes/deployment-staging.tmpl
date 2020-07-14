@@ -1,0 +1,350 @@
+apiVersion: v1
+data:
+  nginx.conf: |+
+    upstream docker-talk {
+      server localhost:81;
+    }
+
+    server {
+      server_name talk-staging.zooniverse.org;
+      include /etc/nginx/ssl.default.conf;
+
+      proxy_buffer_size 8k;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+
+      location = /commit_id.txt {
+        root /talk_rails_app_public/;
+        expires off;
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, HEAD';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+      }
+
+      location / {
+        proxy_pass http://docker-talk;
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: talk-nginx-conf-staging
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-staging-app
+  labels:
+    app: talk-staging-app
+spec:
+  selector:
+    matchLabels:
+      app: talk-staging-app
+  template:
+    metadata:
+      labels:
+        app: talk-staging-app
+    spec:
+      containers:
+        - name: talk-staging-app
+          image: zooniverse/talk-api:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "200Mi"
+              cpu: "10m"
+            limits:
+              memory: "200Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-staging-env-vars
+          - configMapRef:
+              name: talk-staging-shared
+        - name: talk-staging-nginx
+          image: zooniverse/nginx:1.19.0
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "10m"
+            limits:
+              memory: "100Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
+          lifecycle:
+            preStop:
+              exec:
+                # SIGTERM triggers a quick exit; gracefully terminate instead
+                command: ["/usr/sbin/nginx","-s","quit"]
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: talk-nginx-config
+              mountPath: "/etc/nginx-sites"
+      volumes:
+        - name: talk-nginx-config
+          configMap:
+            name: talk-nginx-conf-staging
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: talk-staging-shared
+data:
+  RAILS_ENV: staging
+  AWS_DEFAULT_REGION: us-east-1
+  MAILER_ENABLE_STARTTLS_AUTO: 'true'
+  MAILER_PORT: '587'
+  MAILER_DOMAIN: zooniverse.org
+  MAILER_AUTHENTICATION: plain
+  SIDEKIQ_CONCURRENCY: '2'
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-staging-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-staging-app
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-staging-app
+spec:
+  selector:
+    app: talk-staging-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-staging-sidekiq
+  labels:
+    app: talk-staging-sidekiq
+spec:
+  selector:
+    matchLabels:
+      app: talk-staging-sidekiq
+  template:
+    metadata:
+      labels:
+        app: talk-staging-sidekiq
+    spec:
+      containers:
+        - name: talk-staging-sidekiq
+          image: zooniverse/talk-api:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "700Mi"
+              cpu: "50m"
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "700Mi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+          livenessProbe:
+            exec:
+              command:
+                - /rails_app/docker/sidekiq_status
+            initialDelaySeconds: 20
+          args: ["/rails_app/scripts/docker/start-sidekiq.sh"]
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-staging-env-vars
+          - configMapRef:
+              name: talk-staging-shared
+          volumeMounts:
+          - mountPath: /tmp
+            name: talk-staging-dumpworker-data
+      volumes:
+        - name: talk-staging-dumpworker-data
+          hostPath:
+            # directory location on host node temp disk
+            path: /mnt/talk-staging-dumpworker-data
+            type: DirectoryOrCreate
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: talk-staging-redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: azurefile
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-staging-sidekiq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-staging-sidekiq
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-staging-redis
+  labels:
+    app: talk-staging-redis
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: talk-staging-redis
+  template:
+    metadata:
+      labels:
+        app: talk-staging-redis
+    spec:
+      tolerations:
+      - key: "servicelife"
+        operator: "Equal"
+        value: "longlife"
+        effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: servicelife
+                operator: In
+                values:
+                - longlife
+      initContainers:
+        - name: disable-thp
+          image: busybox
+          volumeMounts:
+            - name: host-sys
+              mountPath: /host-sys
+          command: ["sh", "-c", "echo never >/host-sys/kernel/mm/transparent_hugepage/enabled"]
+      containers:
+        - name: talk-staging-redis
+          image: redis:6.0.5
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "10m"
+            limits:
+              memory: "100Mi"
+              cpu: "500m"
+          volumeMounts:
+          - name: talk-staging-redis-data
+            mountPath: "/data"
+      volumes:
+        - name: talk-staging-redis-data
+          persistentVolumeClaim:
+            claimName: talk-staging-redis
+        - name: host-sys
+          hostPath:
+            path: /sys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-staging-redis
+spec:
+  selector:
+    app: talk-staging-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: NodePort
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: talk-staging-tls
+  labels:
+    use-azuredns-solver: "true"
+spec:
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  secretName: talk-staging-tls
+  dnsNames:
+    - talk-staging.zooniverse.org
+    - talk-staging.azure.zooniverse.org
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: talk-staging-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/set-real-ip-from: "10.0.0.0/8"
+spec:
+  tls:
+  - hosts:
+    - talk-staging.zooniverse.org
+    - talk-staging.azure.zooniverse.org
+    secretName: talk-staging-tls
+  rules:
+  - host: talk-staging.zooniverse.org
+    http:
+      paths:
+      - backend:
+          serviceName: talk-staging-app
+          servicePort: 80
+        path: /(.*)
+  - host: talk-staging.azure.zooniverse.org
+    http:
+      paths:
+      - backend:
+          serviceName: talk-staging-app
+          servicePort: 80
+        path: /(.*)

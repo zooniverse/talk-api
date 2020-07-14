@@ -1,0 +1,350 @@
+apiVersion: v1
+data:
+  nginx.conf: |+
+    upstream docker-talk {
+      server localhost:81;
+    }
+
+    server {
+      server_name talk.zooniverse.org;
+      include /etc/nginx/ssl.default.conf;
+
+      proxy_buffer_size 8k;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+
+      location = /commit_id.txt {
+        root /talk_rails_app_public/;
+        expires off;
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, HEAD';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+      }
+
+      location / {
+        proxy_pass http://docker-talk;
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: talk-nginx-conf-production
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-production-app
+  labels:
+    app: talk-production-app
+spec:
+  selector:
+    matchLabels:
+      app: talk-production-app
+  template:
+    metadata:
+      labels:
+        app: talk-production-app
+    spec:
+      containers:
+        - name: talk-production-app
+          image: zooniverse/talk-api:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "750Mi"
+              cpu: "10m"
+            limits:
+              memory: "750Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-production-env-vars
+          - configMapRef:
+              name: talk-production-shared
+        - name: talk-production-nginx
+          image: zooniverse/nginx:1.19.0
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "10m"
+            limits:
+              memory: "100Mi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
+          lifecycle:
+            preStop:
+              exec:
+                # SIGTERM triggers a quick exit; gracefully terminate instead
+                command: ["/usr/sbin/nginx","-s","quit"]
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: talk-nginx-config
+              mountPath: "/etc/nginx-sites"
+      volumes:
+        - name: talk-nginx-config
+          configMap:
+            name: talk-nginx-conf-production
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: talk-production-shared
+data:
+  RAILS_ENV: production
+  AWS_DEFAULT_REGION: us-east-1
+  MAILER_ENABLE_STARTTLS_AUTO: 'true'
+  MAILER_PORT: '587'
+  MAILER_DOMAIN: zooniverse.org
+  MAILER_AUTHENTICATION: plain
+  SIDEKIQ_CONCURRENCY: '8'
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-production-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-production-app
+  minReplicas: 2
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-production-app
+spec:
+  selector:
+    app: talk-production-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-production-sidekiq
+  labels:
+    app: talk-production-sidekiq
+spec:
+  selector:
+    matchLabels:
+      app: talk-production-sidekiq
+  template:
+    metadata:
+      labels:
+        app: talk-production-sidekiq
+    spec:
+      containers:
+        - name: talk-production-sidekiq
+          image: zooniverse/talk-api:__IMAGE_TAG__
+          resources:
+            requests:
+              memory: "700Mi"
+              cpu: "50m"
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "700Mi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+          livenessProbe:
+            exec:
+              command:
+                - /rails_app/docker/sidekiq_status
+            initialDelaySeconds: 20
+          args: ["/rails_app/scripts/docker/start-sidekiq.sh"]
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-production-env-vars
+          - configMapRef:
+              name: talk-staging-shared
+          volumeMounts:
+          - mountPath: /tmp
+            name: talk-production-dumpworker-data
+      volumes:
+        - name: talk-production-dumpworker-data
+          hostPath:
+            # directory location on host node temp disk
+            path: /mnt/talk-production-dumpworker-data
+            type: DirectoryOrCreate
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: talk-production-redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: azurefile
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: talk-production-sidekiq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: talk-production-sidekiq
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-production-redis
+  labels:
+    app: talk-production-redis
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: talk-production-redis
+  template:
+    metadata:
+      labels:
+        app: talk-production-redis
+    spec:
+      tolerations:
+      - key: "servicelife"
+        operator: "Equal"
+        value: "longlife"
+        effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: servicelife
+                operator: In
+                values:
+                - longlife
+      initContainers:
+        - name: disable-thp
+          image: busybox
+          volumeMounts:
+            - name: host-sys
+              mountPath: /host-sys
+          command: ["sh", "-c", "echo never >/host-sys/kernel/mm/transparent_hugepage/enabled"]
+      containers:
+        - name: talk-production-redis
+          image: redis:6.0.5
+          resources:
+            requests:
+              memory: "2500Mi"
+              cpu: "500m"
+            limits:
+              memory: "2500Mi"
+              cpu: "1500m"
+          volumeMounts:
+          - name: talk-production-redis-data
+            mountPath: "/data"
+      volumes:
+        - name: talk-production-redis-data
+          persistentVolumeClaim:
+            claimName: talk-production-redis
+        - name: host-sys
+          hostPath:
+            path: /sys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-production-redis
+spec:
+  selector:
+    app: talk-production-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: NodePort
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: talk-production-tls
+  labels:
+    use-azuredns-solver: "true"
+spec:
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  secretName: talk-production-tls
+  dnsNames:
+    - talk.zooniverse.org
+    - talk.azure.zooniverse.org
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: talk-production-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/set-real-ip-from: "10.0.0.0/8"
+spec:
+  tls:
+  - hosts:
+    - talk.zooniverse.org
+    - talk.azure.zooniverse.org
+    secretName: talk-production-tls
+  rules:
+  - host: talk.zooniverse.org
+    http:
+      paths:
+      - backend:
+          serviceName: talk-production-app
+          servicePort: 80
+        path: /(.*)
+  - host: talk.azure.zooniverse.org
+    http:
+      paths:
+      - backend:
+          serviceName: talk-production-app
+          servicePort: 80
+        path: /(.*)

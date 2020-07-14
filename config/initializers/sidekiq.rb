@@ -1,34 +1,26 @@
-require 'redis'
+module SidekiqConfig
+  def self.redis_url
+    ENV.fetch('REDIS_URL', 'redis://localhost:6379/0')
+  end
+end
 
-config = YAML.load_file('config/redis.yml')[Rails.env]
-connection = -> {
-  Redis.new config
-}
-
-sidekiq_config = YAML.load_file('config/sidekiq.yml').fetch Rails.env, { }
-concurrency = sidekiq_config.fetch :concurrency, 5
-concurrency += 2 # for internal Sidekiq connections
-
-require 'sidekiq'
 Sidekiq.configure_client do |config|
-  config.redis = ConnectionPool.new size: concurrency, &connection
+  config.redis = { url: SidekiqConfig.redis_url }
 end
 
 Sidekiq.configure_server do |config|
-  config.redis = ConnectionPool.new size: concurrency, &connection
+  config.redis = { url: SidekiqConfig.redis_url }
   config.server_middleware do |chain|
     chain.add Sidekiq::Congestion::Limiter
   end
 end
 
-sidekiq_admin = YAML.load_file 'config/sidekiq_admin.yml'
-
 require 'sidekiq/web'
 Sidekiq::Web.use Rack::Auth::Basic do |name, password|
   name.present? &&
   password.present? &&
-  name == sidekiq_admin['sidekiq_admin_name'] &&
-  password == sidekiq_admin['sidekiq_admin_password']
+  name == ENV.fetch('SIDEKIQ_ADMIN') &&
+  password == ENV.fetch('SIDEKIQ_ADMIN_PASSWORD')
 end unless Rails.env.test? || Rails.env.development?
 
 require 'sidetiq'

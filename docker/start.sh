@@ -9,4 +9,8 @@ then
   cp commit_id.txt public/
 fi
 
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/talk.conf
+cd /rails_app
+mkdir -p tmp/pids
+rm -f tmp/pids/*.pid
+
+exec bundle exec puma -C config/puma.rb

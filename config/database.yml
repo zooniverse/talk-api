@@ -1,0 +1,37 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= (ENV['PG_POOL_SIZE'] || ENV.fetch('RAILS_MAX_THREADS', 8)).to_i %>
+  url: <%= ENV.fetch('DATABASE_URL', 'postgresql://talk:talk@localhost') %>
+
+panoptes_default: &panoptes_default
+  <<: *default
+  url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
+
+development:
+  <<: *default
+  database: talk_development
+
+panoptes_development:
+  <<: *default
+  database: talk_panoptes_development
+
+test:
+  <<: *default
+  database: talk_test
+
+panoptes_test:
+  <<: *panoptes_default
+  database: talk_panoptes_test
+
+staging:
+  <<: *default
+
+panoptes_staging:
+  <<: *panoptes_default
+
+production:
+  <<: *default
+
+panoptes_production:
+  <<: *panoptes_default

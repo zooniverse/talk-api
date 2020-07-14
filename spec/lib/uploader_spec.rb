@@ -8,19 +8,9 @@ RSpec.describe Uploader, type: :lib do
   before(:each) do
     Uploader.instance_variable_set :@_configured, nil
     Uploader.bucket = Uploader.bucket_path = nil
-    allow(YAML).to receive(:load_file).and_return 'test' => {
-      'region' => 'us-east-1',
-      'bucket' => 'a-bucket',
-      'bucket_path' => 'a/bucket/path'
-    }
   end
 
   describe '.initialize_s3' do
-    it 'should memoize the s3 config' do
-      expect(YAML).to receive(:load_file).once.and_call_original
-      2.times{ Uploader.initialize_s3 }
-    end
-
     it 'should set the bucket' do
       expect{
         Uploader.initialize_s3
@@ -35,11 +25,6 @@ RSpec.describe Uploader, type: :lib do
       }.to change {
         Uploader.bucket_path
       }.from(nil).to 'a/bucket/path'
-    end
-
-    it 'should configure AWS' do
-      expect(Aws.config).to receive(:update).with region: 'us-east-1'
-      Uploader.initialize_s3
     end
   end
 

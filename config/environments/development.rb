@@ -20,6 +20,8 @@ Rails.application.configure do
     Rails.application.routes.default_url_options = config.action_mailer.default_url_options
   end
 
-  config.logstasher.enabled = true
-  config.logstasher.log_controller_parameters = true
+  # override default log to stdout, unless env var key exists
+  unless ENV.key?('RAILS_LOG_TO_FILE')
+    config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+  end
 end
