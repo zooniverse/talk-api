@@ -19,7 +19,7 @@ require 'sidekiq/web'
 Sidekiq::Web.use Rack::Auth::Basic do |name, password|
   name.present? &&
   password.present? &&
-  name == ENV.fetch('SIDEKIQ_ADMIN') &&
+  name == ENV.fetch('SIDEKIQ_ADMIN_NAME') &&
   password == ENV.fetch('SIDEKIQ_ADMIN_PASSWORD')
 end unless Rails.env.test? || Rails.env.development?
 
