@@ -187,7 +187,7 @@ spec:
               command:
                 - /rails_app/docker/sidekiq_status
             initialDelaySeconds: 20
-          args: ["/rails_app/scripts/docker/start-sidekiq.sh"]
+          args: ["/rails_app/docker/start-sidekiq.sh"]
           envFrom:
           - secretRef:
               name: talk-common-env-vars
