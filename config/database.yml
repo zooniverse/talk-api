@@ -10,7 +10,6 @@ panoptes_default: &panoptes_default
 
 development:
   <<: *default
-  database: talk_development
 
 panoptes_development:
   <<: *default

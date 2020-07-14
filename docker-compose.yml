@@ -30,7 +30,8 @@ talkapi:
     - redis
 
 sidekiq:
-  image: talk-api:local
+  dockerfile: Dockerfile
+  build: ./
   volumes:
     - ./:/rails_app
   command: ["/rails_app/docker/start-sidekiq.sh"]
