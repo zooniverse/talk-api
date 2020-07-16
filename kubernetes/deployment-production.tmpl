@@ -127,6 +127,7 @@ data:
   MAILER_PORT: '587'
   MAILER_DOMAIN: zooniverse.org
   MAILER_AUTHENTICATION: plain
+  NEW_RELIC_APP_NAME: 'Talk API (Production)'
   SIDEKIQ_CONCURRENCY: '8'
 ---
 apiVersion: autoscaling/v1
@@ -273,7 +274,7 @@ spec:
           image: redis:6.0.5
           resources:
             requests:
-              memory: "2500Mi"
+              memory: "500Mi"
               cpu: "500m"
             limits:
               memory: "2500Mi"
