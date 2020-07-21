@@ -142,7 +142,7 @@ spec:
     kind: Deployment
     name: talk-production-app
   minReplicas: 2
-  maxReplicas: 4
+  maxReplicas: 8
   targetCPUUtilizationPercentage: 80
 ---
 apiVersion: v1
@@ -230,7 +230,7 @@ spec:
     kind: Deployment
     name: talk-production-sidekiq
   minReplicas: 1
-  maxReplicas: 2
+  maxReplicas: 4
   targetCPUUtilizationPercentage: 80
 ---
 apiVersion: apps/v1
