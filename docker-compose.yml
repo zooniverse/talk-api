@@ -1,5 +1,5 @@
 postgres:
-  image: postgres
+  image: postgres:9.5
   environment:
     - "POSTGRES_USER=talkapi"
     - "POSTGRES_PASSWORD=talkapi"
