@@ -1,4 +1,17 @@
 GIT
+  remote: https://github.com/zooniverse/Social.git
+  revision: bb5d93034cb3752f9b779f7bb3553c8b9c504c39
+  branch: relax-puma-constraint
+  specs:
+    zooniverse_social (1.1.0)
+      concurrent-ruby (~> 1.0)
+      concurrent-ruby-ext (~> 1.0)
+      faraday (~> 0.9)
+      puma
+      sinatra (~> 1.4)
+      twitter (~> 5.16)
+
+GIT
   remote: https://github.com/zooniverse/restpack_serializer.git
   revision: 637aaaf85eda4f467c034f19f52e3f0cb6b20112
   ref: 637aaaf85e
@@ -89,7 +102,7 @@ GEM
     crass (1.0.5)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20180417)
+    domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.10)
     erubis (2.7.0)
@@ -186,6 +199,7 @@ GEM
     naught (1.1.0)
     nenv (0.3.0)
     newrelic_rpm (3.15.2.317)
+    nio4r (2.5.2)
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     notiffany (0.1.0)
@@ -195,7 +209,8 @@ GEM
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    puma (3.12.6)
+    puma (4.3.5)
+      nio4r (~> 2.0)
     pundit (1.1.0)
       activesupport (>= 3.0.0)
     rack (1.6.13)
@@ -336,20 +351,13 @@ GEM
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.5)
+    unf_ext (0.0.7.7)
     webmock (3.4.2)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
     zoo_stream (1.0.1)
       aws-sdk
-    zooniverse_social (1.0.6)
-      concurrent-ruby (~> 1.0)
-      concurrent-ruby-ext (~> 1.0)
-      faraday (~> 0.9)
-      puma (~> 3.2)
-      sinatra (~> 1.4)
-      twitter (~> 5.16)
 
 PLATFORMS
   ruby
@@ -370,7 +378,7 @@ DEPENDENCIES
   newrelic_rpm (~> 3.15)
   pg (~> 0.21)
   pry (~> 0.11.3)
-  puma (~> 3.12.1)
+  puma
   pundit (~> 1.1.0)
   rack-cors (~> 1.0.5)
   rails (~> 4.2.11)
@@ -390,7 +398,7 @@ DEPENDENCIES
   timecop
   webmock (~> 3.4)
   zoo_stream (~> 1.0)
-  zooniverse_social (= 1.0.6)
+  zooniverse_social!
 
 BUNDLED WITH
    1.16.6
