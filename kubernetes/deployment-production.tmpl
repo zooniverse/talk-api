@@ -197,7 +197,7 @@ spec:
           - secretRef:
               name: talk-production-env-vars
           - configMapRef:
-              name: talk-staging-shared
+              name: talk-production-shared
           volumeMounts:
           - mountPath: /tmp
             name: talk-production-dumpworker-data
