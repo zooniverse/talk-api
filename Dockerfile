@@ -18,7 +18,7 @@ RUN bundle install --without development test
 
 ADD ./ /rails_app
 
-RUN (cd /rails_app && git log --format="%H" -n 1 > commit_id.txt && rm -rf .git)
+RUN (git log --format="%H" -n 1 > /rails_app/public/commit_id.txt && rm -rf .git)
 
 EXPOSE 81
 
