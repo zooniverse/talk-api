@@ -213,8 +213,8 @@ spec:
           - configMapRef:
               name: talk-staging-shared
           volumeMounts:
-            - mountPath: /tmp
-              name: talk-staging-dumpworker-data
+          - mountPath: /tmp
+            name: talk-staging-dumpworker-data
       volumes:
         - name: talk-staging-dumpworker-data
           hostPath:
