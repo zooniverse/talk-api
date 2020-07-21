@@ -8,48 +8,23 @@ The new backend for Talk
 [![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
 ## Setting up
-
-* Ruby 2.2
-
-* [Vagrant](https://www.vagrantup.com/downloads.html)
-
 * Docker
   * [OS X](https://docs.docker.com/installation/mac/) - Boot2Docker
   * [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) - Docker
   * [Windows](http://docs.docker.com/installation/windows/) - Boot2Docker
 
-By default, Vagrant runs in the staging environment, so you'll want to add configurations:
+Build & start the docker containers:
 
-* database.yml
-  ```yaml
-    staging:
-      adapter: postgresql
-      encoding: unicode
-      pool: 5
-      database: talk_staging
-      username: talk
-      host: <%= ENV['PG_PORT_5432_TCP_ADDR'] %>
-      password: <%= ENV['TALK_DB_PASSWORD'] %>
-  ```
-
-* panoptes.yml
-  ```yaml
-    staging:
-      host: 'https://panoptes-staging.zooniverse.org'
-  ```
-
-* secrets.yml
-  ```yaml
-    staging:
-      secret_key_base: <%= ENV['SECRET_KEY_BASE'] %>
-  ```
-
-Then start everything up with
 ```
-  bundle
-  vagrant up
+  docker-compose build
+  docker-compose up
   open http://localhost:3000/
 ```
+
+Alternatively use docker to run a testing environment bash shell and run test commands, run:
+
+1. `docker-compose run --service-ports --rm -e RAILS_ENV=test talkapi bash`
+0. `bundle exec rspec` from the container bash shell run
 
 If you're running outside of vagrant and just want to run the specs ensure you've created all the databases and tables(foreign) via the following commands:
 1. `RACK_ENV=test bundle exec rake db:create`
