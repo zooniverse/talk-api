@@ -7,7 +7,7 @@ def talk_config
 end
 
 def db_config(key)
-  config = Rails.configuration.database_configuration[key]
+  config = ActiveRecord::Base.configurations[key]
   raise "database.yml does not configure #{ key }\n\n" unless config
   config
 end
