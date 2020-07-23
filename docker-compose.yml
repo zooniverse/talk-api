@@ -1,5 +1,5 @@
 postgres:
-  image: postgres
+  image: postgres:9.5
   environment:
     - "POSTGRES_USER=talkapi"
     - "POSTGRES_PASSWORD=talkapi"
@@ -23,8 +23,6 @@ talkapi:
     - "RAILS_ENV=development"
     - "DATABASE_URL=postgresql://talkapi:talkapi@pg"
     - "REDIS_URL=redis://redis:6379/0"
-  # external_links:
-  #   - external_postgres_container:pg
   links:
     - postgres:pg
     - redis
