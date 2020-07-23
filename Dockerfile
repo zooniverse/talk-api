@@ -10,11 +10,13 @@ RUN apt-get update && \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+ARG RAILS_ENV=production
+
 ADD ./Gemfile /rails_app/
 ADD ./Gemfile.lock /rails_app/
 
 RUN bundle config --global jobs `cat /proc/cpuinfo | grep processor | wc -l | xargs -I % expr % - 1`
-RUN bundle install --without development test
+RUN if [ "$RAILS_ENV" = "development" ]; then bundle install; else bundle install --without development test; fi
 
 ADD ./ /rails_app
 

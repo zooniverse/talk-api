@@ -6,13 +6,16 @@ default: &default
 
 panoptes_default: &panoptes_default
   <<: *default
+  username: <%= ENV.fetch('PANOPTES_DATABASE_USERNAME', 'talkapi') %>
+  password: <%= ENV.fetch('PANOPTES_DATABASE_PASSWORD', 'talkapi') %>
+  host: <%= ENV.fetch('PANOPTES_DATABASE_HOST', 'localhost') %>
   url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 development:
   <<: *default
 
 panoptes_development:
-  <<: *default
+  <<: *panoptes_default
   database: talk_panoptes_development
 
 test:

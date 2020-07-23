@@ -376,6 +376,7 @@ DEPENDENCIES
   rails (~> 4.2.11)
   redis
   restpack_serializer!
+  rspec
   rspec-its (~> 1.2.0)
   rspec-rails (~> 3.4.2)
   schema_plus_pg_indexes (~> 0.1.12)
@@ -393,4 +394,4 @@ DEPENDENCIES
   zooniverse_social (= 1.0.6)
 
 BUNDLED WITH
-   1.16.6
+   1.17.3
