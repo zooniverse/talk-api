@@ -31,7 +31,7 @@ namespace :panoptes do
 
             if (select count(*) from pg_foreign_server where srvname = 'panoptes') = 0 then
               create server panoptes foreign data wrapper postgres_fdw options (
-                host '#{ panoptes_config['host'] }',
+                host 'localhost',
                 dbname '#{ panoptes_config['database'] }',
                 port '#{ panoptes_config.fetch('port', 5432) }',
                 use_remote_estimate 'true'
