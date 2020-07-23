@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 4.2.11'
 gem 'rack-cors', '~> 1.0.5'
 gem 'pg', '~> 0.21'
-gem 'redis', '~> 3.3.0'
+gem 'redis'
 gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidetiq', '~> 0.7.2'
@@ -16,9 +16,9 @@ gem 'faraday', '~> 0.9.2'
 gem 'faraday_middleware', '~> 0.12.2'
 gem 'pundit', '~> 1.1.0'
 gem 'sdoc', '~> 0.4', group: :doc
-gem 'spring', '~> 1.7.1', group: :development
-gem 'newrelic_rpm', '~> 3.15'
-gem 'honeybadger', '~> 2.6.0'
+gem 'spring', group: :development
+gem 'newrelic_rpm'
+gem 'honeybadger'
 gem 'logstasher', '~> 0.9.0'
 gem 'zoo_stream', '~> 1.0'
 gem 'zooniverse_social', '1.0.6'
@@ -36,7 +36,7 @@ group :test, :development do
   gem 'guard', '~> 2.14.0'
   gem 'guard-rspec', '~> 4.6.5'
   gem 'timecop'
-  gem 'pry', '~> 0.11.3'
+  gem 'pry'
   gem 'benchmark-ips'
 end
 
