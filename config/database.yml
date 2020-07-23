@@ -6,6 +6,7 @@ default: &default
 
 panoptes_default: &panoptes_default
   <<: *default
+  pool: <%= (ENV['PG_POOL_SIZE'] || ENV.fetch('RAILS_MAX_THREADS', 8)).to_i %>
   username: <%= ENV.fetch('PANOPTES_DATABASE_USERNAME', 'talkapi') %>
   password: <%= ENV.fetch('PANOPTES_DATABASE_PASSWORD', 'talkapi') %>
   host: <%= ENV.fetch('PANOPTES_DATABASE_HOST', 'localhost') %>
