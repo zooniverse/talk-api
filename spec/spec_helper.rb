@@ -6,7 +6,6 @@ CodeClimate::TestReporter.start
 
 ENV.keys.grep(/aws/i).each{ |key| ENV.delete key }
 
-require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'json/schema_builder/rspec'
