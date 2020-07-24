@@ -59,7 +59,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def normalize_frequency(frequency)
-    frequency.is_a?(Fixnum) ? frequency : SubscriptionPreference.email_digests[frequency]
+    frequency.is_a?(Integer) ? frequency : SubscriptionPreference.email_digests[frequency]
   end
 
   def digest_label_for(frequency)

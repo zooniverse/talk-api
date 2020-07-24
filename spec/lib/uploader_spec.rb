@@ -64,7 +64,7 @@ RSpec.describe Uploader, type: :lib do
 
   describe '#url' do
     it 'should generate a presigned url' do
-      expect(subject.remote_file).to receive(:presigned_url).with :get, expires_in: a_kind_of(Fixnum)
+      expect(subject.remote_file).to receive(:presigned_url).with :get, expires_in: a_kind_of(Integer)
       subject.url
     end
   end
