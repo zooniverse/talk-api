@@ -3,15 +3,7 @@ require 'faraday_middleware'
 
 class MarkdownApi
   def self.host
-    return @host if @host
-    config_file = Rails.root.join 'config/markdown.yml'
-    config = YAML.load(config_file.read)[Rails.env] if config_file.exist?
-
-    @host = if ENV['MARKDOWN_PORT_2998_TCP_ADDR']
-      "http://#{ ENV['MARKDOWN_PORT_2998_TCP_ADDR'] }:2998"
-    else
-      ENV['MARKDOWN_HOST'] || config.try(:[], 'host')
-    end
+    @host ||= ENV.fetch('MARKDOWN_HOST', 'http://markdown.localhost:2998')
   end
 
   def self.connection
