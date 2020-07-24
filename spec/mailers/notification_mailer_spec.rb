@@ -52,7 +52,7 @@ RSpec.describe NotificationMailer, type: :mailer do
       let(:mail){ mailer.notify user1, frequency }
 
       before(:each) do
-        stub_request(:post, 'http://markdown.localhost/html').to_return status: 200, body: 'some markdown', headers: { }
+        stub_request(:post, 'http://markdown.localhost:2998/html').to_return status: 200, body: 'some markdown', headers: { }
         mailer.instance_variable_set :@notifications, Notification.where(user: user1).all.to_a
         expect(mailer).to receive(:normalize_frequency).with(frequency).and_call_original
         expect(mailer).to receive(:find_categories_for).with(frequency_int).and_return categories

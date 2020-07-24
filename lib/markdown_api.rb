@@ -3,7 +3,7 @@ require 'faraday_middleware'
 
 class MarkdownApi
   def self.host
-    @host ||= ENV.fetch('MARKDOWN_HOST', 'http://markdown.localhost:2998')
+    ENV.fetch('MARKDOWN_HOST', 'http://markdown.localhost:2998')
   end
 
   def self.connection
