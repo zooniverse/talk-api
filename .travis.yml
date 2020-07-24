@@ -9,8 +9,9 @@ bundler_args: --without development production
 rvm:
   - 2.5
 env:
-  - DATABASE_URL=postgresql://talk:password@localhost/travis_ci_test
-  - PANOPTES_DATABASE_URL=postgresql://talk:password@localhost/travis_ci_panoptes_test
+  global:
+    - DATABASE_URL=postgresql://talk:password@localhost/travis_ci_test
+    - PANOPTES_DATABASE_URL=postgresql://talk:password@localhost/travis_ci_panoptes_test
 before_install:
     - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
     - gem install bundler -v '< 2'
