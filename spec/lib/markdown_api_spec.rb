@@ -71,6 +71,7 @@ RSpec.describe MarkdownApi, type: :lib do
   end
 
   describe '.markdown' do
+    before(:each){ ENV['MARKDOWN_HOST'] = 'http://markdown.localhost' }
     let(:body){ '**test** _markdown_' }
     let(:slug){ 'foo/bar' }
     let!(:stubbed_request) do
