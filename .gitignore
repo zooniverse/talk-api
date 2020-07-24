@@ -10,3 +10,4 @@
 .DS_Store
 .vagrant
 /spec/support/awful_strings.json
+.ruby-*

@@ -6,13 +6,14 @@ default: &default
 
 panoptes_default: &panoptes_default
   <<: *default
+  pool: <%= (ENV['PG_POOL_SIZE'] || ENV.fetch('RAILS_MAX_THREADS', 8)).to_i %>
   url: <%= ENV.fetch('PANOPTES_DATABASE_URL', 'postgresql://talk:talk@localhost') %>
 
 development:
   <<: *default
 
 panoptes_development:
-  <<: *default
+  <<: *panoptes_default
   database: talk_panoptes_development
 
 test:

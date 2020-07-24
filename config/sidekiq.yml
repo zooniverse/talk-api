@@ -1,5 +1,7 @@
-:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 5).to_i %>
+:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY', 1).to_i %>
 # Default graceperiod in K8s is 30s
 # we can specify longer but will need to increase the terminationGracePeriod
 # https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-terminating-with-grace
 :timeout: <%= ENV.fetch('SIDEKIQ_TIMEOUT', 25).to_i %>
+:verbose: <%= !!ENV.fetch('SIDEKIQ_VERBOSE', false) %>
+

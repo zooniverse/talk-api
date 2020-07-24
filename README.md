@@ -24,16 +24,15 @@ Build & start the docker containers:
 Alternatively use docker to run a testing environment bash shell and run test commands, run:
 
 1. `docker-compose run --service-ports --rm -e RAILS_ENV=test talkapi bash`
-0. `bundle exec rspec` from the container bash shell run
+2. Setup the test database **
+    1. `RAILS_ENV=test bundle exec rake db:create`
+    2. `RAILS_ENV=test bundle exec rake db:schema:load`
+    3. `RAILS_ENV=panoptes_test bundle exec rake db:create`
+    4. `RAILS_ENV=test bundle exec rake panoptes:db:create_tables`
+    5. `RAILS_ENV=test bundle exec rake panoptes:db:setup`
+3. `bundle exec rspec`
 
-If you're running outside of vagrant and just want to run the specs ensure you've created all the databases and tables(foreign) via the following commands:
-1. `RACK_ENV=test bundle exec rake db:create`
-0. `RACK_ENV=test bundle exec rake db:schema:load`
-0. `RACK_ENV=panoptes_test bundle exec rake db:create`
-0. `RACK_ENV=test bundle exec rake panoptes:db:create_tables`
-0. `RACK_ENV=test bundle exec rake panoptes:db:setup`
-
-See *.travis.yml* for more details.
+** See *.travis.yml* for more details on how to setup the talk database.
 
 ## Layout
 
