@@ -12,60 +12,20 @@ RSpec.describe MarkdownApi, type: :lib do
   end
 
   def clear_config
-    ENV.delete 'MARKDOWN_HOST'
     MarkdownApi.instance_variable_set :@host, nil
   end
 
   describe '.config' do
     before(:each){ clear_config }
-    let(:yaml_config) do
-      {
-        'host' => 'yaml_host'
-      }
-    end
 
-    def stub_config_file(exists: true)
-      double.tap do |stubbed|
-        expect(Rails.root).to receive(:join).with('config/markdown.yml').and_return stubbed
-        expect(stubbed).to receive(:exist?).and_return exists
-      end
-    end
-
-    def stub_yaml_config(config_file)
-      expect(config_file).to receive :read
-      expect(YAML).to receive(:load).and_return 'test' => yaml_config
-    end
-
-    def stub_missing_config(config_file)
-      expect(config_file).to_not receive :read
-      expect(YAML).to_not receive :load
-    end
-
-    context 'with YAML configuration' do
-      it 'should load config/markdown.yml' do
-        stub_yaml_config stub_config_file
-        expect(MarkdownApi.host).to eql yaml_config['host']
-      end
-    end
-
-    context 'with ENV configuration' do
-      before(:each){ ENV['MARKDOWN_HOST'] = 'some_host' }
-
-      it 'should not load missing config' do
-        stub_missing_config stub_config_file exists: false
-        expect(MarkdownApi.host).to eql 'some_host'
-      end
-
-      it 'should prioritize ENV over YAML' do
-        stub_yaml_config stub_config_file
-        expect(MarkdownApi.host).to eql 'some_host'
-      end
+    it 'should use the env value' do
+      expect(MarkdownApi.host).to eql 'http://markdown.localhost'
     end
 
     context 'with no configuration' do
-      it 'should not set the host' do
-        stub_missing_config stub_config_file exists: false
-        expect(MarkdownApi.host).to be nil
+      it 'should be the default host' do
+        ENV.delete 'MARKDOWN_HOST'
+        expect(MarkdownApi.host).to eql 'http://markdown.localhost:2998'
       end
     end
   end
