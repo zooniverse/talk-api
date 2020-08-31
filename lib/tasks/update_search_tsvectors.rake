@@ -29,8 +29,8 @@ namespace :search do
       klass = resource.capitalize.constantize
       puts "Processing #{klass}s..."
       klass.find_in_batches(start: start_id, batch_size: batch_size).with_index do |resources, batch|
-        puts "Processing comment group ##{batch}, starting on id #{resources.first.id}"
-        resources.map { |res| res.searchable.set_content }
+        puts "Processing batch ##{batch}, starting on id #{resources.first.id}"
+        resources.map { |res| res&.searchable.set_content }
 
         # Checkpoint the id of the last resource in the batch in Redis
         checkpoint_record_id = comments.last.id
