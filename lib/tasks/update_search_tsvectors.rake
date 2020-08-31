@@ -33,7 +33,7 @@ namespace :search do
         resources.map { |res| res.searchable.set_content if res.searchable }
 
         # Checkpoint the id of the last resource in the batch in Redis
-        checkpoint_record_id = comments.last.id
+        checkpoint_record_id = resources.last.id
         redis.set(rkey, checkpoint_record_id, ex: 2629746)
         sleep(0.01) # throttle
       end
