@@ -35,9 +35,11 @@ namespace :search do
         # Checkpoint the id of the last resource in the batch in Redis
         checkpoint_record_id = resources.last.id
         redis.set(rkey, checkpoint_record_id, ex: 2629746)
+        puts "Checkpoint: id #{checkpoint_record_id}"
         sleep(0.01) # throttle
       end
-      puts "Processing finished!"
+      puts "Processing finished! Deleting redis key #{rkey}, with value #{redis.get(rkey)}"
+      redis.del(rkey)
     end
   end
 
