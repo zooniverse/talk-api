@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: __JOB_NAME__
+spec:
+  template:
+    spec:
+      containers:
+      - name: talk-rake-task-production
+        image: zooniverse/talk-api:__IMAGE_TAG__
+        command: ["bundle",  "exec", "rake", __RAKE_TASK_NAME__]
+        envFrom:
+        - secretRef:
+            name: talk-common-env-vars
+        - secretRef:
+            name: talk-production-env-vars
+        - configMapRef:
+            name: talk-production-shared
+      restartPolicy: Never
+  backoffLimit: 1
