@@ -15,7 +15,6 @@ gem 'aws-sdk', '~> 2.3.7'
 gem 'faraday', '~> 0.9.2'
 gem 'faraday_middleware', '~> 0.12.2'
 gem 'pundit', '~> 1.1.0'
-gem 'sdoc', '>= 1.1.0', group: :doc
 gem 'spring', '~> 1.7.1', group: :development
 gem 'newrelic_rpm'
 gem 'honeybadger', '~> 4.5.0'
