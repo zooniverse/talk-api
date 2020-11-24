@@ -61,6 +61,8 @@ spec:
               httpHeaders:
                  - name: X-Forwarded-Proto
                    value: https
+                 - name: Accept
+                   value: application/json
           readinessProbe:
             httpGet:
               path: /
@@ -68,6 +70,8 @@ spec:
               httpHeaders:
                  - name: X-Forwarded-Proto
                    value: https
+                 - name: Accept
+                   value: application/json
             initialDelaySeconds: 20
           envFrom:
           - secretRef:
@@ -99,6 +103,8 @@ spec:
               httpHeaders:
                  - name: X-Forwarded-Proto
                    value: https
+                 - name: Accept
+                   value: application/json
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
@@ -107,6 +113,8 @@ spec:
               httpHeaders:
                  - name: X-Forwarded-Proto
                    value: https
+                 - name: Accept
+                   value: application/json
             initialDelaySeconds: 20
           lifecycle:
             preStop:
