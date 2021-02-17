@@ -46,7 +46,7 @@ module Talk
 
   def self.report_error(e)
     if Rails.env.staging? || Rails.env.production?
-      Honeybadger.notify_or_ignore e
+      Honeybadger.notify(e)
     end
   end
 
