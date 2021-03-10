@@ -101,20 +101,20 @@ spec:
               path: /
               port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
-                 - name: Accept
-                   value: application/json
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 81
+              port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
-                 - name: Accept
-                   value: application/json
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 20
           lifecycle:
             preStop:
