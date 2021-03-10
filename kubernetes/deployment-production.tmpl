@@ -59,15 +59,19 @@ spec:
               path: /
               port: 81
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
           readinessProbe:
             httpGet:
               path: /
               port: 81
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 20
           envFrom:
           - secretRef:
@@ -97,16 +101,20 @@ spec:
               path: /
               port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 81
+              port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 20
           lifecycle:
             preStop:
