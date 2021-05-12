@@ -49,7 +49,7 @@ spec:
           image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "750Mi"
+              memory: "200Mi"
               cpu: "500m"
             limits:
               memory: "750Mi"
@@ -91,11 +91,11 @@ spec:
           image: zooniverse/nginx:1.19.0
           resources:
             requests:
-              memory: "100Mi"
+              memory: "30Mi"
               cpu: "10m"
             limits:
               memory: "100Mi"
-              cpu: "1000m"
+              cpu: "500m"
           livenessProbe:
             httpGet:
               path: /
@@ -211,13 +211,11 @@ spec:
           image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "700Mi"
+              memory: "250Mi"
               cpu: "250m"
-              ephemeral-storage: "1Gi"
             limits:
               memory: "700Mi"
-              cpu: "500m"
-              ephemeral-storage: "1Gi"
+              cpu: "1000m"
           livenessProbe:
             exec:
               command:
