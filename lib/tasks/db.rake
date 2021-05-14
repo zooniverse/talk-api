@@ -53,8 +53,8 @@ namespace :panoptes do
       ActiveRecord::Base.connection.execute <<-SQL
         create foreign table if not exists projects (
           id int4,
-          display_name varchar(255),
-          slug varchar(255),
+          display_name varchar,
+          slug varchar,
           private bool,
           launch_approved bool,
           launched_row_order int4
