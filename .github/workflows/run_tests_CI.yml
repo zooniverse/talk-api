@@ -5,7 +5,6 @@ on:
 env:
   DATABASE_URL: postgresql://talk:password@localhost/gh_ci_test
   PANOPTES_DATABASE_URL: postgresql://talk:password@localhost/gh_ci_panoptes_test
-  RAILS_ENV: test
 jobs:
   test:
     name: Run Tests
