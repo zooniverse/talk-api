@@ -49,10 +49,10 @@ spec:
           image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "200Mi"
-              cpu: "10m"
+              memory: "150Mi"
+              cpu: "100m"
             limits:
-              memory: "200Mi"
+              memory: "250Mi"
               cpu: "500m"
           livenessProbe:
             httpGet:
@@ -61,6 +61,8 @@ spec:
               httpHeaders:
                  - name: X-Forwarded-Proto
                    value: https
+                 - name: Accept
+                   value: application/json
           readinessProbe:
             httpGet:
               path: /
@@ -68,6 +70,8 @@ spec:
               httpHeaders:
                  - name: X-Forwarded-Proto
                    value: https
+                 - name: Accept
+                   value: application/json
             initialDelaySeconds: 20
           envFrom:
           - secretRef:
@@ -87,7 +91,7 @@ spec:
           image: zooniverse/nginx:1.19.0
           resources:
             requests:
-              memory: "100Mi"
+              memory: "30Mi"
               cpu: "10m"
             limits:
               memory: "100Mi"
@@ -97,16 +101,20 @@ spec:
               path: /
               port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 81
+              port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 20
           lifecycle:
             preStop:
@@ -192,13 +200,11 @@ spec:
           image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "700Mi"
-              cpu: "50m"
-              ephemeral-storage: "1Gi"
+              memory: "200Mi"
+              cpu: "100m"
             limits:
-              memory: "700Mi"
+              memory: "500Mi"
               cpu: "500m"
-              ephemeral-storage: "1Gi"
           livenessProbe:
             exec:
               command:
@@ -319,7 +325,7 @@ spec:
       targetPort: 6379
   type: NodePort
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: talk-staging-tls
@@ -340,7 +346,7 @@ metadata:
   name: talk-staging-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
     nginx.ingress.kubernetes.io/set-real-ip-from: "10.0.0.0/8"

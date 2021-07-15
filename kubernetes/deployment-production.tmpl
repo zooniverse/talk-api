@@ -49,7 +49,7 @@ spec:
           image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "750Mi"
+              memory: "200Mi"
               cpu: "500m"
             limits:
               memory: "750Mi"
@@ -59,15 +59,19 @@ spec:
               path: /
               port: 81
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
           readinessProbe:
             httpGet:
               path: /
               port: 81
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 20
           envFrom:
           - secretRef:
@@ -87,26 +91,30 @@ spec:
           image: zooniverse/nginx:1.19.0
           resources:
             requests:
-              memory: "100Mi"
+              memory: "30Mi"
               cpu: "10m"
             limits:
               memory: "100Mi"
-              cpu: "1000m"
+              cpu: "500m"
           livenessProbe:
             httpGet:
               path: /
               port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 81
+              port: 80
               httpHeaders:
-                 - name: X-Forwarded-Proto
-                   value: https
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: Accept
+                  value: application/json
             initialDelaySeconds: 20
           lifecycle:
             preStop:
@@ -160,6 +168,16 @@ spec:
   maxReplicas: 8
   targetCPUUtilizationPercentage: 80
 ---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+   name: talk-production-app-pdb
+spec:
+  minAvailable: 50%
+  selector:
+    matchLabels:
+      app: talk-production-app
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -193,13 +211,11 @@ spec:
           image: zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "700Mi"
-              cpu: "50m"
-              ephemeral-storage: "1Gi"
+              memory: "250Mi"
+              cpu: "250m"
             limits:
               memory: "700Mi"
-              cpu: "500m"
-              ephemeral-storage: "1Gi"
+              cpu: "1000m"
           livenessProbe:
             exec:
               command:
@@ -234,6 +250,16 @@ spec:
   resources:
     requests:
       storage: 5Gi
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+   name: talk-production-sidekiq-pdb
+spec:
+  minAvailable: 50%
+  selector:
+    matchLabels:
+      app: talk-production-sidekiq
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -307,6 +333,17 @@ spec:
           hostPath:
             path: /sys
 ---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+   name: talk-production-redis-pdb
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: talk-production-redis
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -320,7 +357,7 @@ spec:
       targetPort: 6379
   type: NodePort
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: talk-production-tls
@@ -341,7 +378,7 @@ metadata:
   name: talk-production-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
     nginx.ingress.kubernetes.io/set-real-ip-from: "10.0.0.0/8"
