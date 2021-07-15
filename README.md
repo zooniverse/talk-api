@@ -8,10 +8,8 @@ The new backend for Talk
 [![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
 ## Setting up
-* Docker
-  * [OS X](https://docs.docker.com/installation/mac/) - Boot2Docker
-  * [Ubuntu](https://docs.docker.com/installation/ubuntulinux/) - Docker
-  * [Windows](http://docs.docker.com/installation/windows/) - Boot2Docker
+* [Docker](https://docs.docker.com/get-docker/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
 
 Build & start the docker containers:
 
@@ -24,13 +22,14 @@ Build & start the docker containers:
 Alternatively use docker to run a testing environment bash shell and run test commands, run:
 
 1. `docker-compose run --service-ports --rm -e RAILS_ENV=test talkapi bash`
-2. Setup the test database **
+2. Install the gem dependencies for the application `bundle install`
+3. Setup the test database **
     1. `RAILS_ENV=test bundle exec rake db:create`
     2. `RAILS_ENV=test bundle exec rake db:schema:load`
     3. `RAILS_ENV=panoptes_test bundle exec rake db:create`
     4. `RAILS_ENV=test bundle exec rake panoptes:db:create_tables`
     5. `RAILS_ENV=test bundle exec rake panoptes:db:setup`
-3. `bundle exec rspec`
+4. `bundle exec rspec`
 
 ** See *.travis.yml* for more details on how to setup the talk database.
 
