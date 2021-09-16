@@ -1,11 +1,8 @@
 # Talk-Api
 
-The new backend for Talk
+![Build Status](https://github.com/zooniverse/talk-api/actions/workflows/run_tests_CI.yml/badge.svg?branch=master)
 
-[![Build Status](https://travis-ci.org/zooniverse/Talk-Api.svg?branch=master)](https://travis-ci.org/zooniverse/Talk-Api)
-[![Code Climate](https://codeclimate.com/github/zooniverse/Talk-Api/badges/gpa.svg)](https://codeclimate.com/github/zooniverse/Talk-Api)
-[![Test Coverage](https://codeclimate.com/github/zooniverse/Talk-Api/badges/coverage.svg)](https://codeclimate.com/github/zooniverse/Talk-Api)
-[![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
+The new backend for Talk
 
 ## Setting up
 * [Docker](https://docs.docker.com/get-docker/)
