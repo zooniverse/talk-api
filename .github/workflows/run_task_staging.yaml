@@ -13,7 +13,7 @@ jobs:
     name: Run Staging Task
     uses: zooniverse/ci-cd/.github/workflows/run_task.yaml@main
     with:
-      app_name: tove
+      app_name: talk-api
       task_name: ${{ github.event.inputs.task }}
       environment: staging
     secrets:
@@ -28,7 +28,7 @@ jobs:
       commit_id: ${{ github.sha }}
       job_name: Run Staging Task / run_staging_task
       status: ${{ needs.run_staging_task.result }}
-      title: "Tove Staging task complete"
-      title_link: "https://github.com/zooniverse/tove/actions/${{ github.run_id }}"
+      title: "Talk Staging task complete"
+      title_link: "https://github.com/zooniverse/talk-api/actions/${{ github.run_id }}"
     secrets:
       slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
