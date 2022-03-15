@@ -12,7 +12,7 @@ pipeline {
 
     stage('Build Docker image') {
       agent any
-      environment { 
+      environment {
         DOCKER_BUILDKIT = 1
       }
       steps {
@@ -39,7 +39,7 @@ pipeline {
     stage('Dry run deployments') {
       agent any
       steps {
-        sh "sed 's/__IMAGE_TAG__/${GIT_COMMIT}/g' kubernetes/deployment-staging.tmpl | kubectl --context azure apply --dry-run=client --record -f -"
+        // sh "sed 's/__IMAGE_TAG__/${GIT_COMMIT}/g' kubernetes/deployment-staging.tmpl | kubectl --context azure apply --dry-run=client --record -f -"
         sh "sed 's/__IMAGE_TAG__/${GIT_COMMIT}/g' kubernetes/deployment-production.tmpl | kubectl --context azure apply --dry-run=client --record -f -"
       }
     }
@@ -77,37 +77,39 @@ pipeline {
       }
     }
 
-    stage('Deploy staging to Kubernetes') {
-      when { branch 'master' }
-      agent any
-      steps {
-        sh "sed 's/__IMAGE_TAG__/${GIT_COMMIT}/g' kubernetes/deployment-staging.tmpl | kubectl --context azure apply --record -f -"
-      }
-      post {
-        success {
-          script {
-            if (env.BRANCH_NAME == 'master') {
-              slackSend (
-                color: '#00FF00',
-                message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-                channel: "#deploys"
-              )
-            }
-          }
-        }
+    // Deploy staging via Action
+    // stage('Deploy staging to Kubernetes') {
+    //   when { branch 'master' }
+    //   agent any
+    //   steps {
+    //     sh "sed 's/__IMAGE_TAG__/${GIT_COMMIT}/g' kubernetes/deployment-staging.tmpl | kubectl --context azure apply --record -f -"
+    //   }
+    //   post {
+    //     success {
+    //       script {
+    //         if (env.BRANCH_NAME == 'master') {
+    //           slackSend (
+    //             color: '#00FF00',
+    //             message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
+    //             channel: "#deploys"
+    //           )
+    //         }
+    //       }
+    //     }
 
-        failure {
-          script {
-            if (env.BRANCH_NAME == 'master') {
-              slackSend (
-                color: '#FF0000',
-                message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-                channel: "#deploys"
-              )
-            }
-          }
-        }
-      }
-    }
+    //     failure {
+    //       script {
+    //         if (env.BRANCH_NAME == 'master') {
+    //           slackSend (
+    //             color: '#FF0000',
+    //             message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
+    //             channel: "#deploys"
+    //           )
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
   }
 }
