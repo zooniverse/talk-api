@@ -11,7 +11,7 @@ jobs:
     name: Production DB Migration
     uses: zooniverse/ci-cd/.github/workflows/db_migration.yaml@main
     with:
-      app_name: talk-api
+      app_name: talk
       environment: production
       commit_id: ${{ github.sha }}
     secrets:
@@ -22,7 +22,7 @@ jobs:
     uses: zooniverse/ci-cd/.github/workflows/deploy_app.yaml@main
     needs: db_migration_production
     with:
-      app_name: talk-api
+      app_name: talk
       repo_name: talk-api
       commit_id: ${{ github.sha }}
       environment: production
