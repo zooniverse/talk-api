@@ -6,9 +6,9 @@ spec:
   template:
     spec:
       containers:
-      - name: talk-rake-task-staging
-        image: zooniverse/talk-api:__IMAGE_TAG__
-        command: ["bundle",  "exec", "rake", __RAKE_TASK_NAME__]
+      - name: talk-api-db-migrate-staging
+        image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
+        command: ["bundle",  "exec", "rake", "db:migrate"]
         envFrom:
         - secretRef:
             name: talk-common-env-vars

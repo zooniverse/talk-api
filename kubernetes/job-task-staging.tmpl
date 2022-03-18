@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: __JOB_NAME__
+spec:
+  template:
+    spec:
+      containers:
+      - name: talk-api-rake-task-staging
+        image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
+        command: ["bundle",  "exec", "rake", __RAKE_TASK_NAME__]
+        envFrom:
+        - secretRef:
+            name: talk-common-env-vars
+        - secretRef:
+            name: talk-staging-env-vars
+        - configMapRef:
+            name: talk-staging-shared
+      restartPolicy: Never
+  backoffLimit: 1
