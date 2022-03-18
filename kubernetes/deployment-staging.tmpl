@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
         - name: talk-staging-app
-          image: zooniverse/talk-api:__IMAGE_TAG__
+          image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
               memory: "150Mi"
@@ -197,7 +197,7 @@ spec:
     spec:
       containers:
         - name: talk-staging-sidekiq
-          image: zooniverse/talk-api:__IMAGE_TAG__
+          image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
               memory: "200Mi"
