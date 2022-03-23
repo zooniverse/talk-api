@@ -1,4 +1,4 @@
-name: Run Staging Task
+name: Run Production Task
 
 on:
   workflow_dispatch:
@@ -9,26 +9,26 @@ on:
         default: 'routes'
 
 jobs:
-  run_staging_task:
-    name: Run Staging Task
+  run_production_task:
+    name: Run Production Task
     uses: zooniverse/ci-cd/.github/workflows/run_task.yaml@main
     with:
       app_name: talk
       task_name: ${{ github.event.inputs.task }}
-      environment: staging
+      environment: production
     secrets:
       creds: ${{ secrets.AZURE_AKS }}
 
   slack_notification:
     name: Slack notification
     uses: zooniverse/ci-cd/.github/workflows/slack_notification.yaml@main
-    needs: run_staging_task
+    needs: run_production_task
     if: always()
     with:
       commit_id: ${{ github.sha }}
-      job_name: Run Staging Task / run_staging_task
-      status: ${{ needs.run_staging_task.result }}
-      title: "Talk Staging task complete"
+      job_name: Run Production Task / run_production_task
+      status: ${{ needs.run_production_task.result }}
+      title: "Talk Production task complete"
       title_link: "https://github.com/zooniverse/talk-api/actions/${{ github.run_id }}"
     secrets:
       slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}

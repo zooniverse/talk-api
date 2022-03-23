@@ -6,15 +6,15 @@ spec:
   template:
     spec:
       containers:
-      - name: talk-db-migrate-staging
+      - name: talk-db-migrate-production
         image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
         command: ["bundle",  "exec", "rake", "db:migrate"]
         envFrom:
         - secretRef:
             name: talk-common-env-vars
         - secretRef:
-            name: talk-staging-env-vars
+            name: talk-production-env-vars
         - configMapRef:
-            name: talk-staging-shared
+            name: talk-production-shared
       restartPolicy: Never
   backoffLimit: 1
