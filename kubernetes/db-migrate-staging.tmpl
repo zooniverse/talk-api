@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-      - name: talk-api-db-migrate-staging
+      - name: talk-db-migrate-staging
         image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
         command: ["bundle",  "exec", "rake", "db:migrate"]
         envFrom:
