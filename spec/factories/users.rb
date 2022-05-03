@@ -36,5 +36,15 @@ FactoryGirl.define do
         user.roles.create section: evaluator.section, name: 'scientist'
       end
     end
+
+    factory :translator do
+      transient do
+        section 'project-1'
+      end
+
+      after :create do |user, evaluator|
+        user.roles.create section: evaluator.section, name: 'translator'
+      end
+    end
   end
 end

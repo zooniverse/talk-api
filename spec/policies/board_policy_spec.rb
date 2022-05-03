@@ -29,6 +29,44 @@ RSpec.describe BoardPolicy, type: :policy do
     end
   end
 
+  context 'with permissions read:translator write:translator' do
+    let(:record){ create :board, section: 'project-1', permissions: { read: 'translator', write: 'translator' } }
+
+    context 'without a user' do
+      it_behaves_like 'a policy excluding'
+      it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
+    end
+
+    context 'with a user' do
+      let(:user){ create :user }
+      it_behaves_like 'a policy excluding'
+      it_behaves_like 'a policy forbidding', :show, :create, :update, :destroy
+    end
+
+    context 'with a translator' do
+      let(:user){ create :translator }
+      it_behaves_like 'a policy forbidding', :create, :update, :destroy
+      it_behaves_like 'a policy permitting', :index, :show
+    end
+
+    context 'with a team member' do
+      let(:user){ create :scientist }
+      it_behaves_like 'a policy excluding'
+      it_behaves_like 'a policy forbidding', :create, :update, :destroy
+      it_behaves_like 'a policy permitting', :index, :show
+    end
+
+    context 'with a moderator' do
+      let(:user){ create :moderator }
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
+    end
+
+    context 'with an admin' do
+      let(:user){ create :admin }
+      it_behaves_like 'a policy permitting', :index, :show, :create, :update, :destroy
+    end
+  end
+
   context 'with permissions read:team write:team' do
     let(:record){ create :board, section: 'project-1', permissions: { read: 'team', write: 'team' } }
 
