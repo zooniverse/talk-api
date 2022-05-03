@@ -49,11 +49,16 @@ class BoardPolicy < ApplicationPolicy
 
     def for_roles
       user_roles.collect do |section, roles|
+        roles << 'translator' if translator_for?(roles)
         roles << 'team' if team_for?(section)
-        roles << 'moderator' if 'admin'.in?(roles)
+        roles << 'moderator' if 'admin'.in?(roles) # admin is the owner role for the section
         quoted_roles = roles.uniq.collect{ |role| quote role }.join ', '
         "(boards.permissions ->> '#{ @permission }' in (#{ quoted_roles }) and boards.section = #{ quote section })"
       end
+    end
+
+    def translator_for?(roles)
+      'admin'.in?(roles) || 'moderator'.in?(roles) || 'scientist'.in?(roles) || 'translator'.in?(roles)
     end
 
     def team_for?(section)
