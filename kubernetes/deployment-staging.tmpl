@@ -340,14 +340,13 @@ spec:
     - talk-staging.zooniverse.org
     - talk-staging.azure.zooniverse.org
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: talk-staging-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
     nginx.ingress.kubernetes.io/set-real-ip-from: "10.0.0.0/8"
 spec:
@@ -360,14 +359,20 @@ spec:
   - host: talk-staging.zooniverse.org
     http:
       paths:
-      - backend:
-          serviceName: talk-staging-app
-          servicePort: 80
-        path: /(.*)
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: talk-staging-app
+            port:
+              number: 80
   - host: talk-staging.azure.zooniverse.org
     http:
       paths:
-      - backend:
-          serviceName: talk-staging-app
-          servicePort: 80
-        path: /(.*)
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: talk-staging-app
+            port:
+              number: 80
