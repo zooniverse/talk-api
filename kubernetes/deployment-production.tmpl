@@ -168,7 +168,7 @@ spec:
   maxReplicas: 8
   targetCPUUtilizationPercentage: 80
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
    name: talk-production-app-pdb
@@ -251,7 +251,7 @@ spec:
     requests:
       storage: 5Gi
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
    name: talk-production-sidekiq-pdb
@@ -333,7 +333,7 @@ spec:
           hostPath:
             path: /sys
 ---
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
    name: talk-production-redis-pdb
