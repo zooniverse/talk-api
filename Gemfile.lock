@@ -358,8 +358,8 @@ DEPENDENCIES
   benchmark-ips
   codeclimate-test-reporter (~> 0.5)
   factory_girl_rails (~> 4.7.0)
-  faraday (~> 0.9.2)
-  faraday_middleware (~> 0.12.2)
+  faraday
+  faraday_middleware
   guard (~> 2.14.0)
   guard-rspec (~> 4.6.5)
   honeybadger (~> 4.5.0)
@@ -387,7 +387,7 @@ DEPENDENCIES
   timecop
   webmock (~> 3.4)
   zoo_stream (~> 1.0)
-  zooniverse_social (~> 1.1)
+  zooniverse_social
 
 BUNDLED WITH
    1.17.3

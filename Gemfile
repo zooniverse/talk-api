@@ -11,15 +11,15 @@ gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializ
 gem 'json-schema', '~> 2.8'
 gem 'json-schema_builder', '~> 0.0.8'
 gem 'aws-sdk', '~> 2.3.7'
-gem 'faraday', '~> 0.9.2'
-gem 'faraday_middleware', '~> 0.12.2'
+gem 'faraday'
+gem 'faraday_middleware'
 gem 'pundit', '~> 1.1.0'
 gem 'spring', '~> 1.7.1', group: :development
 gem 'newrelic_rpm'
 gem 'honeybadger', '~> 4.5.0'
 gem 'logstasher', '~> 0.9.0'
 gem 'zoo_stream', '~> 1.0'
-gem 'zooniverse_social', '~>1.1'
+gem 'zooniverse_social'
 gem 'schema_plus_pg_indexes', '~> 0.1.12'
 gem 'puma'
 
