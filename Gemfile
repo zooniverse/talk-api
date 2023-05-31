@@ -19,7 +19,6 @@ gem 'newrelic_rpm'
 gem 'honeybadger', '~> 4.5.0'
 gem 'logstasher', '~> 0.9.0'
 gem 'zoo_stream', '~> 1.0'
-gem 'zooniverse_social'
 gem 'schema_plus_pg_indexes', '~> 0.1.12'
 gem 'puma'
 
