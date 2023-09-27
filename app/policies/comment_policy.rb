@@ -10,7 +10,7 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def create?
-    logged_in? && !locked? && writable?
+    logged_in? && !locked? && writable? && of_posting_age?
   end
 
   def update?

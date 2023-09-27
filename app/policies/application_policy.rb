@@ -77,6 +77,18 @@ class ApplicationPolicy
       true
     end
 
+    def of_posting_age?
+      return true unless ENV['POSTING_AGE_REQUIREMENT']
+
+      user.created_at < (Time.now - age_requirement)
+    end
+
+    def age_requirement
+      req = ENV.fetch('POSTING_AGE_REQUIREMENT', '1 week')
+      quant, duration = req.split(' ')
+      quant.to_i.send(duration)
+    end
+
     def roles_in(section)
       user_roles.fetch section, []
     end

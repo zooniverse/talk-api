@@ -38,6 +38,13 @@ RSpec.describe CommentPolicy, type: :policy do
       it_behaves_like 'a policy permitting', :index, :show, :create, :move, :upvote, :remove_upvote
       it_behaves_like 'a policy forbidding', :update, :destroy
     end
+
+    context 'with a new account' do
+      ENV['POSTING_AGE_REQUIREMENT'] = '1 week'
+      let(:user){ create :user, created_at: Time.now }
+      it_behaves_like 'a policy permitting', :index, :show, :upvote, :remove_upvote
+      it_behaves_like 'a policy forbidding', :create, :update, :destroy, :move
+    end
   end
 
   context 'with permissions read:team write:team' do
