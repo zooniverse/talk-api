@@ -10,7 +10,7 @@ class CommentPolicy < ApplicationPolicy
   end
 
   def create?
-    if Array.wrap(record).compact.any? { |a| a.section == 'zooniverse' }
+    if Array.wrap(record).compact.any? { |c| c.discussion.board.section == 'zooniverse' }
       logged_in? && !locked? && writable? && of_posting_age?
     else
       logged_in? && !locked? && writable?
