@@ -84,9 +84,8 @@ class ApplicationPolicy
     end
 
     def age_requirement
-      req = ENV.fetch('POSTING_AGE_REQUIREMENT', '1 week')
-      quant, duration = req.split(' ')
-      quant.to_i.send(duration)
+      quant = ENV.fetch('POSTING_AGE_REQUIREMENT', '24')
+      quant.to_i.hours
     end
 
     def roles_in(section)
