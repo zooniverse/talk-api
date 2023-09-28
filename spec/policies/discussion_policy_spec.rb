@@ -19,6 +19,14 @@ RSpec.describe DiscussionPolicy, type: :policy do
       it_behaves_like 'a policy forbidding', :update, :destroy
     end
 
+    context 'with a brand new user' do
+      ENV['POSTING_AGE_REQUIREMENT'] = '24'
+      let(:user){ create :user, created_at: Time.now }
+      let(:board){ create :board, section: 'zooniverse', permissions: { read: 'all', write: 'all' } }
+      it_behaves_like 'a policy permitting', :index, :show
+      it_behaves_like 'a policy forbidding', :create, :update, :destroy
+    end
+
     context 'with the owner' do
       let(:user){ record.user }
       it_behaves_like 'a policy permitting', :index, :show, :create, :update
