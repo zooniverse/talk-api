@@ -20,10 +20,25 @@ RSpec.describe ApplicationPolicy, type: :policy do
   end
 
   context 'with a user' do
+    ENV['POSTING_AGE_REQUIREMENT'] = '24'
     let(:user){ create :user }
     let(:record){ OpenStruct.new user_id: user.id + 1, section: 'project-1' }
 
     it{ is_expected.to be_logged_in }
+    it{ is_expected.to be_of_posting_age }
+    it{ is_expected.to_not be_owner }
+    it{ is_expected.to_not be_moderator }
+    it{ is_expected.to_not be_admin }
+    it{ is_expected.to_not be_team }
+    it{ is_expected.to have_attributes user_roles: { } }
+  end
+
+  context 'with a brand new user' do
+    ENV['POSTING_AGE_REQUIREMENT'] = '24'
+    let(:user){ create :user, created_at: Time.now }
+
+    it{ is_expected.to be_logged_in }
+    it{ is_expected.to_not be_of_posting_age }
     it{ is_expected.to_not be_owner }
     it{ is_expected.to_not be_moderator }
     it{ is_expected.to_not be_admin }

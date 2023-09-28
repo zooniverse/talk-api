@@ -6,6 +6,7 @@ FactoryGirl.define do
     email { "#{ login }@example.com" }
     admin false
     banned false
+    created_at Time.now - 1.year
 
     factory :moderator do
       transient do

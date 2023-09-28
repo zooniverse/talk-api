@@ -38,6 +38,22 @@ RSpec.describe CommentPolicy, type: :policy do
       it_behaves_like 'a policy permitting', :index, :show, :create, :move, :upvote, :remove_upvote
       it_behaves_like 'a policy forbidding', :update, :destroy
     end
+
+    context 'with a new account' do
+      let(:user){ create :user, created_at: Time.now }
+      ENV['POSTING_AGE_REQUIREMENT'] = '24'
+
+      context 'on a project board' do
+        it_behaves_like 'a policy permitting', :index, :show, :create, :upvote, :remove_upvote
+        it_behaves_like 'a policy forbidding', :update, :destroy, :move
+      end
+
+      context 'on the zooniverse board' do
+        let(:board){ create :board, section: 'zooniverse', permissions: { read: 'all', write: 'all' } }
+        it_behaves_like 'a policy permitting', :index, :show, :upvote, :remove_upvote
+        it_behaves_like 'a policy forbidding', :create, :update, :destroy, :move
+      end
+    end
   end
 
   context 'with permissions read:team write:team' do
