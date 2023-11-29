@@ -15,6 +15,11 @@ RSpec.describe ConversationPolicy, type: :policy do
     it_behaves_like 'a policy forbidding', :show, :update, :destroy
   end
 
+  context 'with an unconfirmed user' do
+    let(:user){ create :user, confirmed_at: nil }
+    it_behaves_like 'a policy forbidding', :index, :show, :create, :destroy, :update
+  end
+
   context 'with a participant' do
     let(:user){ record.users.first }
     it_behaves_like 'a policy permitting', :index, :show, :create, :destroy

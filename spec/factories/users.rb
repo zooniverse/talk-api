@@ -7,6 +7,7 @@ FactoryGirl.define do
     admin false
     banned false
     created_at Time.now - 1.year
+    confirmed_at Time.now - 364.days
 
     factory :moderator do
       transient do

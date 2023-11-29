@@ -39,6 +39,12 @@ RSpec.describe CommentPolicy, type: :policy do
       it_behaves_like 'a policy forbidding', :update, :destroy
     end
 
+    context 'with an unconfirmed user' do
+      let(:user){ create :user, confirmed_at: nil }
+      it_behaves_like 'a policy permitting', :index, :show, :upvote, :remove_upvote
+      it_behaves_like 'a policy forbidding', :update, :destroy, :move
+    end
+
     context 'with a new account' do
       let(:user){ create :user, created_at: Time.now }
       ENV['POSTING_AGE_REQUIREMENT'] = '24'
