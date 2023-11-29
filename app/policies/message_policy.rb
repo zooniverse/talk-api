@@ -1,14 +1,14 @@
 class MessagePolicy < ApplicationPolicy
   def index?
-    logged_in?
+    logged_in? && confirmed?
   end
 
   def show?
-    moderator? || admin? || participant?
+    (moderator? || admin? || participant?) && confirmed?
   end
 
   def create?
-    participant?
+    participant? && confirmed?
   end
 
   def update?
