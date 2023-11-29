@@ -79,7 +79,8 @@ namespace :panoptes do
           zooniverse_id varchar(255),
           credited_name varchar(255),
           admin bool,
-          banned bool
+          banned bool,
+          confirmed_at timestamp(6)
         ) server panoptes;
 
         create foreign table if not exists oauth_access_tokens (
@@ -232,7 +233,8 @@ namespace :panoptes do
           banned boolean default false not null,
           migrated boolean default false,
           valid_email boolean default true not null,
-          uploaded_subjects_count integer default 0
+          uploaded_subjects_count integer default 0,
+          confirmed_at timestamp(6) without time zone default null
         );
 
         drop table if exists oauth_access_tokens;
