@@ -27,6 +27,13 @@ RSpec.describe DiscussionPolicy, type: :policy do
       it_behaves_like 'a policy forbidding', :create, :update, :destroy
     end
 
+    context 'with an unconfirmed user' do
+      let(:user){ create :user, confirmed_at: nil }
+      let(:board){ create :board, section: 'zooniverse', permissions: { read: 'all', write: 'all' } }
+      it_behaves_like 'a policy permitting', :index, :show
+      it_behaves_like 'a policy forbidding', :create, :update, :destroy
+    end
+
     context 'with the owner' do
       let(:user){ record.user }
       it_behaves_like 'a policy permitting', :index, :show, :create, :update

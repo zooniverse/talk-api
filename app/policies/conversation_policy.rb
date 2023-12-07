@@ -1,14 +1,14 @@
 class ConversationPolicy < ApplicationPolicy
   def index?
-    logged_in?
+    logged_in? && confirmed?
   end
 
   def show?
-    moderator? || admin? || participant?
+    (moderator? || admin? || participant?) && confirmed?
   end
 
   def create?
-    logged_in?
+    logged_in? && confirmed?
   end
 
   def update?
@@ -16,7 +16,7 @@ class ConversationPolicy < ApplicationPolicy
   end
 
   def destroy?
-    participant?
+    participant? && confirmed?
   end
 
   class Scope < Scope

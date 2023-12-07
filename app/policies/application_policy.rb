@@ -77,6 +77,10 @@ class ApplicationPolicy
       true
     end
 
+    def confirmed?
+      !!user.confirmed_at
+    end
+
     def of_posting_age?
       return true unless ENV['POSTING_AGE_REQUIREMENT']
 

@@ -11,9 +11,9 @@ class DiscussionPolicy < ApplicationPolicy
 
   def create?
     if Array.wrap(record).compact.any? { |d| d.board.section == 'zooniverse' }
-      writable? && of_posting_age?
+      writable? && confirmed? && of_posting_age?
     else
-      writable?
+      writable? && confirmed?
     end
   end
 

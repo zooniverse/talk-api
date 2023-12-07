@@ -11,18 +11,18 @@ class CommentPolicy < ApplicationPolicy
 
   def create?
     if Array.wrap(record).compact.any? { |c| c.discussion.board.section == 'zooniverse' }
-      logged_in? && !locked? && writable? && of_posting_age?
+      logged_in? && !locked? && writable? && confirmed? && of_posting_age?
     else
-      logged_in? && !locked? && writable?
+      logged_in? && !locked? && writable? && confirmed?
     end
   end
 
   def update?
-    owner? && !deleted? && !locked? && writable?
+    owner? && !deleted? && !locked? && writable? && confirmed?
   end
 
   def destroy?
-    owner? && !deleted? && !locked? && writable?
+    owner? && !deleted? && !locked? && writable? && confirmed?
   end
 
   def move?
