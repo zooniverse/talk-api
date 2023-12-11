@@ -69,6 +69,13 @@ RSpec.describe ConversationService, type: :service do
           expect{ service.build }.to raise_error Talk::UserBlockedError
         end
       end
+
+      context 'when the sender is unconfirmed' do
+        it 'should fail' do
+          current_user.confirmed_at = nil
+          expect{ service.build }.to raise_error Talk::UserUnconfirmedError
+        end
+      end
     end
   end
 end
