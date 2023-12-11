@@ -31,6 +31,13 @@ module Talk
     alias_method :to_s, :message
   end
 
+  class UserUnconfirmedError < StandardError
+    def message
+      'You must confirm your account'
+    end
+    alias_method :to_s, :message
+  end
+
   class InvalidParameterError < StandardError
     def initialize(param, expected, actual)
       @param = param
