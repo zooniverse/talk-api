@@ -13,6 +13,7 @@ class ConversationService < ApplicationService
 
     raise Talk::BlockedUserError.new if blocked?
     raise Talk::UserBlockedError.new if blocking?
+    raise Talk::UserUnconfirmedError.new if unconfirmed?
     recipient_ids.each do |recipient_id|
       conversation.user_conversations.build user_id: recipient_id, is_unread: true
     end
@@ -47,5 +48,9 @@ class ConversationService < ApplicationService
 
   def blocking?
     BlockedUser.blocked_by(current_user.id).blocking(recipient_ids).exists?
+  end
+
+  def unconfirmed?
+    current_user.confirmed_at.nil?
   end
 end

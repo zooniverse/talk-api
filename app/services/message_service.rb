@@ -6,6 +6,7 @@ class MessageService < ApplicationService
       built.user_ip = user_ip
       raise Talk::BlockedUserError.new if blocked?
       raise Talk::UserBlockedError.new if blocking?
+      raise Talk::UserUnconfirmedError.new if unconfirmed?
     end
   end
 
@@ -17,6 +18,11 @@ class MessageService < ApplicationService
   def blocking?
     return false unless resource.conversation
     BlockedUser.blocked_by(current_user.id).blocking(recipient_ids).exists?
+  end
+
+  def unconfirmed?
+    return false unless resource.conversation
+    current_user.confirmed_at.nil?
   end
 
   def recipient_ids
