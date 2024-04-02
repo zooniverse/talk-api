@@ -71,5 +71,15 @@ RSpec.describe NotificationEmailWorker, type: :worker do
         worker.perform user.id, :daily
       end
     end
+
+    context 'when user email is invalid' do
+      it 'should not attempt to deliver email' do
+        user.update(valid_email: false)
+        mail = double deliver_now!: true
+        expect(NotificationMailer).not_to receive(:notify)
+        expect(mail).not_to receive :deliver_now!
+        worker.perform user.id, :daily
+      end
+    end
   end
 end
