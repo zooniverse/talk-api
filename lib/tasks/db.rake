@@ -80,6 +80,7 @@ namespace :panoptes do
           credited_name varchar(255),
           admin bool,
           banned bool,
+          valid_email bool,
           confirmed_at timestamp(6)
         ) server panoptes;
 
