@@ -14,6 +14,9 @@ class NotificationEmailWorker
 
   def perform(user_id, digest)
     user = ::User.find user_id
+
+    return unless user.valid_email
+
     digest_number = SubscriptionPreference.email_digests[digest]
 
     # Ensure there are categories delivered at this frequency
