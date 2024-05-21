@@ -28,6 +28,7 @@ jobs:
           - Gemfile
           - Gemfile.next
         ruby:
+          - 2.5
           - 2.6
     steps:
       - uses: actions/checkout@v3
