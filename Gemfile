@@ -1,3 +1,6 @@
+def next?
+  File.basename(__FILE__) == "Gemfile.next"
+end
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.2'
@@ -32,6 +35,7 @@ group :test, :development do
   gem 'timecop'
   gem 'pry', '~> 0.11.3'
   gem 'benchmark-ips'
+  gem 'ten_years_rails'
 end
 
 group :test do

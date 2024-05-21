@@ -1,0 +1,57 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:11
+    environment:
+      - "POSTGRES_USER=talkapi"
+      - "POSTGRES_PASSWORD=talkapi"
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+
+  talkapi:
+    image: talkapi:rails-next-local
+    build:
+      context: .
+      dockerfile: Dockerfile.rails-next
+      args:
+        RAILS_ENV: development
+    volumes:
+      - ./:/rails_app
+      - gem_cache:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    environment:
+      - "RAILS_ENV=development"
+      - "DATABASE_URL=postgresql://talkapi:talkapi@pg"
+      - "PANOPTES_DATABASE_URL=postgresql://talkapi:talkapi@pg"
+      - "REDIS_URL=redis://redis:6379/0"
+      - "DISABLE_SPRING=true"
+    links:
+      - postgres:pg
+      - redis
+
+  sidekiq:
+    image: talkapi:rails-next-local
+    volumes:
+      - ./:/rails_app
+      - gem_cache:/usr/local/bundle
+    command: ["/rails_app/docker/start-sidekiq.sh"]
+    environment:
+      - "RAILS_ENV=development"
+      - "DATABASE_URL=postgresql://talkapi:talkapi@pg"
+      - "PANOPTES_DATABASE_URL=postgresql://talkapi:talkapi@pg"
+      - "REDIS_URL=redis://redis:6379/0"
+      - "DISABLE_SPRING=true"
+      - "SIDEKIQ_VERBOSE=true"
+    links:
+      - redis:redis
+      - postgres:pg
+
+volumes:
+  gem_cache:
