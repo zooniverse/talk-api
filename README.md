@@ -28,8 +28,6 @@ Alternatively use docker to run a testing environment bash shell and run test co
     5. `RAILS_ENV=test bundle exec rake panoptes:db:setup`
 4. `bundle exec rspec`
 
-** See *.travis.yml* for more details on how to setup the talk database.
-
 ## Layout
 
 The app is built to conform to the [JSON API spec](http://jsonapi.org/)
@@ -70,6 +68,25 @@ Talk is built to integrate with [Panoptes](https://github.com/zooniverse/panopte
 Authentication is provided by signing your requests with a Bearer-Token
 
 Some resources ([User](app/models/user.rb), [Subject](app/models/subject.rb)) are proxied from Panoptes
+
+## Setting Up Rails-next
+Using the gem https://github.com/clio/ten_years_rails to help with the upgrade path https://www.youtube.com/watch?v=6aCfc0DkSFo
+
+### Using docker-compose for env setup
+
+```
+docker-compose -f docker-compose-rails-next.yml build
+
+docker-compose -f docker-compose-rails-next.yml run --service-ports --rm talkapi bash
+```
+
+### Install the gems via next
+
+`BUNDLE_GEMFILE=Gemfile.next bundle install`
+
+OR
+
+`next bundle install`
 
 
 ## To-Do

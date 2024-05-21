@@ -13,6 +13,7 @@ RUN --mount=type=cache,id=talk-apt-cache,target=/var/cache/apt --mount=type=cach
     tmpreaper
 
 ARG RAILS_ENV=production
+ENV RAILS_ENV=$RAILS_ENV
 
 ADD ./Gemfile.next /rails_app/
 ADD ./Gemfile.next.lock /rails_app/

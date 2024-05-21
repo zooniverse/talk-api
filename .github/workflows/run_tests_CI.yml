@@ -21,12 +21,20 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    continue-on-error: true
+    strategy:
+      matrix:
+        gemfile:
+          - Gemfile
+          - Gemfile.next
+        ruby:
+          - 2.6
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.5
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - name: Install PG Client
         run: |

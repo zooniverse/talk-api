@@ -3,7 +3,11 @@ def next?
 end
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.2'
+if next?
+  gem 'rails', '5.0.7.2'
+else
+  gem 'rails', '~> 4.2'
+end
 gem 'rack-cors', '~> 1.0.5'
 gem 'pg', '~> 0.21'
 gem 'redis', '~> 3.3.0'
@@ -17,16 +21,28 @@ gem 'aws-sdk', '~> 2.3.7'
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'pundit', '~> 1.1.0'
-gem 'spring', '~> 1.7.1', group: :development
+if next?
+  gem 'spring', '~> 2.0.2', group: :development
+else
+  gem 'spring', '~> 1.7.1', group: :development
+end
 gem 'newrelic_rpm'
 gem 'honeybadger', '~> 4.5.0'
 gem 'logstasher', '~> 0.9.0'
 gem 'zoo_stream', '~> 1.0'
-gem 'schema_plus_pg_indexes', '~> 0.1.12'
+if next?
+  gem 'schema_plus_pg_indexes', '~> 0.2.1'
+else
+  gem 'schema_plus_pg_indexes', '~> 0.1.12'
+end
 gem 'puma'
 
 group :test, :development do
-  gem 'rspec-rails', '~> 3.4.2'
+  if next?
+    gem 'rspec-rails', '~> 4.1.2'
+  else
+    gem 'rspec-rails', '~> 3.4.2'
+  end
   gem 'rspec-its', '~> 1.2.0'
   gem 'spring-commands-rspec', '~> 1.0.4'
   gem 'factory_girl_rails', '~> 4.7.0'
