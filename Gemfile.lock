@@ -313,7 +313,7 @@ GEM
       rest-client (>= 2.0.2)
     thor (1.1.0)
     thread_safe (0.3.6)
-    timecop (0.8.1)
+    timecop (0.9.8)
     timers (4.1.2)
       hitimes
     tzinfo (1.2.10)
