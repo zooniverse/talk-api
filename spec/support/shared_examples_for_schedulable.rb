@@ -3,6 +3,7 @@ shared_examples 'is schedulable' do
 
   it 'gets queued on enqueued_times' do
     enqueued_times.each do |enqueued_time|
+        # update to formatted_enqueue_time when updating sidekiq-cron to 1.9+ (sidekiq 7 support)
         job_enqueue_time = Time.at(job.formated_enqueue_time.to_f).utc
         expect(job_enqueue_time).to eq(enqueued_time)
     end
