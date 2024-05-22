@@ -1,0 +1,36 @@
+# Here is a list of jobs that are scheduled to run periodically.
+# We use a UNIX cron notation to specify execution schedule.
+#
+# Please read here for more information:
+# https://github.com/ondrejbartas/sidekiq-cron#adding-cron-job
+
+announcement_expiry_worker:
+  cron: "0 * * * *"
+  class: "AnnouncementExpiryWorker"
+  queue: "default"
+  description: "Hourly worker that destroys all expired Announcements. Announcements expires_at set to 1 month from creation"
+daily_digest_email_worker:
+  cron: "0 6 * * *"
+  class: "DailyDigestEmailWorker"
+  queue: "default"
+  description: "Daily worker that sends notifications to users who have a Daily Subscription Preference. Runs at 6th hour of the day."
+data_request_expiry_worker:
+  cron: "0 * * * *"
+  class: "DataRequestExpiryWorker"
+  queue: "default"
+  description: "Hourly worker that destroys all expired Data Requests. Data Request expires_at is set to 1 day from request creation."
+notification_expiry_worker:
+  cron: "0 * * * *"
+  class: "NotificationExpiryWorker"
+  queue: "default"
+  description: "Hourly worker that destroys all expired Notifications. Notifications expires in 3 months of creation"
+unsubscribe_token_expiry_worker:
+  cron: "0 * * * *"
+  class: "UnsubscribeTokenExpiryWorker"
+  queue: "default"
+  description: "Hourly worker that destroys all unsubscribe_tokens. Unsubscribe_token expires_at set to 1 month of creation"
+weekly_digest_expiry_worker:
+  cron: "0 12 * * 1"
+  class: "WeeklyDigestEmailWorker"
+  queue: "default"
+  description: "Weekly worker that sends notifications to users who have a subscription preference set to weekly. Runs on Mondays on the 12th hour of the day."

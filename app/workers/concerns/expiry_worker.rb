@@ -3,14 +3,12 @@ module ExpiryWorker
 
   included do
     include Sidekiq::Worker
-    include Sidetiq::Schedulable
 
     class << self
       attr_accessor :model
     end
 
     sidekiq_options retry: false, backtrace: true
-    recurrence{ hourly }
   end
 
   def perform

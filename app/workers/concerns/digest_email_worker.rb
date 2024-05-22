@@ -3,13 +3,8 @@ module DigestEmailWorker
 
   included do
     include Sidekiq::Worker
-    include Sidetiq::Schedulable
 
     sidekiq_options retry: false, backtrace: true
-
-    class << self
-      attr_accessor :frequency
-    end
   end
 
   def perform
