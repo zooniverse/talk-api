@@ -18,9 +18,17 @@ end
 RSpec.shared_examples_for 'an expiry worker' do |model:|
   it{ is_expected.to be_a Sidekiq::Worker }
 
-  describe 'schedule' do
-    subject{ described_class.schedule.to_s }
-    it{ is_expected.to eql 'Hourly' }
+  describe 'hourly schedule' do
+    it_behaves_like 'is schedulable' do
+      let(:cron_sched) { '0 * * * *' }
+      let(:enqueue_time) { Fugit::Cron.parse(cron_sched).previous_time }
+      let(:class_name) { described_class.name }
+      let(:enqueued_times) {
+        [
+          enqueue_time.utc
+        ]
+      }
+    end
   end
 
   describe '.model' do

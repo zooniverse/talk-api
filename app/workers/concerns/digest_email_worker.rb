@@ -5,6 +5,10 @@ module DigestEmailWorker
     include Sidekiq::Worker
 
     sidekiq_options retry: false, backtrace: true
+
+    class << self
+      attr_accessor :frequency
+    end
   end
 
   def perform
