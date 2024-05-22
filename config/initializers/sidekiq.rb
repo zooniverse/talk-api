@@ -29,11 +29,6 @@ Sidekiq::Web.use Rack::Auth::Basic do |name, password|
   password == ENV.fetch('SIDEKIQ_ADMIN_PASSWORD')
 end unless Rails.env.test? || Rails.env.development?
 
-require 'sidetiq'
-Sidetiq.configure do |config|
-  config.utc = true
-end
-
 # preload autoloaded workers
 Dir[Rails.root.join('app/workers/**/*.rb')].sort.each do |path|
   name = path.match(/workers\/(.+)\.rb$/)[1]
