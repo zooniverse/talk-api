@@ -31,9 +31,21 @@ end
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include JSON::SchemaBuilder::RSpecHelper, type: :schema
+  MOCK_REDIS ||= MockRedis.new
 
   config.before(:suite){ WebMock.disable_net_connect! }
   config.after(:suite){ WebMock.allow_net_connect! }
+
+  config.before(:each) do |example|
+    allow(Redis).to receive(:new).and_return(MOCK_REDIS)
+
+    MOCK_REDIS.keys.each do |key|
+      MOCK_REDIS.del(key)
+    end
+
+    # Clears out the jobs for tests using the fake testing
+    Sidekiq::Worker.clear_all
+  end
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

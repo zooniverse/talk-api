@@ -4,6 +4,7 @@
 /log/*.log
 /tmp
 /config/*.yml
+!/config/schedule.yml
 /.rvmrc
 /coverage
 **.orig
