@@ -30,7 +30,6 @@ gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializ
 gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
-gem 'spring', '~> 1.7.1', group: :development
 gem 'zoo_stream', '~> 1.0'
 
 group :test, :development do
