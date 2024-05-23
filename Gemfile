@@ -29,7 +29,7 @@ gem 'redis', '~> 3.3.0'
 gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializer.git', branch: 'talk-api-version', ref: '637aaaf85e'
 gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
-gem 'sidekiq-cron'
+gem 'sidekiq-cron', '<=1.8.0' # can remove this version constraint once we are on Rails 5+
 gem 'zoo_stream', '~> 1.0'
 
 group :test, :development do
