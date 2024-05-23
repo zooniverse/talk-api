@@ -1,3 +1,4 @@
 docker-compose.yml
 config/database.yml
 config/secrets.yml
+docker-compose-rails-next.yml
