@@ -346,7 +346,7 @@ DEPENDENCIES
   schema_plus_pg_indexes (~> 0.1.12)
   sidekiq (< 6)
   sidekiq-congestion (~> 0.1.0)
-  sidekiq-cron
+  sidekiq-cron (<= 1.8.0)
   simplecov (~> 0.11.2)
   spring (~> 1.7.1)
   spring-commands-rspec (~> 1.0.4)
