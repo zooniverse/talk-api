@@ -51,7 +51,8 @@ RSpec.shared_examples_for 'a controller updating' do
       end
 
       it 'should be an object' do
-        expect(response.json).to be_a Hash
+        response_body = JSON.parse(response.body)
+        expect(response_body).to be_a Hash
       end
     end
 

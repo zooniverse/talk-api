@@ -18,11 +18,13 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should be json' do
-      expect(response.content_type).to eql 'application/json'
+      # starting from Rails 5+, if responding with 204, content-type of response is set by Rails as nil
+      expect(response.content_type).to eql 'application/json' unless response.status == 204
     end
 
     it 'should be an object' do
-      expect(response.json).to be_a Hash
+      response_body = JSON.parse(response.body)
+      expect(response_body).to be_a Hash
     end
   end
 
@@ -38,7 +40,8 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should respond with the correct error message' do
-      expect(response.json[:error]).to eql 'You are banned'
+      response_body = JSON.parse(response.body).with_indifferent_access
+      expect(response_body[:error]).to eql 'You are banned'
     end
   end
 
@@ -47,7 +50,7 @@ RSpec.shared_examples_for 'a controller action' do
     let!(:banned_ip){ create :user_ip_ban }
     before(:each) do
       allow(subject).to receive(:current_user).and_return user
-      allow(subject.request).to receive(:remote_ip).and_return '1.2.3.4'
+      request.env['REMOTE_ADDR'] = '1.2.3.4'
       send_request
     end
 
@@ -56,7 +59,8 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should respond with the correct error message' do
-      expect(response.json[:error]).to eql 'You are banned'
+      response_body = JSON.parse(response.body).with_indifferent_access
+      expect(response_body[:error]).to eql 'You are banned'
     end
   end
 end

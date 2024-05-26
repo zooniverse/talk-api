@@ -77,7 +77,7 @@ Using the gem https://github.com/clio/ten_years_rails to help with the upgrade p
 ```
 docker-compose -f docker-compose-rails-next.yml build
 
-docker-compose -f docker-compose-rails-next.yml run --service-ports --rm talkapi bash
+docker-compose -f docker-compose-rails-next.yml run --service-ports --rm -e RAILS_ENV=test talkapi bash
 ```
 
 ### Install the gems via next

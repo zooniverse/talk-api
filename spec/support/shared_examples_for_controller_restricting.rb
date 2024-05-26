@@ -7,11 +7,12 @@ RSpec.shared_examples_for 'a restricted action' do
 
     it 'should respond appropriately' do
       send_request
+      response_body = JSON.parse(response.body).with_indifferent_access
       case expected_response
       when :error
-        expect(response.json).to have_key :error
+        expect(response_body).to have_key :error
       when :empty
-        expect(response.json[resource_name]).to be_empty
+        expect(response_body[resource_name]).to be_empty
       end
     end
   end

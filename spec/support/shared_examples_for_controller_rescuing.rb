@@ -15,7 +15,8 @@ RSpec.shared_examples_for 'ActionRescuing' do |exception, with: nil|
 
     it 'should report the error message' do
       get :index
-      expect(response.json[:error]).to eql exception.to_s
+      response_body = JSON.parse(response.body).with_indifferent_access
+      expect(response_body[:error]).to eql exception.to_s
     end
   end
 end
