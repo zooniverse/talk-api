@@ -11,7 +11,7 @@ RSpec.shared_examples_for 'a restricted action' do
       when :error
         expect(response.json).to have_key :error
       when :empty
-        expect(respons.json[resource_name]).to be_empty
+        expect(response.json[resource_name]).to be_empty
       end
     end
   end
