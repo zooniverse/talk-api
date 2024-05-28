@@ -23,8 +23,7 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should be an object' do
-      response_body = JSON.parse(response.body)
-      expect(response_body).to be_a Hash
+      expect(response.json).to be_a Hash
     end
   end
 
@@ -40,8 +39,7 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should respond with the correct error message' do
-      response_body = JSON.parse(response.body).with_indifferent_access
-      expect(response_body[:error]).to eql 'You are banned'
+      expect(response.json[:error]).to eql 'You are banned'
     end
   end
 
@@ -59,8 +57,7 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should respond with the correct error message' do
-      response_body = JSON.parse(response.body).with_indifferent_access
-      expect(response_body[:error]).to eql 'You are banned'
+      expect(response.json[:error]).to eql 'You are banned'
     end
   end
 end
