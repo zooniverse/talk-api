@@ -18,7 +18,8 @@ RSpec.shared_examples_for 'a controller action' do
     end
 
     it 'should be json' do
-      expect(response.content_type).to eql 'application/json'
+      # starting from Rails 5+, if responding with 204, content-type of response is set by Rails as nil
+      expect(response.content_type).to eql 'application/json' unless response.status == 204
     end
 
     it 'should be an object' do
@@ -47,7 +48,7 @@ RSpec.shared_examples_for 'a controller action' do
     let!(:banned_ip){ create :user_ip_ban }
     before(:each) do
       allow(subject).to receive(:current_user).and_return user
-      allow(subject.request).to receive(:remote_ip).and_return '1.2.3.4'
+      request.env['REMOTE_ADDR'] = '1.2.3.4'
       send_request
     end
 
