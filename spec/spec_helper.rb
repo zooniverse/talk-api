@@ -18,6 +18,8 @@ PanoptesUser = User # Since RSpec/FactoryGirl can't handle multiple databases
 
 Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
+$required_validation_text = Rails.version.starts_with?('4.2') ? "can't be blank" : "must exist"
+
 if ENV['EVIL_MODE']
   require 'open-uri'
 
