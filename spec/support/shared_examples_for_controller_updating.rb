@@ -8,6 +8,7 @@ RSpec.shared_examples_for 'a controller updating' do
 
   before :each do
     allow(subject).to receive(:current_user).and_return current_user
+    request.headers['CONTENT_TYPE'] = 'application/json'
   end
 
   describe '#update' do
