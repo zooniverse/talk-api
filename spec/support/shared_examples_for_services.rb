@@ -170,6 +170,7 @@ RSpec.shared_examples_for 'a service creating' do |resource|
 
     it 'should validate the schema' do
       schema = double create: double
+      service.build
       expect(service.schema_class).to receive(:new).and_return schema
       expect(schema.create).to receive(:validate!)
         .with(service.rooted_params)
