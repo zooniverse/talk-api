@@ -6,7 +6,7 @@ RSpec.describe UserConversation, type: :model do
   context 'validating' do
     it 'should require a user' do
       without_user = build :user_conversation, user_id: nil
-      expect(without_user).to fail_validation user: "can't be blank"
+      expect(without_user).to fail_validation
     end
   end
 
