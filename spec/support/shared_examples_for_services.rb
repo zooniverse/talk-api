@@ -69,7 +69,7 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
 
   describe '#unrooted_params' do
     let(:create_params){ { resource.table_name => { foo: 1 } } }
-    subject{ service.unrooted_params }
+    subject{ service.unrooted_params.to_h }
     it{ is_expected.to include 'foo' => 1 }
 
     it 'should permit the params' do
@@ -98,19 +98,13 @@ RSpec.shared_examples_for 'a service' do |resource, sets_user: true|
       end
 
       it 'should set the user id' do
-        expect{
-          service.set_user
-        }.to change{
-          service.unrooted_params[:user_id]
-        }.from(nil).to current_user.id
+        service.set_user
+        expect(service.unrooted_params[:user_id]).to eq(current_user.id)
       end
 
       it 'should accept a block' do
-        expect{
-          service.set_user{ unrooted_params[:foo] = 123 }
-        }.to change{
-          service.unrooted_params[:foo]
-        }.from(nil).to 123
+        service.set_user{ unrooted_params[:foo] = 123 }
+        expect(service.unrooted_params[:foo]).to eq(123)
       end
     end
   end

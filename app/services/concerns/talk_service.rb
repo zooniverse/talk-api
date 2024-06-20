@@ -33,7 +33,7 @@ module TalkService
   end
 
   def update_resource
-    resource.assign_attributes unrooted_params
+    resource.assign_attributes unrooted_params.to_h
   rescue ArgumentError => e
     reraise_enum_errors e
   rescue NameError => e
