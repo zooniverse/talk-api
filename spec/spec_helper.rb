@@ -18,7 +18,6 @@ PanoptesUser = User # Since RSpec/FactoryGirl can't handle multiple databases
 
 Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
-
 if ENV['EVIL_MODE']
   require 'open-uri'
 
