@@ -15,11 +15,11 @@ class NotificationMailer < ApplicationMailer
     find_notifications_for categories
     organize
 
-    mail to: @user.email, subject: subject(digest_frequency)
+    mail to: @user.email, subject: subject(digest_frequency), template_name: 'notify'
   end
 
   def find_categories_for(digest_frequency)
-    @user.subscription_preferences.enabled.where(email_digest: digest_frequency).pluck :category
+    @user.subscription_preferences.enabled.where(email_digest: digest_frequency).pluck(:category)
   end
 
   def find_notifications_for(categories)
