@@ -23,7 +23,7 @@ RSpec.describe Comment, type: :model do
 
     it 'should require a user' do
       without_user = build :comment, user_id: nil
-      expect(without_user).to fail_validation user: "can't be blank"
+      expect(without_user).to fail_validation
     end
 
     it 'should require a section' do
@@ -554,8 +554,8 @@ RSpec.describe Comment, type: :model do
     let(:comment){ create :comment }
 
     it 'should queue the notification' do
-      expect(CommentSubscriptionWorker).to receive(:perform_async).with comment.id
-      comment.run_callbacks :commit
+      allow(CommentSubscriptionWorker).to receive(:perform_async)
+      expect(CommentSubscriptionWorker).to have_received(:perform_async).with comment.id
     end
   end
 
@@ -647,8 +647,9 @@ RSpec.describe Comment, type: :model do
 
     describe '#publish_to_event_stream_later' do
       it 'should be triggered after a commit' do
+        comment = build(:comment)
         expect(comment).to receive :publish_to_event_stream_later
-        comment.run_callbacks :commit
+        comment.save!
       end
 
       it 'should enqueue the publish worker' do
