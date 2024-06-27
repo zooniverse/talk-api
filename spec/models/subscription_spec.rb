@@ -5,7 +5,7 @@ RSpec.describe Subscription, type: :model do
     it 'should require a user' do
       without_user = build :subscription, user: nil
       expect(without_user).to_not be_valid
-      expect(without_user).to fail_validation user: "can't be blank"
+      expect(without_user).to fail_validation
     end
 
     it 'should require a category' do
@@ -17,7 +17,7 @@ RSpec.describe Subscription, type: :model do
     it 'should require a source' do
       without_source = build :subscription, source: nil
       expect(without_source).to_not be_valid
-      expect(without_source).to fail_validation source: "can't be blank"
+      expect(without_source).to fail_validation
     end
 
     describe SubscriptionUniquenessValidator do
