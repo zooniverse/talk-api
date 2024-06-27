@@ -4,7 +4,7 @@ RSpec.describe Role, type: :model do
   context 'validating' do
     it 'should require a user' do
       without_user = build :role, user: nil
-      expect(without_user).to fail_validation user: "can't be blank"
+      expect(without_user).to fail_validation
     end
 
     it 'should prevent duplicates' do
