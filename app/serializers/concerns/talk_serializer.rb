@@ -66,7 +66,7 @@ module TalkSerializer
     end
 
     def page(params = { }, scope = nil, context = { })
-      super params.to_h, scope_preloading_for(scope), context.merge(params: params)
+      super params, scope_preloading_for(scope), context.merge(params: params)
     end
 
     def page_with_options(options)

@@ -23,6 +23,5 @@ class ModerationsController < ApplicationController
     inverted_state = Moderation.states[params[:state]]
     raise Talk::InvalidParameterError.new(:state, "in #{ Moderation.states.keys }", params[:state]) unless inverted_state
     params[:state] = inverted_state
-    params.permit!
   end
 end
