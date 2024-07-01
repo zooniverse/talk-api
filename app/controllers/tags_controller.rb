@@ -4,7 +4,8 @@ class TagsController < ApplicationController
 
   def popular
     params[:name].try :downcase!
-    render json: popular_serializer.resource(params, nil, current_user: current_user)
+    params.permit!
+    render json: popular_serializer.resource(params.to_h, nil, current_user: current_user)
   end
 
   def popular_serializer
