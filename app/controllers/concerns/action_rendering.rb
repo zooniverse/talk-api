@@ -11,7 +11,8 @@ module ActionRendering
 
   def show
     authorize model_class.where(id: resource_ids)
-    render json: serializer_class.resource(params, nil, current_user: current_user)
+    params.permit!
+    render json: serializer_class.resource(params.to_h, nil, current_user: current_user)
   end
 
   def create
