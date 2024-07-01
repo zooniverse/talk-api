@@ -27,5 +27,6 @@ class CommentsController < ApplicationController
   def filter_subject_default
     board_ids = Board.where(section: params[:section], subject_default: params[:subject_default]).pluck :id
     params[:board_id] = board_ids.join ','
+    params.permit!
   end
 end
