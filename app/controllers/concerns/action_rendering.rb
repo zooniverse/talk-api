@@ -5,7 +5,8 @@ module ActionRendering
     authorize model_class
     scoped = policy_scope model_class
     params[:sort] ||= serializer_class.default_sort if serializer_class.default_sort
-    render json: serializer_class.page(params, scoped, current_user: current_user)
+    params.permit!
+    render json: serializer_class.page(params.to_h, scoped, current_user: current_user)
   end
 
   def show
