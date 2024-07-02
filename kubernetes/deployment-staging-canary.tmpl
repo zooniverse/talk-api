@@ -1,0 +1,150 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talk-staging-canary-app
+  labels:
+    app: talk-staging-canary-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: talk-staging-canary-app
+  template:
+    metadata:
+      labels:
+        app: talk-staging-canary-app
+    spec:
+      containers:
+        - name: talk-staging-canary-app
+          image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__-next
+          resources:
+            requests:
+              memory: "150Mi"
+              cpu: "100m"
+            limits:
+              memory: "250Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
+          envFrom:
+          - secretRef:
+              name: talk-common-env-vars
+          - secretRef:
+              name: talk-staging-env-vars
+          - configMapRef:
+              name: talk-staging-shared
+          volumeMounts:
+            - name: static-assets
+              mountPath: "/static-assets"
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "-c", "cp -R /rails_app/public/* /static-assets"]
+        - name: talk-staging-nginx
+          image: zooniverse/nginx
+          resources:
+            requests:
+              memory: "30Mi"
+              cpu: "10m"
+            limits:
+              memory: "100Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            initialDelaySeconds: 20
+          lifecycle:
+            preStop:
+              exec:
+                # SIGTERM triggers a quick exit; gracefully terminate instead
+                command: ["/usr/sbin/nginx","-s","quit"]
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: static-assets
+              mountPath: "/static-assets"
+            - name: talk-nginx-config
+              mountPath: "/etc/nginx-sites"
+      volumes:
+        - name: static-assets
+          hostPath:
+            # directory location on host node temp disk
+            path: /mnt/talk-staging-app-static-assets
+            type: DirectoryOrCreate
+        - name: talk-nginx-config
+          configMap:
+            name: talk-nginx-conf-staging
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: talk-staging-canary
+spec:
+  selector:
+    app: talk-staging-canary-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: talk-staging-canary-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-by-header: "Canary-Testing-Opt-In"
+spec:
+  tls:
+  - hosts:
+    - talk-staging.zooniverse.org
+    - talk-staging.azure.zooniverse.org
+    secretName: talk-staging-tls
+  rules:
+  - host: talk-staging.zooniverse.org
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: talk-staging-canary
+            port:
+              number: 80
+  - host: talk-staging.azure.zooniverse.org
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: talk-staging-canary
+            port:
+              number: 80
