@@ -19,6 +19,19 @@ class MessagePolicy < ApplicationPolicy
     false
   end
 
+  def participant?
+    return false unless logged_in?
+    Array.wrap(record).each do |r|
+      if r.persisted?
+        return r.users.exists?(id: user.id)
+      elsif r.conversation
+        return r.conversation.users.exists?(id: user.id)
+      end
+      return false
+    end
+    true
+  end
+
   class Scope < Scope
     def resolve
       scope.joins(:conversation, :user_conversations).where({
