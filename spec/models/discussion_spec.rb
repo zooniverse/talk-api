@@ -190,8 +190,6 @@ RSpec.describe Discussion, type: :model do
   end
 
   describe '#notify_subscribers_later' do
-    let(:discussion){ create :discussion }
-
     it 'should queue the notification' do
       # TODO: Once on Rails 5, Can Remove this Version Check
       # In Rails Versions < 5, commit callbacks are not getting called in transactional tests.
@@ -202,6 +200,7 @@ RSpec.describe Discussion, type: :model do
         discussion.save!
         expect(DiscussionSubscriptionWorker).to have_received(:perform_async).with discussion.id
       else
+        discussion = create :discussion
         expect(DiscussionSubscriptionWorker).to receive(:perform_async).with discussion.id
         discussion.run_callbacks :commit
       end
