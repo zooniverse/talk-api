@@ -50,7 +50,7 @@ RSpec.describe UsersController, type: :controller do
 
       it 'should return the usernames' do
         expect(response.json[:usernames]).to match_array [{
-          'id' => user.id,
+          'id' => user.id.to_s,
           'login' => user.login,
           'display_name' => user.display_name
         }]
