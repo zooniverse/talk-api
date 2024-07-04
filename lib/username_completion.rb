@@ -21,7 +21,7 @@ class UsernameCompletion
   def query
     <<-SQL
       select
-        id::text,
+        id,
         login,
         display_name
 
