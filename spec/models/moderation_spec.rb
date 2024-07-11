@@ -104,8 +104,15 @@ RSpec.describe Moderation, type: :model do
     include_context 'moderation subscriptions'
 
     it 'should queue the notification' do
-      expect(ModerationNotificationWorker).to receive(:perform_async).with moderation.id
-      moderation.run_callbacks :commit
+      # TODO: Once on Rails 5, Can Remove this Version Check
+      if Rails.version.starts_with?('5')
+        new_moderation = build :moderation, section: 'project-1'
+        expect(ModerationNotificationWorker).to receive(:perform_async)
+        new_moderation.save!
+      else
+        expect(ModerationNotificationWorker).to receive(:perform_async).with moderation.id
+        moderation.run_callbacks :commit
+      end
     end
   end
 

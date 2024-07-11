@@ -33,7 +33,7 @@ module TalkService
   end
 
   def update_resource
-    resource.assign_attributes unrooted_params
+    resource.assign_attributes unrooted_params.to_h
   rescue ArgumentError => e
     reraise_enum_errors e
   rescue NameError => e
@@ -101,7 +101,15 @@ module TalkService
   end
 
   def rooted_params
-    permitted_params.slice model_class.table_name
+    # Parameters in Rails 5+ behave differently, because they no longer inherit from HashWithIndifferentAccess
+    # methods like slice will behave differently in Rails 4 than Rails 5
+    # In Rails 5, we will need to first to apply to_h and then slice.
+    # TODO: Can Remove version comparison once Prod is on Rails 5+
+    if Rails.version.starts_with?('4.2')
+      permitted_params.slice model_class.table_name
+    else
+      permitted_params.to_h.slice model_class.table_name
+    end
   end
 
   def unrooted_params

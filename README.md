@@ -72,12 +72,15 @@ Some resources ([User](app/models/user.rb), [Subject](app/models/subject.rb)) ar
 ## Setting Up Rails-next
 Using the gem https://github.com/clio/ten_years_rails to help with the upgrade path https://www.youtube.com/watch?v=6aCfc0DkSFo
 
-### Using docker-compose for env setup
+### Using docker-compose-rails-next for env setup
 
 ```
 docker-compose -f docker-compose-rails-next.yml build
 
 docker-compose -f docker-compose-rails-next.yml run --service-ports --rm talkapi bash
+
+## To run bash in test env
+docker-compose -f docker-compose-rails-next.yml run --service-ports --rm -e RAILS_ENV=test talkapi bash
 ```
 
 ### Install the gems via next

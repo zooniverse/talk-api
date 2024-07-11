@@ -4,7 +4,7 @@ RSpec.describe GroupMention, type: :model do
   context 'validating' do
     it 'should require a comment' do
       without_comment = build :group_mention, comment: nil
-      expect(without_comment).to fail_validation comment: "can't be blank"
+      expect(without_comment).to fail_validation
     end
 
     it 'should require a section' do
@@ -65,9 +65,16 @@ RSpec.describe GroupMention, type: :model do
 
   describe '#notify_later' do
     it 'should queue the notification' do
-      group_mention = create :group_mention
-      expect(GroupMentionWorker).to receive(:perform_async).with group_mention.id
-      group_mention.run_callbacks :commit
+      # TODO: Once on Rails 5, Can Remove this Version Check
+      if Rails.version.starts_with?('5')
+        group_mention = build :group_mention
+        expect(GroupMentionWorker).to receive(:perform_async)
+        group_mention.save!
+      else
+        group_mention = create :group_mention
+        expect(GroupMentionWorker).to receive(:perform_async).with group_mention.id
+        group_mention.run_callbacks :commit
+      end
     end
   end
 

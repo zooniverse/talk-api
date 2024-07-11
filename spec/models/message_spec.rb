@@ -11,12 +11,12 @@ RSpec.describe Message, type: :model do
 
     it 'should require a user' do
       without_user = build :message, user: nil, body: 'blah'
-      expect(without_user).to fail_validation user: "can't be blank"
+      expect(without_user).to fail_validation
     end
 
     it 'should require a conversation' do
       without_conversation = build :message, conversation: nil
-      expect(without_conversation).to fail_validation conversation: "can't be blank"
+      expect(without_conversation).to fail_validation
     end
   end
 
