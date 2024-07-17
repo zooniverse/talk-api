@@ -8,9 +8,9 @@ if next?
   gem 'schema_plus_pg_indexes', '~> 0.2.1'
   gem 'spring', '~> 2.0.2', group: :development
 else
-  gem 'rails', '~> 4.2'
-  gem 'schema_plus_pg_indexes', '~> 0.1.12'
-  gem 'spring', '~> 1.7.1', group: :development
+  gem 'rails', '5.0.7.2'
+  gem 'schema_plus_pg_indexes', '~> 0.2.1'
+  gem 'spring', '~> 2.0.2', group: :development
 end
 
 gem 'aws-sdk', '~> 2.3.7'
@@ -36,7 +36,7 @@ group :test, :development do
   if next?
     gem 'rspec-rails', '~> 4.1.2'
   else
-    gem 'rspec-rails', '~> 3.4.2'
+    gem 'rspec-rails', '~> 4.1.2'
   end
   gem 'benchmark-ips'
   gem 'factory_girl_rails', '~> 4.7.0'
