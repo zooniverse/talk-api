@@ -15,7 +15,7 @@ Rails.application.configure do
   config.active_record.raise_in_transactional_callbacks = true
 
   config.action_mailer.smtp_settings = {
-    enable_starttls_auto: ENV.fetch('MAILER_ENABLE_STARTTLS_AUTO', true),
+    enable_starttls_auto: true,
     address: ENV['MAILER_ADDRESS'],
     port: ENV.fetch('MAILER_PORT', 587).to_i,
     domain: ENV['MAILER_DOMAIN'] || 'zooniverse.org',
