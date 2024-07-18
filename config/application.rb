@@ -58,6 +58,7 @@ module Talk
   end
 
   class Application < Rails::Application
+    config.enable_dependency_loading = true
     config.autoload_paths += [
       'lib',
       'app/schemas/concerns',
