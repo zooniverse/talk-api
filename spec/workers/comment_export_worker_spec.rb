@@ -42,6 +42,7 @@ RSpec.describe CommentExportWorker, type: :worker do
     let(:data_request){ create :comments_data_request }
     let!(:comment1){ create :comment, section: data_request.section }
     let!(:comment2){ create :comment, section: data_request.section }
+    let!(:board_without_discussion) { create :board, section: data_request.section }
     let(:data){ subject.view_model.all.collect(&:to_json) }
     before(:each) do
       subject.data_request = data_request
@@ -54,6 +55,11 @@ RSpec.describe CommentExportWorker, type: :worker do
         format_of(comment1).to_json,
         format_of(comment2).to_json
       ]
+    end
+
+    it 'should not include empty boards' do
+      data_board_ids = subject.view_model.all.pluck(:board_id)
+      expect(data_board_ids).not_to include(board_without_discussion.id)
     end
   end
 
