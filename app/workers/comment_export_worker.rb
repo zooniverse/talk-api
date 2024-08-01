@@ -39,7 +39,7 @@ class CommentExportWorker
       from boards
       left join discussions on discussions.board_id = boards.id
       left join comments on comments.discussion_id = discussions.id
-      where boards.section = '#{ data_request.section }';
+      where boards.section = '#{ data_request.section }' and discussions.id is not null;
     SQL
   end
 
