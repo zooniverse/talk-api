@@ -30,16 +30,9 @@ RSpec.describe Mention, type: :model do
 
   describe '#notify_later' do
     it 'should queue the notification' do
-       # TODO: Once on Rails 5, Can Remove this Version Check
-       if Rails.version.starts_with?('5')
-        mention = build :mention, mentionable: focus
-        expect(MentionWorker).to receive(:perform_async)
-        mention.save!
-      else
-        mention = create :mention, mentionable: focus
-        expect(MentionWorker).to receive(:perform_async).with mention.id
-        mention.run_callbacks :commit
-      end
+      mention = build :mention, mentionable: focus
+      expect(MentionWorker).to receive(:perform_async)
+      mention.save!
     end
   end
 

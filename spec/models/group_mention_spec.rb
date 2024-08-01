@@ -65,16 +65,9 @@ RSpec.describe GroupMention, type: :model do
 
   describe '#notify_later' do
     it 'should queue the notification' do
-      # TODO: Once on Rails 5, Can Remove this Version Check
-      if Rails.version.starts_with?('5')
-        group_mention = build :group_mention
-        expect(GroupMentionWorker).to receive(:perform_async)
-        group_mention.save!
-      else
-        group_mention = create :group_mention
-        expect(GroupMentionWorker).to receive(:perform_async).with group_mention.id
-        group_mention.run_callbacks :commit
-      end
+      group_mention = build :group_mention
+      expect(GroupMentionWorker).to receive(:perform_async)
+      group_mention.save!
     end
   end
 
