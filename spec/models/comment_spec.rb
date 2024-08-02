@@ -554,16 +554,8 @@ RSpec.describe Comment, type: :model do
     let(:comment){ create :comment }
 
     it 'should queue the notification' do
-      # TODO: Once on Rails 5, Can Remove this Version Check
-      # In Rails Versions < 5, commit callbacks are not getting called in transactional tests.
-      # See https://stackoverflow.com/a/30901628/15768801 for more details.
-      if Rails.version.starts_with?('5')
-        allow(CommentSubscriptionWorker).to receive(:perform_async)
-        expect(CommentSubscriptionWorker).to have_received(:perform_async).with comment.id
-      else
-        expect(CommentSubscriptionWorker).to receive(:perform_async).with comment.id
-        comment.run_callbacks :commit
-      end
+      allow(CommentSubscriptionWorker).to receive(:perform_async)
+      expect(CommentSubscriptionWorker).to have_received(:perform_async).with comment.id
     end
   end
 
@@ -655,15 +647,9 @@ RSpec.describe Comment, type: :model do
 
     describe '#publish_to_event_stream_later' do
       it 'should be triggered after a commit' do
-        # TODO: Once on Rails 5, Can Remove this Version Check
-        if Rails.version.starts_with?('5')
-          new_comment = build(:comment)
-          expect(new_comment).to receive :publish_to_event_stream_later
-          new_comment.save!
-        else
-          expect(comment).to receive :publish_to_event_stream_later
-          comment.run_callbacks :commit
-        end
+        new_comment = build(:comment)
+        expect(new_comment).to receive :publish_to_event_stream_later
+        new_comment.save!
       end
 
       it 'should enqueue the publish worker' do

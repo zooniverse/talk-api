@@ -99,34 +99,24 @@ RSpec.describe NotificationMailer, type: :mailer do
     before(:each){ mailer.instance_variable_set :@user, user1 }
     let(:categories){ mailer.find_categories_for SubscriptionPreference.email_digests[frequency] }
 
-    # TODO: Once on Rails 5, Can Remove Version Check.
-    # Rails 5 introduces a change to ActiveRecord:Enum where it typecasts enum attributes to its string value.
-    # See: https://github.com/rails/rails/commit/c51f9b61ce1e167f5f58f07441adcfa117694301
-    # Luckily we can still send int values when doing a where clause on categories AND by Rails 5, we can also do a string array search of categories. So we do not need to update `find_notifications_for`
-    # Regardless, we will test thoroughly in Staging Canary When Up.
-    # Version Checks are on L112, L120, L128
-
     context 'with immediate' do
       let(:frequency){ :immediate }
       subject{ categories }
-      # TODO: When on Rails 5, Remove Version Checks (See L102 For Details)
-      expected_categories =  Rails.version.starts_with?('4.2') ? Subscription.categories.values_at(:mentions, :group_mentions, :system, :moderation_reports) : ['mentions', 'group_mentions', 'system', 'moderation_reports']
+      expected_categories =  ['mentions', 'group_mentions', 'system', 'moderation_reports']
       it{ is_expected.to match_array expected_categories }
     end
 
     context 'with daily' do
       let(:frequency){ :daily }
       subject{ categories }
-      # TODO: When on Rails 5, Remove Version Checks(See L102 For Details)
-      expected_categories =  Rails.version.starts_with?('4.2') ? Subscription.categories.values_at(:participating_discussions, :followed_discussions) : ['participating_discussions', 'followed_discussions']
+      expected_categories = ['participating_discussions', 'followed_discussions']
       it{ is_expected.to match_array expected_categories }
     end
 
     context 'with weekly' do
       let(:frequency){ :weekly }
       subject{ categories }
-      # TODO: When on Rails 5, Remove Version Checks(See L102 For Details)
-      expected_categories =  Rails.version.starts_with?('4.2') ? Subscription.categories.values_at(:messages, :started_discussions) : ['messages', 'started_discussions']
+      expected_categories = ['messages', 'started_discussions']
       it{ is_expected.to match_array expected_categories }
     end
 

@@ -49,12 +49,7 @@ RSpec.describe UsersController, type: :controller do
       it{ is_expected.to be_successful }
 
       it 'should return the usernames' do
-        # TODO: Remove version check once on Rails 5
-        # In Rails versions < 5, PG results when casted to_a,
-        # numeric types will get converted to string.
-        # After Rails 5, there is no typecasting, unless stated.
-        # See https://github.com/rails/rails/commit/c51f9b61ce1e167f5f58f07441adcfa117694301
-        expected_user_id = Rails.version.starts_with?('5') ? user.id : user.id.to_s
+        expected_user_id = user.id
         expect(response.json[:usernames]).to match_array [{
           'id' => expected_user_id,
           'login' => user.login,
