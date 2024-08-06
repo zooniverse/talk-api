@@ -1,4 +1,4 @@
-class Search < ActiveRecord::Base
+class Search < ApplicationRecord
   include Searchable::Querying
 
   class_attribute :serializers

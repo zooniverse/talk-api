@@ -1,4 +1,4 @@
-class SuggestedTag < ActiveRecord::Base
+class SuggestedTag < ApplicationRecord
   validates :section, presence: true
   validates :name, presence: true, length: {
     minimum: 3,

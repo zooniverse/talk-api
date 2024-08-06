@@ -21,7 +21,7 @@ module Searchable
   module ClassMethods
     def _searchable_model
       klass = self
-      @_searchable_model ||= Class.new(ActiveRecord::Base) do
+      @_searchable_model ||= Class.new(ApplicationRecord) do
         include Searchable::Model
         searchable_model klass
       end

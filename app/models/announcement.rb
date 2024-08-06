@@ -1,4 +1,4 @@
-class Announcement < ActiveRecord::Base
+class Announcement < ApplicationRecord
   include Expirable
   include Sectioned
 

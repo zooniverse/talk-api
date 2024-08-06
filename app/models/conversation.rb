@@ -1,4 +1,4 @@
-class Conversation < ActiveRecord::Base
+class Conversation < ApplicationRecord
   include Moderatable
 
   has_many :user_conversations, dependent: :restrict_with_exception

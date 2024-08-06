@@ -1,4 +1,4 @@
-class Notification < ActiveRecord::Base
+class Notification < ApplicationRecord
   include Expirable
   include Sectioned
   include BooleanCoercion

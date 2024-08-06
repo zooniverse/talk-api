@@ -1,4 +1,4 @@
-class DataRequest < ActiveRecord::Base
+class DataRequest < ApplicationRecord
   include Sectioned
   include Subscribable
   include Notifiable

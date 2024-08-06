@@ -1,4 +1,4 @@
-class Discussion < ActiveRecord::Base
+class Discussion < ApplicationRecord
   include Moderatable
   include Searchable
   include Subscribable

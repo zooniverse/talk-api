@@ -1,4 +1,4 @@
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   include Moderatable
   include HashChanges
   include HstoreUpdate
