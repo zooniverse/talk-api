@@ -8,7 +8,6 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.active_support.deprecation = :log
   config.active_record.migration_error = :page_load
-  config.active_record.raise_in_transactional_callbacks = true
   # Don't care if the mailer can't send emails in dev
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = {
