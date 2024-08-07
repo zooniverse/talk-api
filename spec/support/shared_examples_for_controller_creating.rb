@@ -9,7 +9,7 @@ RSpec.shared_examples_for 'a controller creating' do
   end
 
   describe '#create' do
-    let(:send_request){ post :create, request_params.merge(format: :json) }
+    let(:send_request){ post :create, params:  request_params.merge(format: :json) }
 
     it 'should authorize the action' do
       expect_any_instance_of(subject.service_class).to receive :authorize
