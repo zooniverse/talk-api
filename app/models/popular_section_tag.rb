@@ -1,3 +1,3 @@
-class PopularSectionTag < ActiveRecord::Base
+class PopularSectionTag < ApplicationRecord
   self.primary_key = :id
 end

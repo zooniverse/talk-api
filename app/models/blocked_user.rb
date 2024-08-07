@@ -1,4 +1,4 @@
-class BlockedUser < ActiveRecord::Base
+class BlockedUser < ApplicationRecord
   belongs_to :user, required: true
   belongs_to :blocked_user, class_name: 'User', required: true
   scope :blocked_by, ->(*user_ids){ where user_id: user_ids.flatten }

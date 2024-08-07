@@ -1,4 +1,4 @@
-class Role < ActiveRecord::Base
+class Role < ApplicationRecord
   include BooleanCoercion
   belongs_to :user, required: true
 

@@ -1,2 +1,2 @@
-class EventLog < ActiveRecord::Base
+class EventLog < ApplicationRecord
 end

@@ -1,4 +1,4 @@
-class SubscriptionPreference < ActiveRecord::Base
+class SubscriptionPreference < ApplicationRecord
   include SubscriptionCategories
   include BooleanCoercion
   belongs_to :user, required: true

@@ -1,4 +1,4 @@
-class Moderation < ActiveRecord::Base
+class Moderation < ApplicationRecord
   include Notifiable
   include Sectioned
 

@@ -1,4 +1,4 @@
-class Board < ActiveRecord::Base
+class Board < ApplicationRecord
   include Searchable
   include Sectioned
   include Subscribable

@@ -1,4 +1,4 @@
-class Mention < ActiveRecord::Base
+class Mention < ApplicationRecord
   include Sectioned
 
   belongs_to :comment, required: true

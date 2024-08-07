@@ -1,4 +1,4 @@
-class UserConversation < ActiveRecord::Base
+class UserConversation < ApplicationRecord
   include Subscribable
   include BooleanCoercion
 

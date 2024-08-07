@@ -1,3 +1,3 @@
-class PopularFocusTag < ActiveRecord::Base
+class PopularFocusTag < ApplicationRecord
   self.primary_key = :id
 end

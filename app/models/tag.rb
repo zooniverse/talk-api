@@ -1,4 +1,4 @@
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   include Sectioned
 
   belongs_to :user, required: true

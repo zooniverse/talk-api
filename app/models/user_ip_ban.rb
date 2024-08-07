@@ -1,4 +1,4 @@
-class UserIpBan < ActiveRecord::Base
+class UserIpBan < ApplicationRecord
   validates :ip, presence: true
 
   def self.banned?(request)

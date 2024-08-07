@@ -1,6 +1,6 @@
 require 'securerandom'
 
-class UnsubscribeToken < ActiveRecord::Base
+class UnsubscribeToken < ApplicationRecord
   include Expirable
   belongs_to :user
   before_create :set_expiration, :set_token!
