@@ -36,7 +36,7 @@ RSpec.shared_examples_for 'a controller rendering' do |*actions|
 
       it 'should serialize the resource' do
         expect(subject.serializer_class).to receive(:resource).and_call_original
-        get :show, id: record.id
+        get :show, params: { id: record.id }
       end
     end
   end
