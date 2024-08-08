@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.shared_examples_for 'a controller action' do
-  let(:send_request){ send verb, action, params.merge(format: :json) }
+  let(:send_request){ send verb, action, params: params.merge(format: :json) }
 
   it 'should authorize the action' do
     if authorizable
