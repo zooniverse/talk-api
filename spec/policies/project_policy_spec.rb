@@ -19,6 +19,7 @@ RSpec.describe ProjectPolicy, type: :policy do
   context 'with scope' do
     let!(:launched1){ create :project, launched_row_order: 1 }
     let!(:board1){ create :board, section: "project-#{ launched1.id }" }
+    let!(:second_board_of_launched1){ create :board, section: "project-#{ launched1.id }" }
 
     let!(:launched2){ create :project, launched_row_order: 2 }
     let!(:board2){ create :board, section: "project-#{ launched2.id }" }
