@@ -34,7 +34,7 @@ RSpec.describe NotificationsController, type: :controller do
       let!(:notifications){ create_list :notification, 2 }
 
       it 'should scope updates to the user' do
-        put :read, { format: :json, id: notifications.map(&:id).join(',') }
+        put :read, params: { format: :json, id: notifications.map(&:id).join(',') }
         statuses = notifications.map{ |notification| notification.reload.delivered }
         expect(statuses).to all be false
       end
@@ -68,18 +68,18 @@ RSpec.describe NotificationsController, type: :controller do
       let!(:others){ create_list :notification, 2, section: 'project-1' }
 
       it 'should scope updates to the user with specified ids' do
-        put :read, { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
+        put :read, params: { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
         owned_statuses = [record, record2].map{ |notification| notification.reload.delivered }
         expect(owned_statuses).to all be true
       end
 
       it 'should not update unspecified notifications with specified ids' do
-        put :read, { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
+        put :read, params: { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
         expect(record3.reload).to_not be_delivered
       end
 
       it 'should scope updates to the user with specified ids' do
-        put :read, { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
+        put :read, params: { format: :json, id: ([record, record2] + others).map(&:id).join(',') }
         other_statuses = others.map{ |notification| notification.reload.delivered }
         expect(other_statuses).to all be false
       end
@@ -97,18 +97,18 @@ RSpec.describe NotificationsController, type: :controller do
       end
 
       it 'should scope updates to the user with the specified section' do
-        put :read, { format: :json, section: 'project-1' }
+        put :read, params: { format: :json, section: 'project-1' }
         section_statuses = [record, record2].map{ |notification| notification.reload.delivered }
         expect(section_statuses).to all be true
       end
 
       it 'should not update other sections for the user' do
-        put :read, { format: :json, section: 'project-1' }
+        put :read, params: { format: :json, section: 'project-1' }
         expect(record3.reload).to_not be_delivered
       end
 
       it 'should not update for other users in the section' do
-        put :read, { format: :json, section: 'project-1' }
+        put :read, params: { format: :json, section: 'project-1' }
         expect(others.map(&:reload).map(&:delivered)).to all be false
       end
     end
