@@ -49,7 +49,7 @@ class SearchesController < ApplicationController
   end
 
   def search_href(opts = { })
-    permitted = params.slice :page, :page_size, :section, :query, :types
+    permitted = permit_params.to_h.slice :page, :page_size, :section, :query, :types
     query_opts = permitted.merge(opts).collect{ |k, v| "#{ k }=#{ v }" }.join '&'
     "/searches?#{ query_opts }"
   end
