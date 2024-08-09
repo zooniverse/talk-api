@@ -26,7 +26,7 @@ RSpec.describe CommentsController, type: :controller do
       let(:href_params){ CGI.parse URI.parse(first_href).query }
 
       context 'when false' do
-        before(:each){ get :index, format: :json, section: 'project-1', subject_default: false }
+        before(:each){ get :index, format: :json, params: { section: 'project-1', subject_default: false } }
 
         it 'should filter comments from subject default boards' do
           expect(response_ids).to match_array comment_ids
@@ -40,7 +40,7 @@ RSpec.describe CommentsController, type: :controller do
       end
 
       context 'when true' do
-        before(:each){ get :index, format: :json, section: 'project-1', subject_default: true }
+        before(:each){ get :index, params: { format: :json, section: 'project-1', subject_default: true } }
 
         it 'should filter comments from subject default boards' do
           expect(response_ids).to match_array [subject_default_comment.id.to_s]
@@ -86,7 +86,7 @@ RSpec.describe CommentsController, type: :controller do
       end
 
       it 'should set the user ip' do
-        post :create, request_params.merge(format: :json)
+        post :create, params: request_params.merge(format: :json)
         id = response.json['comments'].first['id']
         comment = Comment.find id
         expect(comment.user_ip).to eql request.remote_ip
@@ -109,7 +109,7 @@ RSpec.describe CommentsController, type: :controller do
   context 'with a non-author user' do
     let(:record){ create :comment }
     let(:user){ create :user }
-    let(:send_request){ put upvote_method, id: record.id.to_s, format: :json }
+    let(:send_request){ put upvote_method, params: { id: record.id.to_s, format: :json }}
     before(:each){ allow(subject).to receive(:current_user).and_return user }
 
     it_behaves_like 'a controller restricting',
