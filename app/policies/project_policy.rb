@@ -20,7 +20,7 @@ class ProjectPolicy < ApplicationPolicy
         .where('private is not true')
         .joins(:boards)
         .order(launched_row_order: :desc)
-        .uniq
+        .distinct
     end
   end
 end
