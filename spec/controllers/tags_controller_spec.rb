@@ -31,7 +31,7 @@ RSpec.describe TagsController, type: :controller do
         if serializer
           allow(serializer).to receive(:resource).and_call_original
         end
-        get :popular, params
+        get :popular, params: params
       end
 
       it 'should use the correct serializer' do
@@ -129,7 +129,7 @@ RSpec.describe TagsController, type: :controller do
     let!(:tag){ create :tag, name: 'foo' }
     let(:params){ { } }
     subject{ response }
-    before(:each){ get :autocomplete, params }
+    before(:each){ get :autocomplete, params: params }
 
     context 'without a search' do
       let(:params){ { search: 'f' } }
@@ -153,7 +153,7 @@ RSpec.describe TagsController, type: :controller do
         completer = double results: []
         expect(TagCompletion).to receive(:new).with('f', 'project-1', limit: 5).and_return completer
         expect(completer).to receive :results
-        get :autocomplete, params
+        get :autocomplete, params: params
       end
     end
   end

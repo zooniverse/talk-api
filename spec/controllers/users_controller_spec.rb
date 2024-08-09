@@ -29,7 +29,7 @@ RSpec.describe UsersController, type: :controller do
 
     before(:each) do
       allow(controller).to receive(:current_user).and_return current_user
-      get :autocomplete, params
+      get :autocomplete, params: params
     end
 
     context 'without an authorized user' do
@@ -61,7 +61,7 @@ RSpec.describe UsersController, type: :controller do
         completer = double results: []
         expect(UsernameCompletion).to receive(:new).with(current_user, 'f', limit: 5).and_return completer
         expect(completer).to receive :results
-        get :autocomplete, params
+        get :autocomplete, params: params
       end
     end
   end
