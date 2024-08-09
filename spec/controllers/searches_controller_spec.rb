@@ -1,5 +1,5 @@
 RSpec.describe SearchesController, type: :controller do
-  let(:send_request){ get :index, request_params.merge(format: :json) }
+  let(:send_request){ get :index, params: request_params.merge(format: :json) }
 
   describe '#index' do
     context 'without a section param' do
