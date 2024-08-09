@@ -32,7 +32,7 @@ RSpec.describe ModerationsController, type: :controller do
       before(:each) do
         create :moderation, :closed
         create :moderation, :watched
-        get :index, state: state, format: :json
+        get :index, params: { state: state, format: :json }
       end
 
       context 'with a valid state' do
@@ -84,7 +84,7 @@ RSpec.describe ModerationsController, type: :controller do
     context 'when the target is already reported' do
       before(:each) do
         create :reported_comment, target: target, message: 'first', user: first_user
-        post :create, request_params.merge(format: :json)
+        post :create, params: request_params.merge(format: :json)
       end
 
       let(:first_user){ create :user }
