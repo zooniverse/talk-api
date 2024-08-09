@@ -44,7 +44,7 @@ RSpec.describe MessagesController, type: :controller do
       end
 
       it 'should set the user ip' do
-        post :create, request_params.merge(format: :json)
+        post :create, params: request_params.merge(format: :json)
         id = response.json['messages'].first['id']
         message = Message.find id
         expect(message.user_ip).to eql request.remote_ip

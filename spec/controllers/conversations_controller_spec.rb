@@ -43,14 +43,14 @@ RSpec.describe ConversationsController, type: :controller do
       end
 
       it 'should have the correct participant ids' do
-        post :create, request_params.merge(format: :json)
+        post :create, params: request_params.merge(format: :json)
         conversation = Conversation.first
         user_ids = [current_user.id] + recipients.map(&:id)
         expect(conversation.participant_ids).to match_array user_ids
       end
 
       it 'should set the user ip' do
-        post :create, request_params.merge(format: :json)
+        post :create, params: request_params.merge(format: :json)
         conversation_id = response.json['conversations'].first['id']
         message = Message.where(conversation_id: conversation_id).first
         expect(message.user_ip).to eql request.remote_ip
@@ -64,7 +64,7 @@ RSpec.describe ConversationsController, type: :controller do
       let!(:record){ create :conversation_with_messages, user: user }
 
       def destroy_conversation
-        delete :destroy, id: record.id, format: :json
+        delete :destroy, params: { id: record.id, format: :json }
       end
 
       it 'should set the status' do
@@ -110,7 +110,7 @@ RSpec.describe ConversationsController, type: :controller do
       let(:record){ create :conversation_with_messages }
       let(:recipient){ record.user_conversations.where(is_unread: true).first.user }
       let(:sender){ record.user_conversations.where(is_unread: false ).first.user }
-      let(:json){ get(:index, unread: true); response.json['conversations'] }
+      let(:json){ get(:index, params: { unread: true }); response.json['conversations'] }
 
       before(:each) do
         allow(subject).to receive(:current_user).and_return current_user
@@ -146,7 +146,7 @@ RSpec.describe ConversationsController, type: :controller do
 
       it 'should mark the conversation as read' do
         expect(Conversation).to receive(:mark_as_read_by).with [record.id], recipient.id
-        get :show, id: record.id.to_s
+        get :show, params: { id: record.id.to_s }
       end
     end
   end
