@@ -18,7 +18,7 @@ module HstoreUpdate
   end
 
   def hstore_sanitize(string)
-    self.class.sanitize string.to_s.gsub /["'=>\(\)]/, ''
+    self.class.connection.quote string.to_s.gsub /["'=>\(\)]/, ''
   end
 
   def hstore_escape(key_pairs)
