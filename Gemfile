@@ -5,10 +5,8 @@ source 'https://rubygems.org'
 
 if next?
   gem 'rails', '5.1.7'
-  gem 'spring', group: :development
 else
   gem 'rails', '5.0.7.2'
-  gem 'spring', '~> 2.0.2', group: :development
 end
 
 gem 'aws-sdk', '~> 2.3.7'
@@ -29,6 +27,7 @@ gem 'schema_plus_pg_indexes'
 gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
+gem 'spring', group: :development
 gem 'zoo_stream', '~> 1.0'
 
 group :test, :development do

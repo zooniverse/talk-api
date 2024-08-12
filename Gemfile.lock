@@ -326,8 +326,7 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    spring (2.0.2)
-      activesupport (>= 4.2)
+    spring (3.1.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
     sprockets (4.2.1)
@@ -396,7 +395,7 @@ DEPENDENCIES
   sidekiq-congestion (~> 0.1.0)
   sidekiq-cron
   simplecov (~> 0.11.2)
-  spring (~> 2.0.2)
+  spring
   spring-commands-rspec
   ten_years_rails
   timecop
