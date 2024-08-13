@@ -14,7 +14,7 @@ require 'sidekiq/testing'
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 Sidekiq::Testing.fake!
-PanoptesUser = User # Since RSpec/FactoryGirl can't handle multiple databases
+PanoptesUser = User # Since RSpec/FactoryBot can't handle multiple databases
 
 Aws.config.update region: 'us-east-1', credentials: Aws::Credentials.new('', '')
 
@@ -29,7 +29,7 @@ if ENV['EVIL_MODE']
 end
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include JSON::SchemaBuilder::RSpecHelper, type: :schema
   MOCK_REDIS ||= MockRedis.new
 

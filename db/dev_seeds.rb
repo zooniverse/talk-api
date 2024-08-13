@@ -1,5 +1,5 @@
-require 'factory_girl'
-include FactoryGirl::Syntax::Methods
+require 'factory_bot'
+include FactoryBot::Syntax::Methods
 
 projects = create_list :project, 10
 

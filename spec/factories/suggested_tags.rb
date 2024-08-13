@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :suggested_tag do
-    name{ "suggested-tag#{ id }" }
-    section 'project-1'
+    name { "suggested-tag#{ id }" }
+    section { 'project-1' }
   end
 end

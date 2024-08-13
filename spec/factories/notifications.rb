@@ -1,9 +1,9 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :notification do
     user
-    message 'testing'
-    url 'http://www.example.com'
-    section 'project-1'
+    message { 'testing' }
+    url { 'http://www.example.com' }
+    section { 'project-1' }
     subscription
     association :source, factory: :comment
   end

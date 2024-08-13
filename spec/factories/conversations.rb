@@ -1,12 +1,12 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :conversation do
-    title 'A conversation'
+    title { 'A conversation' }
 
     factory :conversation_with_messages do
       transient do
         user nil
         recipients nil
-        message_count 2
+        message_count { 2 }
       end
 
       after :create do |conversation, evaluator|
