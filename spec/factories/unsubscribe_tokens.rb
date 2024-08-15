@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :unsubscribe_token do
     user
   end

@@ -1,18 +1,18 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     external_id
     login { "user#{ id }" }
     display_name { "User #{ id }" }
     email { "#{ login }@example.com" }
-    admin false
-    banned false
-    created_at Time.now - 1.year
-    valid_email true
-    confirmed_at Time.now - 364.days
+    admin { false }
+    banned { false }
+    created_at { Time.now - 1.year }
+    valid_email { true }
+    confirmed_at { Time.now - 364.days }
 
     factory :moderator do
       transient do
-        section 'project-1'
+        section { 'project-1' }
       end
 
       after :create do |user, evaluator|
@@ -22,7 +22,7 @@ FactoryGirl.define do
 
     factory :admin do
       transient do
-        section 'project-1'
+        section { 'project-1' }
       end
 
       after :create do |user, evaluator|
@@ -32,7 +32,7 @@ FactoryGirl.define do
 
     factory :scientist do
       transient do
-        section 'project-1'
+        section { 'project-1' }
       end
 
       after :create do |user, evaluator|
@@ -42,7 +42,7 @@ FactoryGirl.define do
 
     factory :translator do
       transient do
-        section 'project-1'
+        section { 'project-1' }
       end
 
       after :create do |user, evaluator|

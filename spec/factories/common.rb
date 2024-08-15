@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   trait :external_id do
     transient do
       sequence :external_id

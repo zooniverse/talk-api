@@ -1,13 +1,13 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :board do
-    title 'A board'
-    description 'Some board'
-    section 'project-1'
-    permissions read: 'all', write: 'all'
+    title { 'A board' }
+    description { 'Some board' }
+    section { 'project-1' }
+    permissions { { read: 'all', write: 'all' } }
 
     factory :board_with_discussions do
       transient do
-        discussion_count 2
+        discussion_count { 2 }
       end
 
       after :create do |board, evaluator|
@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     factory :board_with_subboards do
       transient do
-        subboard_count 2
+        subboard_count { 2 }
       end
 
       after :create do |board, evaluator|
