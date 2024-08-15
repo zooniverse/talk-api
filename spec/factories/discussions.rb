@@ -1,14 +1,14 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :discussion do
-    title 'A discussion'
-    section 'project-1'
+    title { 'A discussion' }
+    section { 'project-1' }
     board
     user
 
     factory :discussion_with_comments do
       transient do
-        comment_count 2
-        user_count 2
+        comment_count { 2 }
+        user_count { 2 }
       end
 
       after :create do |discussion, evaluator|

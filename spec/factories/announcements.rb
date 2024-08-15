@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :announcement do
-    message 'testing'
-    section 'project-1'
+    message { 'testing' }
+    section { 'project-1' }
   end
 end

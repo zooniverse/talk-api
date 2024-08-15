@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription do
-    category :participating_discussions
+    category { :participating_discussions }
     user
     association :source, factory: :discussion
   end

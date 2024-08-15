@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :group_mention do
     comment
-    name 'admins'
+    name { 'admins' }
   end
 end
