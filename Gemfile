@@ -38,7 +38,7 @@ group :test, :development do
   gem 'guard-rspec'
   gem 'pry'
   gem 'rspec-its'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 4.1.2'
   gem 'spring-commands-rspec'
   gem 'ten_years_rails'
   gem 'timecop'
