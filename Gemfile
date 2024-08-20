@@ -29,6 +29,7 @@ gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
 gem 'spring', group: :development
 gem 'zoo_stream', '~> 1.0'
+gem 'concurrent-ruby', '1.3.4'
 
 group :test, :development do
   gem 'benchmark-ips'
