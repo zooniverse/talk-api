@@ -63,6 +63,8 @@ spec:
                   value: https
                 - name: Accept
                   value: application/json
+            # allow a longer response time than 1s
+            timeoutSeconds: 10
           readinessProbe:
             httpGet:
               path: /
@@ -73,6 +75,8 @@ spec:
                 - name: Accept
                   value: application/json
             initialDelaySeconds: 20
+            # allow a longer response time than 1s
+            timeoutSeconds: 10
           envFrom:
           - secretRef:
               name: talk-common-env-vars
