@@ -17,7 +17,7 @@ class Subscription < ApplicationRecord
   end
 
   def ensure_enabled
-    preference.enabled?
+    throw(:abort) unless preference.enabled?
   end
 
   def enabled?
