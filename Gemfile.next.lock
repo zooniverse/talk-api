@@ -389,7 +389,7 @@ DEPENDENCIES
   redis (~> 3.3.0)
   restpack_serializer!
   rspec-its
-  rspec-rails
+  rspec-rails (~> 4.1.2)
   schema_plus_pg_indexes
   sidekiq (< 6)
   sidekiq-congestion (~> 0.1.0)
