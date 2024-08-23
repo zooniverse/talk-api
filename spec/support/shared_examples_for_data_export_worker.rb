@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.shared_examples_for 'a data export worker' do
-  it{ is_expected.to be_a Sidekiq::Worker }
+  it { is_expected.to be_a Sidekiq::Worker }
   let!(:data_request){ create :data_request }
 
   describe '#compress' do
@@ -172,6 +172,9 @@ RSpec.shared_examples_for 'a data export worker' do
 
     before(:each) do
       allow(DataRequest).to receive(:find).with(data_request.id).and_return data_request
+      allow_any_instance_of(DataRequest).to receive(:started!)
+      allow_any_instance_of(DataRequest).to receive(:finished!)
+      allow_any_instance_of(DataRequest).to receive(:failed!)
       allow(subject).to receive :process_data
       allow(Time).to receive_message_chain('now.utc.to_date.to_s'){ '2015-07-21' }
     end
@@ -203,6 +206,9 @@ RSpec.shared_examples_for 'a data export worker' do
 
     it 'should indicate failure' do
       allow(subject).to receive(:process_data).and_raise 'hell'
+      data_request.state = 'failed'
+      allow_any_instance_of(DataRequest).to receive(:failed!).and_return(data_request)
+
 
       expect{
         subject.perform data_request.id
