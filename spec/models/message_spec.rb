@@ -65,7 +65,7 @@ RSpec.describe Message, type: :model do
         expect {
           create :message, conversation: conversation, user: destroyed_conversation.user
         }.to change {
-          conversation.user_conversations(true).where(user: destroyed_conversation.user).exists?
+          conversation.user_conversations.reload.where(user: destroyed_conversation.user).exists?
         }.from(false).to true
       end
     end
