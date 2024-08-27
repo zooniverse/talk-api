@@ -11,7 +11,7 @@ FactoryBot.define do
     factory :reported_comment do
       transient do
         message { 'reported' }
-        user nil
+        user { nil }
       end
 
       before :create do |moderation, evaluator|
