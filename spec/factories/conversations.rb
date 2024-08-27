@@ -4,8 +4,8 @@ FactoryBot.define do
 
     factory :conversation_with_messages do
       transient do
-        user nil
-        recipients nil
+        user { nil }
+        recipients { nil }
         message_count { 2 }
       end
 
