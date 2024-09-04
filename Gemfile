@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 if next?
   gem 'rails', '5.1.7'
 else
-  gem 'rails', '5.0.7.2'
+  gem 'rails', '5.1.7'
 end
 
 gem 'aws-sdk', '~> 2.3.7'
