@@ -30,7 +30,7 @@ RSpec.describe Mention, type: :model do
 
   describe '#notify_later' do
     it 'should queue the notification' do
-      project_board = create :board, section: "project-#{ focus.project.id
+      project_board = create :board, section: "project-#{ focus.project.id}"
       project_discussion = create :discussion, board: project_board
       project_comment = create :comment, discussion: project_discussion
       mention = build :mention, mentionable: focus, comment: project_comment
