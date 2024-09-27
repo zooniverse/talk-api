@@ -32,7 +32,7 @@ gem 'zoo_stream', '~> 1.0'
 
 group :test, :development do
   gem 'benchmark-ips'
-  gem 'factory_bot_rails', '~> 4.11.1'
+  gem 'factory_bot_rails', '~> 5.0'
   gem 'ffi', '1.16.3'
   gem 'guard'
   gem 'guard-rspec'
