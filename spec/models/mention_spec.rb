@@ -41,7 +41,6 @@ RSpec.describe Mention, type: :model do
 
   describe '#notify_mentioned' do
     it 'should notify of the mention' do
-      subject_mentioned =
       mention = create :mention, mentionable: focus
       expect(focus).to receive(:mentioned_by).with mention.comment
       mention.notify_mentioned
