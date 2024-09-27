@@ -4,7 +4,7 @@ end
 source 'https://rubygems.org'
 
 if next?
-  gem 'rails', '5.1.7'
+  gem 'rails', '5.2.8.1'
 else
   gem 'rails', '5.1.7'
 end
@@ -23,7 +23,7 @@ gem 'pundit', '~> 1.1.0'
 gem 'rack-cors', '~> 1.0.5'
 gem 'redis', '~> 3.3.0'
 gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializer.git', branch: 'talk-api-version', ref: '637aaaf85e'
-gem 'schema_plus_pg_indexes'
+# gem 'schema_plus_pg_indexes'
 gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
