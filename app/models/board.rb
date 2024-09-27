@@ -19,7 +19,7 @@ class Board < ApplicationRecord
   validates :description, presence: true
   validates :section, presence: true
 
-  after_update :cascade_searchable_later, if: :permissions_changed?
+  after_update :cascade_searchable_later, if: :saved_change_to_permissions?
 
   def searchable?
     permissions['read'] == 'all'
@@ -44,9 +44,9 @@ class Board < ApplicationRecord
   end
 
   def cascade_searchable_later
-    action = if permissions_was['read'] == 'all' && permissions['read'] != 'all'
+    action = if permissions_before_last_save['read'] == 'all' && permissions['read'] != 'all'
       :destroy_searchable # was public, but isn't now
-    elsif permissions_was['read'] != 'all' && permissions['read'] == 'all'
+    elsif permissions_before_last_save['read'] != 'all' && permissions['read'] == 'all'
       :update_searchable # wasn't public, but is now
     end
 
