@@ -83,11 +83,11 @@ GEM
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
-    factory_bot (4.11.1)
-      activesupport (>= 3.0.0)
-    factory_bot_rails (4.11.1)
-      factory_bot (~> 4.11.1)
-      railties (>= 3.0.0)
+    factory_bot (5.2.0)
+      activesupport (>= 4.2.0)
+    factory_bot_rails (5.2.0)
+      factory_bot (~> 5.2.0)
+      railties (>= 4.2.0)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -139,7 +139,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.6)
       domain_name (~> 0.5)
-    i18n (1.14.5)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     its-it (1.3.0)
     jmespath (1.6.2)
@@ -368,7 +368,7 @@ DEPENDENCIES
   aws-sdk (~> 2.3.7)
   benchmark-ips
   codeclimate-test-reporter (~> 0.5)
-  factory_bot_rails (~> 4.11.1)
+  factory_bot_rails (~> 5.0)
   faraday
   faraday_middleware
   ffi (= 1.16.3)
