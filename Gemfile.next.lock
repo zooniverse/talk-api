@@ -145,6 +145,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
+    its-it (1.3.0)
     jmespath (1.6.2)
     json (1.8.6)
     json-schema (2.8.1)
@@ -164,6 +165,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    key_struct (0.4.2)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -192,6 +194,8 @@ GEM
     minitest (5.25.1)
     mock_redis (0.36.0)
       ruby2_keywords
+    modware (0.1.3)
+      key_struct (~> 0.4)
     multipart-post (2.4.1)
     nenv (0.3.0)
     net-imap (0.3.7)
@@ -295,6 +299,22 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.13.1)
     ruby2_keywords (0.0.5)
+    schema_monkey (2.1.6)
+      activerecord (>= 4.2)
+      modware (~> 0.1.0)
+    schema_plus_core (2.2.3)
+      activerecord (~> 5.0)
+      its-it (~> 1.2)
+      schema_monkey (~> 2.1)
+    schema_plus_indexes (0.3.1)
+      activerecord (>= 4.2, < 5.3)
+      its-it (~> 1.2)
+      schema_plus_core
+    schema_plus_pg_indexes (0.3.2)
+      activerecord (>= 5.0.1, < 5.3)
+      its-it (~> 1.2)
+      schema_plus_core (~> 2.0)
+      schema_plus_indexes (~> 0.2, >= 0.2.4)
     shellany (0.0.1)
     sidekiq (5.2.9)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -376,6 +396,7 @@ DEPENDENCIES
   restpack_serializer!
   rspec-its
   rspec-rails (~> 4.1.2)
+  schema_plus_pg_indexes
   sidekiq (< 6)
   sidekiq-congestion (~> 0.1.0)
   sidekiq-cron
