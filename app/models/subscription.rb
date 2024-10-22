@@ -7,7 +7,7 @@ class Subscription < ApplicationRecord
   belongs_to :source, polymorphic: true, required: true
 
   before_create :ensure_enabled
-  after_update :clear_notifications, if: ->{ enabled_change == [true, false] }
+  after_update :clear_notifications, if: ->{ saved_change_to_enabled == [true, false] }
 
   validates_with SubscriptionUniquenessValidator, on: :create
   scope :enabled, ->{ where enabled: true }
