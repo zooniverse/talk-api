@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  self.primary_key = :id
   include Moderatable
 
   ALLOWED_LOGIN_CHARACTERS = '\w\-\.'.freeze
