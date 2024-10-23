@@ -5,7 +5,7 @@ class SubscriptionPreference < ApplicationRecord
 
   validates :enabled, inclusion: { in: [true, false] }
   scope :enabled, ->{ where enabled: true }
-  after_update :unsubscribe_user, if: ->{ enabled_change == [true, false] }
+  after_update :unsubscribe_user, if: ->{ saved_change_to_enabled == [true, false] }
   validates :email_digest, inclusion: {
     in: %w(immediate daily weekly never)
   }
