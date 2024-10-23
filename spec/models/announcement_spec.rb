@@ -9,10 +9,10 @@ RSpec.describe Announcement, type: :model do
   end
 
   context 'creating' do
-    let(:announcement){ create :announcement }
+    let(:announcement){ build :announcement }
     it 'should publish' do
       expect(AnnouncementWorker).to receive :perform_async
-      announcement.run_callbacks :commit
+      announcement.save!
     end
   end
 
