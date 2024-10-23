@@ -121,7 +121,7 @@ class Comment < ApplicationRecord
   end
 
   def update_moved_discussion
-    changes.fetch(:discussion_id, []).compact.each do |id|
+    saved_changes.fetch(:discussion_id, []).compact.each do |id|
       Discussion.find_by_id(id).try :update_counters!
     end
   end
