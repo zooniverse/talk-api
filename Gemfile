@@ -32,13 +32,13 @@ gem 'zoo_stream', '~> 1.0'
 
 group :test, :development do
   gem 'benchmark-ips'
-  gem 'factory_bot_rails', '~> 5.0'
+  gem 'factory_bot_rails'
   gem 'ffi', '1.16.3'
   gem 'guard'
   gem 'guard-rspec'
   gem 'pry'
   gem 'rspec-its'
-  gem 'rspec-rails', '~> 4.1.2' # upgrade when on rails 5.2
+  gem 'rspec-rails'
   gem 'spring-commands-rspec'
   gem 'ten_years_rails'
   gem 'timecop'
@@ -47,6 +47,6 @@ end
 group :test do
   gem 'codeclimate-test-reporter', '~> 0.5'
   gem 'mock_redis'
-  gem 'simplecov', '~> 0.11.2'
+  gem 'simplecov'
   gem 'webmock', '~> 3.4'
 end
