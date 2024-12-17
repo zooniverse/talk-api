@@ -1,8 +1,7 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 require 'simplecov'
-require 'codeclimate-test-reporter'
-CodeClimate::TestReporter.start
+SimpleCov.start
 
 ENV.keys.grep(/aws/i).each{ |key| ENV.delete key }
 
