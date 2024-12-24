@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20240402094638) do
+ActiveRecord::Schema.define(version: 2024_04_02_094638) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
   enable_extension "hstore"
   enable_extension "pg_trgm"
+  enable_extension "plpgsql"
   enable_extension "postgres_fdw"
 
   create_table "announcements", force: :cascade do |t|
@@ -50,10 +49,11 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.integer  "project_id"
     t.datetime "last_comment_created_at"
     t.integer  "position",                :default=>0
-    t.index :name=>"boards_read_permission_index", :expression=>"(permissions ->> 'read'::text)"
-    t.index :name=>"boards_write_permission_index", :expression=>"(permissions ->> 'write'::text)"
+
+    t.index "((permissions ->> 'read'::text))", :name=>"boards_read_permission_index"
+    t.index "((permissions ->> 'write'::text))", :name=>"boards_write_permission_index"
+    t.index ["section", "subject_default"], :name=>"index_boards_on_section_and_subject_default", :unique=>true, :where=>"(subject_default = true)"
   end
-  add_index "boards", ["section", "subject_default"], :name=>"index_boards_on_section_and_subject_default", :unique=>true, :where=>"(subject_default = true)"
 
   create_table "comments", force: :cascade do |t|
     t.string   "category"
@@ -76,11 +76,12 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.integer  "reply_id"
     t.integer  "board_id",         :index=>{:name=>"index_comments_on_board_id"}
     t.json     "group_mentioning", :default=>{}, :null=>false
+
+    t.index ["board_id", "created_at"], :name=>"index_comments_on_board_id_and_created_at"
+    t.index ["discussion_id", "created_at"], :name=>"index_comments_on_discussion_id_and_created_at"
+    t.index ["section", "created_at"], :name=>"index_comments_on_section_and_created_at"
+    t.index ["user_id", "created_at"], :name=>"index_comments_on_user_id_and_created_at"
   end
-  add_index "comments", ["board_id", "created_at"], :name=>"index_comments_on_board_id_and_created_at"
-  add_index "comments", ["discussion_id", "created_at"], :name=>"index_comments_on_discussion_id_and_created_at"
-  add_index "comments", ["section", "created_at"], :name=>"index_comments_on_section_and_created_at"
-  add_index "comments", ["user_id", "created_at"], :name=>"index_comments_on_user_id_and_created_at"
 
   create_table "conversations", force: :cascade do |t|
     t.string   "title",           :null=>false
@@ -119,9 +120,10 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.integer  "focus_id",                :index=>{:name=>"index_discussions_on_focus_id_and_focus_type", :with=>["focus_type"]}
     t.string   "focus_type"
     t.datetime "last_comment_created_at"
+
+    t.index ["board_id", "sticky", "sticky_position"], :name=>"index_discussions_on_board_id_and_sticky_and_sticky_position", :where=>"(sticky = true)"
+    t.index ["board_id", "title", "subject_default"], :name=>"index_discussions_on_board_id_and_title_and_subject_default", :unique=>true, :where=>"(subject_default = true)"
   end
-  add_index "discussions", ["board_id", "sticky", "sticky_position"], :name=>"index_discussions_on_board_id_and_sticky_and_sticky_position", :where=>"(sticky = true)"
-  add_index "discussions", ["board_id", "title", "subject_default"], :name=>"index_discussions_on_board_id_and_title_and_subject_default", :unique=>true, :where=>"(subject_default = true)"
 
   create_table "event_logs", force: :cascade do |t|
     t.integer  "user_id"
@@ -138,8 +140,9 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+
+    t.index ["comment_id", "name"], :name=>"index_group_mentions_on_comment_id_and_name", :unique=>true
   end
-  add_index "group_mentions", ["comment_id", "name"], :name=>"index_group_mentions_on_comment_id_and_name", :unique=>true
 
   create_table "mentions", force: :cascade do |t|
     t.integer  "mentionable_id",   :null=>false, :index=>{:name=>"index_mentions_on_unique_per_comment", :with=>["mentionable_type", "comment_id"], :unique=>true}
@@ -151,10 +154,11 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.string   "section"
     t.integer  "project_id"
     t.integer  "board_id",         :index=>{:name=>"index_mentions_on_board_id"}
+
+    t.index ["mentionable_id", "mentionable_type", "created_at"], :name=>"mentionable_created_at"
+    t.index ["mentionable_id", "mentionable_type", "section", "created_at"], :name=>"mentionable_section_created_at"
+    t.index ["mentionable_id", "mentionable_type"], :name=>"index_mentions_on_mentionable_id_and_mentionable_type"
   end
-  add_index "mentions", ["mentionable_id", "mentionable_type", "created_at"], :name=>"mentionable_created_at"
-  add_index "mentions", ["mentionable_id", "mentionable_type", "section", "created_at"], :name=>"mentionable_section_created_at"
-  add_index "mentions", ["mentionable_id", "mentionable_type"], :name=>"index_mentions_on_mentionable_id_and_mentionable_type"
 
   create_table "messages", force: :cascade do |t|
     t.integer  "conversation_id", :null=>false, :index=>{:name=>"index_messages_on_conversation_id_and_created_at", :with=>["created_at"]}
@@ -191,10 +195,11 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.integer  "project_id"
     t.integer  "source_id",       :index=>{:name=>"index_notifications_on_source_id_and_source_type", :with=>["source_type"]}
     t.string   "source_type"
+
+    t.index ["user_id", "delivered", "created_at"], :name=>"unread_index"
+    t.index ["user_id", "section", "created_at"], :name=>"index_notifications_on_user_id_and_section_and_created_at"
+    t.index ["user_id", "section", "delivered", "created_at"], :name=>"unread_section_index"
   end
-  add_index "notifications", ["user_id", "delivered", "created_at"], :name=>"unread_index"
-  add_index "notifications", ["user_id", "section", "created_at"], :name=>"index_notifications_on_user_id_and_section_and_created_at"
-  add_index "notifications", ["user_id", "section", "delivered", "created_at"], :name=>"unread_section_index"
 
   create_table "roles", force: :cascade do |t|
     t.integer  "user_id",    :null=>false, :index=>{:name=>"index_roles_on_user_id_and_section_and_is_shown", :with=>["section", "is_shown"]}
@@ -203,8 +208,9 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_shown",   :default=>true, :null=>false
+
+    t.index ["user_id", "section", "name"], :name=>"index_roles_on_user_id_and_section_and_name", :unique=>true
   end
-  add_index "roles", ["user_id", "section", "name"], :name=>"index_roles_on_user_id_and_section_and_name", :unique=>true
 
   create_table "searchable_boards", primary_key: "searchable_id", force: :cascade do |t|
     t.string   "searchable_type", :null=>false, :index=>{:name=>"index_searchable_boards_on_searchable_type"}
@@ -241,9 +247,10 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "enabled",     :default=>true, :null=>false
+
+    t.index ["user_id", "source_id", "source_type", "category"], :name=>"index_subscriptions_uniquely", :unique=>true
+    t.index ["user_id", "source_id", "source_type"], :name=>"index_subscriptions_on_user_id_and_source_id_and_source_type"
   end
-  add_index "subscriptions", ["user_id", "source_id", "source_type", "category"], :name=>"index_subscriptions_uniquely", :unique=>true
-  add_index "subscriptions", ["user_id", "source_id", "source_type"], :name=>"index_subscriptions_on_user_id_and_source_id_and_source_type"
 
   create_table "suggested_tags", force: :cascade do |t|
     t.string   "name",       :index=>{:name=>"index_suggested_tags_on_name_and_section", :with=>["section"], :unique=>true}
@@ -263,9 +270,10 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.string   "taggable_type"
     t.integer  "project_id"
     t.string   "user_login"
+
+    t.index ["comment_id", "name"], :name=>"index_tags_on_comment_id_and_name", :unique=>true
+    t.index ["section", "taggable_type"], :name=>"index_tags_on_section_and_taggable_type"
   end
-  add_index "tags", ["comment_id", "name"], :name=>"index_tags_on_comment_id_and_name", :unique=>true
-  add_index "tags", ["section", "taggable_type"], :name=>"index_tags_on_section_and_taggable_type"
 
   create_table "unsubscribe_tokens", force: :cascade do |t|
     t.integer  "user_id",    :null=>false, :index=>{:name=>"index_unsubscribe_tokens_on_user_id", :unique=>true}
@@ -279,8 +287,9 @@ ActiveRecord::Schema.define(version: 20240402094638) do
     t.boolean  "is_unread",       :default=>true
     t.datetime "created_at"
     t.datetime "updated_at"
+
+    t.index ["conversation_id", "user_id"], :name=>"index_user_conversations_on_conversation_id_and_user_id"
   end
-  add_index "user_conversations", ["conversation_id", "user_id"], :name=>"index_user_conversations_on_conversation_id_and_user_id"
 
   create_table "user_ip_bans", force: :cascade do |t|
     t.cidr     "ip",         :null=>false, :index=>{:name=>"index_user_ip_bans_on_ip"}

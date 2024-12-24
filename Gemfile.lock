@@ -315,11 +315,6 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
-    schema_plus_pg_indexes (0.3.2)
-      activerecord (>= 5.0.1, < 5.3)
-      its-it (~> 1.2)
-      schema_plus_core (~> 2.0)
-      schema_plus_indexes (~> 0.2, >= 0.2.4)
     shellany (0.0.1)
     sidekiq (5.2.9)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -401,7 +396,7 @@ DEPENDENCIES
   restpack_serializer!
   rspec-its
   rspec-rails
-  schema_plus_pg_indexes
+  schema_plus_indexes
   sidekiq (< 6)
   sidekiq-congestion (~> 0.1.0)
   sidekiq-cron

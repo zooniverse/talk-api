@@ -86,10 +86,10 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    date (3.3.4)
+    date (3.4.1)
     diff-lcs (1.5.1)
     docile (1.4.1)
-    erubi (1.13.0)
+    erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
     factory_bot (6.4.5)
@@ -113,8 +113,8 @@ GEM
     faraday-em_synchrony (1.0.0)
     faraday-excon (1.1.0)
     faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
     faraday-net_http (1.0.2)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
@@ -129,7 +129,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.1.0)
       activesupport (>= 5.0)
-    guard (2.18.1)
+    guard (2.19.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
       lumberjack (>= 1.0.12, < 2.0)
@@ -143,7 +143,7 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    hashdiff (1.1.1)
+    hashdiff (1.1.2)
     honeybadger (4.5.6)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
@@ -187,13 +187,12 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
     minitest (5.25.4)
-    mock_redis (0.36.0)
-      ruby2_keywords
+    mock_redis (0.41.0)
     modware (0.1.3)
       key_struct (~> 0.4)
     multipart-post (2.4.1)
     nenv (0.3.0)
-    net-imap (0.3.7)
+    net-imap (0.4.18)
       date
       net-protocol
     net-pop (0.1.2)
@@ -202,8 +201,8 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    newrelic_rpm (9.14.0)
-    nio4r (2.7.3)
+    newrelic_rpm (9.16.1)
+    nio4r (2.7.4)
     nokogiri (1.15.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -211,11 +210,11 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     pg (0.21.0)
-    pry (0.14.2)
+    pry (0.15.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.1.1)
-    puma (6.4.3)
+    puma (6.5.0)
       nio4r (~> 2.0)
     pundit (1.1.0)
       activesupport (>= 3.0.0)
@@ -227,7 +226,7 @@ GEM
     rack-protection (3.2.0)
       base64 (>= 0.1.0)
       rack (~> 2.2, >= 2.2.4)
-    rack-test (2.1.0)
+    rack-test (2.2.0)
       rack (>= 1.3)
     rails (5.2.8.1)
       actioncable (= 5.2.8.1)
@@ -263,7 +262,7 @@ GEM
     redis (3.3.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.3.8)
+    rexml (3.4.0)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -273,7 +272,7 @@ GEM
     rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-its (1.3.0)
+    rspec-its (1.3.1)
       rspec-core (>= 3.0.0)
       rspec-expectations (>= 3.0.0)
     rspec-mocks (3.13.2)
@@ -300,11 +299,6 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
-    schema_plus_pg_indexes (0.3.2)
-      activerecord (>= 5.0.1, < 5.3)
-      its-it (~> 1.2)
-      schema_plus_core (~> 2.0)
-      schema_plus_indexes (~> 0.2, >= 0.2.4)
     shellany (0.0.1)
     sidekiq (5.2.9)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -323,7 +317,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
     simplecov_json_formatter (0.1.4)
-    spring (3.1.1)
+    spring (4.2.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
     sprockets (4.2.1)
@@ -339,7 +333,7 @@ GEM
     thor (1.3.2)
     thread_safe (0.3.6)
     timecop (0.9.10)
-    timeout (0.4.1)
+    timeout (0.4.3)
     tzinfo (1.2.11)
       thread_safe (~> 0.1)
     webmock (3.24.0)
@@ -380,7 +374,7 @@ DEPENDENCIES
   restpack_serializer!
   rspec-its
   rspec-rails
-  schema_plus_pg_indexes
+  schema_plus_indexes
   sidekiq (< 6)
   sidekiq-congestion (~> 0.1.0)
   sidekiq-cron
