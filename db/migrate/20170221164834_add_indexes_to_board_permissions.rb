@@ -1,12 +1,12 @@
-class AddIndexesToBoardPermissions < ActiveRecord::Migration
+class AddIndexesToBoardPermissions < ActiveRecord::Migration[4.2]
   disable_ddl_transaction!
 
   def up
     indexes.each do |name, perms|
       unless index_exists?(:boards, nil, name: name)
         add_index :boards,
+          ["(permissions->>'#{perms}')"],
           name: name,
-          expression: "(permissions->>'#{perms}')",
           algorithm: :concurrently
       end
     end
