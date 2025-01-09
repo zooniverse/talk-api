@@ -1,4 +1,4 @@
-class CreateAnnouncements < ActiveRecord::Migration
+class CreateAnnouncements < ActiveRecord::Migration[4.2]
   def change
     create_table :announcements do |t|
       t.text :message, null: false
@@ -6,7 +6,6 @@ class CreateAnnouncements < ActiveRecord::Migration
       t.datetime :expires_at, null: false
       t.timestamps
     end
-
     add_index :announcements, [:section, :created_at]
     add_index :announcements, :created_at
     add_index :announcements, :expires_at
