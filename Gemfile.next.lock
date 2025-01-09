@@ -211,7 +211,6 @@ GEM
     mini_portile2 (2.8.8)
     minitest (5.25.4)
     mock_redis (0.41.0)
-    modware (1.0.2)
     multipart-post (2.4.1)
     nenv (0.3.0)
     net-imap (0.4.18)
@@ -318,15 +317,6 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.13.2)
     ruby2_keywords (0.0.5)
-    schema_monkey (3.0.2)
-      activerecord (>= 5.2)
-      modware (~> 1.0.2)
-    schema_plus_core (3.1.0)
-      activerecord (>= 5.2, < 7.1)
-      schema_monkey (~> 3.0.2)
-    schema_plus_indexes (1.0.1)
-      activerecord (>= 5.2, < 7.1)
-      schema_plus_core (~> 3.1.0)
     shellany (0.0.1)
     sidekiq (5.2.9)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -406,7 +396,6 @@ DEPENDENCIES
   restpack_serializer!
   rspec-its
   rspec-rails
-  schema_plus_indexes
   sidekiq (< 6)
   sidekiq-congestion (~> 0.1.0)
   sidekiq-cron
