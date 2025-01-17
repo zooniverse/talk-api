@@ -4,7 +4,7 @@ require 'unsubscribe_token'
 
 class NotificationMailer < ApplicationMailer
   include ActionView::Helpers::DateHelper
-  add_template_helper MailerHelper
+  helper MailerHelper
 
   after_action :set_delivered
 

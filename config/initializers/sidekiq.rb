@@ -29,8 +29,11 @@ Sidekiq::Web.use Rack::Auth::Basic do |name, password|
   password == ENV.fetch('SIDEKIQ_ADMIN_PASSWORD')
 end unless Rails.env.test? || Rails.env.development?
 
-# preload autoloaded workers
-Dir[Rails.root.join('app/workers/**/*.rb')].sort.each do |path|
-  name = path.match(/workers\/(.+)\.rb$/)[1]
-  name.classify.constantize unless path =~ /workers\/concerns/
+# preload autoloaded workers after database has been loaded 
+db_loaded = ::ActiveRecord::Base.connection_pool.with_connection(&:active?) rescue false
+if db_loaded
+  Dir[Rails.root.join('app/workers/**/*.rb')].sort.each do |path|
+    name = path.match(/workers\/(.+)\.rb$/)[1]
+    name.classify.constantize unless path =~ /workers\/concerns/
+  end
 end

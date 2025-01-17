@@ -4,12 +4,18 @@ end
 source 'https://rubygems.org'
 
 if next?
-  gem 'rails', '6.0.6.1'
+  gem 'rails', '6.1.7.10'
 else
   gem 'rails', '6.0.6.1'
 end
 
 gem 'aws-sdk', '~> 2.3.7'
+# lock concurrent-ruby to 1.3.4 since 1.3.5 breaks active support
+# with a NameError  uninitialized constant
+# ActiveSupport::LoggerThreadSafeLevel::Logger on application.rb
+# See: https://github.com/rails/rails/issues/54260
+# It looks like this gets fixed in Rails 7.1
+gem 'concurrent-ruby', '1.3.4'
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'honeybadger', '~> 4.5.0'
