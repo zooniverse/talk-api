@@ -1,5 +1,6 @@
 def panoptes_config
-  @panoptes_config ||= db_config("panoptes_#{ Rails.env }")
+  # starting in Rails 6.1 db_config becomes hash with symbol keys as opposed to hash with string keys.
+  @panoptes_config ||= db_config("panoptes_#{ Rails.env }").with_indifferent_access
 end
 
 def talk_config
