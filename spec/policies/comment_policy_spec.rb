@@ -175,7 +175,7 @@ RSpec.describe CommentPolicy, type: :policy do
 
   context 'with a locked discussion' do
     let(:user){ create :user }
-    before(:each){ record.discussion.update_attributes locked: true }
+    before(:each){ record.discussion.update locked: true }
     it_behaves_like 'a policy permitting', :index, :show, :upvote, :remove_upvote
     it_behaves_like 'a policy forbidding', :create, :update, :destroy, :move
 
