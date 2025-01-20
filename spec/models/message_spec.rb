@@ -96,7 +96,7 @@ RSpec.describe Message, type: :model do
     context 'when preference is disabled' do
       context 'for the sender' do
         before(:each) do
-          user.preference_for(:messages).update_attributes enabled: false
+          user.preference_for(:messages).update enabled: false
         end
         include_context 'existing conversation'
 
@@ -112,7 +112,7 @@ RSpec.describe Message, type: :model do
       context 'for the recipient' do
         before(:each) do
           recipients.each do |recipient|
-            recipient.preference_for(:messages).update_attributes enabled: false
+            recipient.preference_for(:messages).update enabled: false
           end
         end
         include_context 'existing conversation'
@@ -130,7 +130,7 @@ RSpec.describe Message, type: :model do
 
   describe '#notify_subscribers' do
     before(:each) do
-      user.preference_for(:messages).update_attributes enabled: false
+      user.preference_for(:messages).update enabled: false
     end
     include_context 'existing conversation'
 
