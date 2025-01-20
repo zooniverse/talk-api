@@ -464,14 +464,14 @@ RSpec.describe Comment, type: :model do
 
   describe '#update_tags' do
     let(:comment){ create :comment, body: '#tag1 not#atag #Tag' }
-    before(:each){ comment.update_attributes body: '#TAG1' }
+    before(:each){ comment.update body: '#TAG1' }
 
     it 'should maintain case' do
       expect(comment.reload.tags.first.name).to eql 'tag1'
     end
 
     context 'when removing' do
-      before(:each){ comment.update_attributes body: '#tag1' }
+      before(:each){ comment.update body: '#tag1' }
 
       it 'should destroy removed tags on update' do
         expect(comment.reload.tags.where(name: 'tag').exists?).to be false
@@ -484,7 +484,7 @@ RSpec.describe Comment, type: :model do
 
     context 'when adding' do
       let(:subject2){ create :subject }
-      before(:each){ comment.update_attributes body: '#tag #newtag' }
+      before(:each){ comment.update body: '#tag #newtag' }
 
       it 'should create added tags on update' do
         expect(comment.reload.tags.where(name: 'newtag').exists?).to be true
@@ -540,7 +540,7 @@ RSpec.describe Comment, type: :model do
 
     context 'when preference is disabled' do
       before(:each) do
-        commenting_user.preference_for(:participating_discussions).update_attributes enabled: false
+        commenting_user.preference_for(:participating_discussions).update enabled: false
       end
 
       it 'should not subscribe the user' do
@@ -570,7 +570,7 @@ RSpec.describe Comment, type: :model do
     before(:each) do
       participating_users.each{ |user| user.subscribe_to discussion, :participating_discussions }
       following_user.subscribe_to discussion, :followed_discussions
-      unsubscribed_user.preference_for(:participating_discussions).update_attributes enabled: false
+      unsubscribed_user.preference_for(:participating_discussions).update enabled: false
     end
 
     it 'should create notifications for subscribed users' do

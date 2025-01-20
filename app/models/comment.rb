@@ -53,7 +53,7 @@ class Comment < ApplicationRecord
   end
 
   def soft_destroy
-    update_attributes is_deleted: true, body: 'This comment has been deleted'
+    update is_deleted: true, body: 'This comment has been deleted'
     mentions.destroy_all
     group_mentions.destroy_all
     tags.destroy_all
