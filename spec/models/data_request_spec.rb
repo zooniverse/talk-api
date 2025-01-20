@@ -88,7 +88,7 @@ RSpec.describe DataRequest, type: :model do
     let(:data_request){ create :data_request, user: user }
 
     before :each do
-      unsubscribed_user.preference_for(:system).update_attributes enabled: false
+      unsubscribed_user.preference_for(:system).update enabled: false
     end
 
     context 'with a subscribed user' do

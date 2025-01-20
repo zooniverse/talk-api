@@ -81,7 +81,7 @@ RSpec.describe Subscription, type: :model do
       let!(:subscription){ create :subscription }
       it 'should clear notifications' do
         expect{
-          subscription.update_attributes enabled: false
+          subscription.update enabled: false
         }.to change{
           Notification.count
         }.from(3).to 1
@@ -92,7 +92,7 @@ RSpec.describe Subscription, type: :model do
       let!(:subscription){ create :subscription, enabled: false }
       it 'should not clear notifications' do
         expect{
-          subscription.update_attributes enabled: true
+          subscription.update enabled: true
         }.to_not change{
           Notification.count
         }
