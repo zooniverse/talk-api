@@ -4,7 +4,7 @@ namespace :data do
     Discussion.where('focus_type' => nil).joins(:comments).where('comments.focus_type' => 'Subject').find_each do |discussion|
       first_comment = discussion.comments.order(created_at: :asc).first
       if first_comment.focus
-        discussion.update_attributes focus_id: first_comment.focus_id, focus_type: first_comment.focus_type
+        discussion.update focus_id: first_comment.focus_id, focus_type: first_comment.focus_type
       end
     end
   end

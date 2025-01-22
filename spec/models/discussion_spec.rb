@@ -161,7 +161,7 @@ RSpec.describe Discussion, type: :model do
 
     it 'should clear sticky' do
       expect{
-        discussion.update_attributes sticky: false
+        discussion.update sticky: false
       }.to change{
         discussion.sticky_position
       }.to nil
@@ -207,7 +207,7 @@ RSpec.describe Discussion, type: :model do
 
     before(:each) do
       users.each{ |user| user.subscribe_to board, :started_discussions }
-      unsubscribed_user.preference_for(:started_discussions).update_attributes enabled: false
+      unsubscribed_user.preference_for(:started_discussions).update enabled: false
     end
 
     it 'should create notifications for subscribed users' do
