@@ -113,7 +113,7 @@ RSpec.describe Moderation, type: :model do
   describe '#notify_subscribers' do
     before(:each) do
       admins.each do |admin|
-        admin.preference_for(:moderation_reports).update_attributes enabled: false
+        admin.preference_for(:moderation_reports).update enabled: false
       end
     end
     include_context 'moderation subscriptions'
@@ -156,7 +156,7 @@ RSpec.describe Moderation, type: :model do
     context 'when the preference is disabled' do
       before(:each) do
         admins.each do |admin|
-          admin.preference_for(:moderation_reports).update_attributes enabled: false
+          admin.preference_for(:moderation_reports).update enabled: false
         end
       end
 
