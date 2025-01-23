@@ -19,7 +19,7 @@ RSpec.shared_examples_for 'a controller action' do
 
     it 'should be json' do
       # starting from Rails 5+, if responding with 204, content-type of response is set by Rails as nil
-      expect(response.content_type).to eql 'application/json' unless response.status == 204
+      expect(response.media_type).to eql 'application/json' unless response.status == 204
     end
 
     it 'should be an object' do
