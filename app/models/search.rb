@@ -13,7 +13,7 @@ class Search < ApplicationRecord
   scope :with_content, ->(terms) {
     query = _parse_query terms
     where('content @@ to_tsquery(?)', query)
-      .order("ts_rank(content, #{ connection.quote query }) desc")
+      .order(Arel.sql("ts_rank(content, #{ connection.quote query }) desc"))
   }
 
   def self.serialize_search
