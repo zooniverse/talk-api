@@ -45,7 +45,7 @@ RSpec.shared_examples_for 'a controller creating' do
       end
 
       it 'should be json' do
-        expect(response.content_type).to eql 'application/json'
+        expect(response.media_type).to eql 'application/json'
       end
 
       it 'should be an object' do

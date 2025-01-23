@@ -9,7 +9,7 @@ RSpec.describe ApplicationController, type: :controller do
       before(:each){ get :root, format: :json }
 
       it 'should render json' do
-        expect(response.content_type).to eql 'application/json'
+        expect(response.media_type).to eql 'application/json'
       end
 
       it 'should list resources' do
@@ -21,7 +21,7 @@ RSpec.describe ApplicationController, type: :controller do
       before(:each){ get :root, format: :json_api }
 
       it 'should render json' do
-        expect(response.content_type).to eql 'application/json'
+        expect(response.media_type).to eql 'application/json'
       end
 
       it 'should list resources' do
@@ -36,7 +36,7 @@ RSpec.describe ApplicationController, type: :controller do
       end
 
       it 'should render html' do
-        expect(response.content_type).to eql 'text/html'
+        expect(response.media_type).to eql 'text/html'
       end
 
       it 'should redirect' do
