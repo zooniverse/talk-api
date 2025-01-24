@@ -8,7 +8,7 @@ RSpec.describe SearchesController, type: :controller do
       before(:each){ send_request }
 
       its(:status){ is_expected.to eql 422 }
-      its(:content_type){ is_expected.to eql 'application/json' }
+      its(:media_type){ is_expected.to eql 'application/json' }
 
       describe 'json' do
         subject{ response.json }
@@ -24,7 +24,7 @@ RSpec.describe SearchesController, type: :controller do
       before(:each){ send_request }
 
       its(:status){ is_expected.to eql 422 }
-      its(:content_type){ is_expected.to eql 'application/json' }
+      its(:media_type){ is_expected.to eql 'application/json' }
 
       describe 'json' do
         subject{ response.json }
@@ -43,7 +43,7 @@ RSpec.describe SearchesController, type: :controller do
       before(:each){ send_request }
 
       its(:status){ is_expected.to eql 422 }
-      its(:content_type){ is_expected.to eql 'application/json' }
+      its(:media_type){ is_expected.to eql 'application/json' }
 
       describe 'json' do
         subject{ response.json }
@@ -62,7 +62,7 @@ RSpec.describe SearchesController, type: :controller do
       before(:each){ send_request }
 
       its(:status){ is_expected.to eql 422 }
-      its(:content_type){ is_expected.to eql 'application/json' }
+      its(:media_type){ is_expected.to eql 'application/json' }
 
       describe 'json' do
         subject{ response.json }
@@ -81,7 +81,7 @@ RSpec.describe SearchesController, type: :controller do
       before(:each){ send_request }
 
       its(:status){ is_expected.to eql 200 }
-      its(:content_type){ is_expected.to eql 'application/json' }
+      its(:media_type){ is_expected.to eql 'application/json' }
 
       describe 'json' do
         subject{ response.json }
@@ -102,7 +102,7 @@ RSpec.describe SearchesController, type: :controller do
       before(:each){ send_request }
 
       its(:status){ is_expected.to eql 200 }
-      its(:content_type){ is_expected.to eql 'application/json' }
+      its(:media_type){ is_expected.to eql 'application/json' }
 
       describe 'json' do
         subject{ response.json }
