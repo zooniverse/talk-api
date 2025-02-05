@@ -11,14 +11,14 @@ module TalkResource
   end
 
   def service
-    @service ||= service_class.new({
+    @service ||= service_class.new(
       params: params,
       action: params[:action],
       current_user: current_user,
       model_class: model_class,
       schema_class: schema_class,
       user_ip: current_user_ip
-    })
+    )
   end
 
   def resource_ids

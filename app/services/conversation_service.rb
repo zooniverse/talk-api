@@ -20,12 +20,12 @@ class ConversationService < ApplicationService
   end
 
   def build_message
-    MessageService.new({
+    MessageService.new(
       params: message_params,
       action: :create,
       current_user: current_user,
       user_ip: user_ip
-    }).build
+    ).build
   end
 
   def conversation_params

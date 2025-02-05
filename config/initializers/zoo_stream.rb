@@ -1,5 +1,6 @@
 if Rails.env.staging? || Rails.env.production?
-  require 'aws-sdk'
+  require 'aws-sdk-core'
+  require 'aws-sdk-kinesis'
   require 'zoo_stream'
   Aws.config.update region: 'us-east-1'
   ZooStream.source = ENV["ZOO_STREAM_SOURCE"] || "talk"

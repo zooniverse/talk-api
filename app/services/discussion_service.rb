@@ -2,12 +2,12 @@ class DiscussionService < ApplicationService
   def build
     set_user
     @resource = model_class.new(discussion_params).tap do |discussion|
-      new_comment = CommentService.new({
+      new_comment = CommentService.new(
         params: comment_params,
         action: :create,
         current_user: current_user,
         user_ip: user_ip
-      }).build
+      ).build
       discussion.focus = new_comment.focus
       discussion.comments << new_comment
     end

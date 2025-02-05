@@ -5,11 +5,16 @@ source 'https://rubygems.org'
 
 if next?
   gem 'rails', '6.1.7.10'
+  gem 'zoo_stream', git: 'https://github.com/zooniverse/zoo_stream.git', branch: 'ruby-3', ref: '6642932d30'
 else
-  gem 'rails', '6.1.7.10'
+  gem 'rails', '6.0.6.1'
+  gem 'aws-sdk', '~> 2.3.7'
+  gem 'zoo_stream', '~> 1.0'
 end
 
-gem 'aws-sdk', '~> 2.3.7'
+gem 'aws-sdk-core', '~> 3'
+gem 'aws-sdk-s3', '~> 1'
+gem 'aws-sdk-kinesis', '~> 1'
 # lock concurrent-ruby to 1.3.4 since 1.3.5 breaks active support
 # with a NameError  uninitialized constant
 # ActiveSupport::LoggerThreadSafeLevel::Logger on application.rb
@@ -33,7 +38,6 @@ gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
 gem 'spring', group: :development
-gem 'zoo_stream', '~> 1.0'
 
 group :test, :development do
   gem 'benchmark-ips'

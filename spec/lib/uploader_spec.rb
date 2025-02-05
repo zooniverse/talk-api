@@ -29,9 +29,9 @@ RSpec.describe Uploader, type: :lib do
   end
 
   describe '#initialize' do
-    it 'should initialize s3' do
-      expect(Uploader).to receive(:initialize_s3).and_return nil
-      subject
+    it 'sets bucket and bucket_path via initialize_s3' do
+      expect(uploader.bucket).to eq('a-bucket')
+      expect(uploader.bucket_path).to eq('a/bucket/path')
     end
 
     its(:local_file){ is_expected.to eql file }
