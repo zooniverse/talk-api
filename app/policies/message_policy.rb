@@ -34,21 +34,9 @@ class MessagePolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      # TODO: REMOVE VERSION CHECK ONCE ON RAILS 6.1
-      # Rails 6.1 introduces a feature that allows .where
-      # to access alias tables.
-      # See: https://blog.saeloun.com/2021/01/25/rails-6-allow-where-clause-reference-association-by-alias-name/
-      # This change is not backwards compatible with Rails 6.0
-
-      if Rails.version.starts_with?('6.0')
-        scope.joins(:conversation, :user_conversations).where({
-        user_conversations: { user_id: user.id }
-        })
-      else
-        scope.joins(:conversation, :user_conversations).where({
-        user_conversations_messages: { user_id: user.id }
-        })
-      end
+      scope.joins(:conversation, :user_conversations).where({
+      user_conversations_messages: { user_id: user.id }
+      })
     end
   end
 end
