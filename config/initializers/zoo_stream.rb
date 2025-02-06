@@ -1,5 +1,4 @@
 if Rails.env.staging? || Rails.env.production?
-  require 'aws-sdk-core'
   require 'aws-sdk-kinesis'
   require 'zoo_stream'
   Aws.config.update region: 'us-east-1'
