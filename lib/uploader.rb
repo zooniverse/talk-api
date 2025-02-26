@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require 'aws-sdk-s3'
 
 class Uploader
   delegate :initialize_s3, to: :class
