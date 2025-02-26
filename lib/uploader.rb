@@ -25,7 +25,7 @@ class Uploader
   end
 
   def url
-    remote_file.presigned_url :get, expires_in: 1.week
+    remote_file.presigned_url :get, expires_in: 1.week.in_seconds
   end
 
   def mime_type
