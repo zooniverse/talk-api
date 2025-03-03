@@ -29,10 +29,10 @@ jobs:
           - Gemfile.next
         ruby:
           - 2.7
-          - 3.0
+          - 3.0.7
         exclude:
           - gemfile: Gemfile
-            ruby: 3.0
+            ruby: 3.0.7
           - gemfile: Gemfile.next
             ruby: 2.7
     env: # $BUNDLE_GEMFILE must be set at the job level, so it is set for all steps
