@@ -106,8 +106,8 @@ RSpec.shared_examples_for 'a data export worker' do
     end
 
     it 'should call #row_from' do
-      expect(subject).to receive(:row_from).with a: 1
-      expect(subject).to receive(:row_from).with b: 2
+      expect(subject).to receive(:row_from).with({ a: 1 })
+      expect(subject).to receive(:row_from).with({ b: 2 })
       subject.each_row{ }
     end
 
