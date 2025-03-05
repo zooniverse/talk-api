@@ -85,13 +85,13 @@ RSpec.describe NotificationsController, type: :controller do
       end
 
       it 'should update all notifications without specified ids' do
-        put :read, { format: :json }
+        put :read, params: { format: :json }
         owned_statuses = record.user.notifications.map{ |notification| notification.reload.delivered }
         expect(owned_statuses).to all be true
       end
 
       it 'should not update other users notifications without specified ids' do
-        put :read, { format: :json }
+        put :read, params: { format: :json }
         other_statuses = others.map{ |notification| notification.reload.delivered }
         expect(other_statuses).to all be false
       end
