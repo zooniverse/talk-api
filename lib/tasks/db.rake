@@ -1,5 +1,4 @@
 def panoptes_config
-  # starting in Rails 6.1 db_config becomes hash with symbol keys as opposed to hash with string keys.
   @panoptes_config ||= db_config("panoptes_#{ Rails.env }").with_indifferent_access
 end
 
@@ -8,7 +7,7 @@ def talk_config
 end
 
 def db_config(key)
-  config = ActiveRecord::Base.configurations[key]
+  config = ActiveRecord::Base.configurations.configs_for(env_name: key)[0].configuration_hash
   raise "database.yml does not configure #{ key }\n\n" unless config
   config
 end
