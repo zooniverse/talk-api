@@ -4,7 +4,7 @@ end
 source 'https://rubygems.org'
 
 if next?
-  gem 'rails', '6.1.7.10'
+  gem 'rails', '7.0.8.7'
 else
   gem 'rails', '6.1.7.10'
 end
