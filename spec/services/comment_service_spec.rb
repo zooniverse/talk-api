@@ -46,7 +46,7 @@ RSpec.describe CommentService, type: :service do
 
       it 'should find the resource' do
         expect(service.model_class).to receive(:find)
-          .with(record.id).twice.and_call_original
+          .with(record.id).and_call_original
         service.send upvote_method
       end
 
