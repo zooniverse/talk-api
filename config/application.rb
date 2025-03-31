@@ -71,6 +71,19 @@ module Talk
       'app/workers'
     ].collect{ |path| Rails.root.join path }
 
+    config.eager_load_paths += [
+      'lib',
+      'app/schemas/concerns',
+      'app/schemas',
+      'app/services/concerns',
+      'app/services',
+      'app/serializers/concerns',
+      'app/serializers',
+      'app/workers/concerns',
+      'app/workers'
+    ].collect{ |path| Rails.root.join path }
+
+
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
