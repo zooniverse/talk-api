@@ -37,6 +37,19 @@ RSpec.describe Discussion, type: :model do
       allow(without_section).to receive :set_section
       expect(without_section).to fail_validation section: "can't be blank"
     end
+
+    context 'when focus_id is present' do
+      let(:focus) { create :subject }
+      it 'returns validation error if focus subject does not belong to project' do
+        with_focus_unrelated_to_project = build :discussion, focus_id: focus.id, focus_type: 'Subject', project_id: focus.project_id
+        expect(with_focus_unrelated_to_project).to fail_validation focus_id: 'Subject must belong to project'
+      end
+
+      it 'should allow comment if focus belongs to project' do
+        with_valid_focus = build :discussion, focus_id: focus.id, focus_type: 'Subject'
+        expect(with_valid_focus.valid?).to be false
+      end
+    end
   end
 
   describe '#subject_default' do

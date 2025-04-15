@@ -33,6 +33,8 @@ class Comment < ApplicationRecord
     message: 'must be "Subject"'
   }
 
+  validate :focus_belongs_to_project
+
   before_validation :set_section
   before_create :denormalize_attributes
   after_create :update_discussion
@@ -94,6 +96,12 @@ class Comment < ApplicationRecord
       || setweight(to_tsvector(focus_id::text), 'A')
       || setweight(to_tsvector(substring(focus_type, 1, 1) || focus_id::text), 'A')
     SQL
+  end
+
+  def focus_belongs_to_project
+    return unless focus && project_id.present?
+
+    errors.add(:focus_id, 'Subject must belong to project') if focus.project_id != project_id
   end
 
   protected
