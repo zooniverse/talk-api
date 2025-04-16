@@ -47,7 +47,7 @@ RSpec.describe Discussion, type: :model do
 
       it 'should allow comment if focus belongs to project' do
         with_valid_focus = build :discussion, focus_id: focus.id, focus_type: 'Subject'
-        expect(with_valid_focus.valid?).to be false
+        expect(with_valid_focus.valid?).to be true
       end
     end
   end
