@@ -41,7 +41,7 @@ RSpec.describe Discussion, type: :model do
     context 'when focus_id is present' do
       let(:focus) { create :subject }
       it 'returns validation error if focus subject does not belong to project' do
-        with_focus_unrelated_to_project = build :discussion, focus_id: focus.id, focus_type: 'Subject', project_id: focus.project_id
+        with_focus_unrelated_to_project = build :discussion, focus_id: focus.id, focus_type: 'Subject', project_id: focus.project_id + 1
         expect(with_focus_unrelated_to_project).to fail_validation focus_id: 'Subject must belong to project'
       end
 
