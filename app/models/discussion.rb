@@ -21,6 +21,8 @@ class Discussion < ApplicationRecord
   validates :title, presence: true, length: { in: 3..140, unless: ->{ subject_default? } }
   validates :section, presence: true
 
+  validate :focus_belongs_to_project
+
   before_validation :set_section
   before_create :denormalize_attributes
   before_save :clear_sticky, unless: ->{ sticky? }
@@ -56,6 +58,12 @@ class Discussion < ApplicationRecord
   def update_counters!
     count_users!
     board.count_users_and_comments!
+  end
+
+  def focus_belongs_to_project
+    return unless focus && project_id.present?
+
+    errors.add(:focus_id, 'Subject must belong to project') if focus.project_id != project_id
   end
 
   protected
