@@ -154,9 +154,10 @@ RSpec.describe Comment, type: :model do
     end
 
     context 'with a focused discussion' do
-      let(:focus){ create :subject }
-      let(:discussion){ create :discussion, focus: focus }
-      subject{ create :comment, discussion: discussion }
+      let(:focus) { create :subject }
+      let(:project_board) { create :board, section: "project-#{focus.project_id}" }
+      let(:discussion) { create :discussion, focus: focus, board: project_board }
+      subject { create :comment, discussion: discussion }
       its(:focus){ is_expected.to eql focus }
     end
   end
