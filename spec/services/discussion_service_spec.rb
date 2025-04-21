@@ -36,12 +36,14 @@ RSpec.describe DiscussionService, type: :service do
 
     context 'with a focused comment' do
       context 'with a related focus to project board' do
-        let(:focus){ create :subject }
+        let(:project_board) { create :board, section: 'project-212' }
+        let(:related_project) { create :project, id: 212}
+        let(:focus) { create :subject, project: related_project }
         let(:create_params) do
           {
             discussions: {
               title: 'works',
-              board_id: board.id,
+              board_id: project_board.id,
               comments: [{
                 body: 'works',
                 focus_id: focus.id,
@@ -51,12 +53,11 @@ RSpec.describe DiscussionService, type: :service do
           }
         end
 
-        before(:each) { service.create }
-        subject { service.resource }
-
         it 'should set focus of discussion and comment' do
-          expect(subject.focus).to eq(focus)
-          expect(subject.comments.first.focus).to eq(focus)
+          service.create
+          created_discussion = service.resource
+          expect(created_discussion.focus).to eq(focus)
+          expect(created_discussion.comments.first.focus).to eq(focus)
         end
       end
 
