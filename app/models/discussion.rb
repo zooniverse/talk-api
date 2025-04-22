@@ -61,9 +61,9 @@ class Discussion < ApplicationRecord
   end
 
   def focus_belongs_to_project
-    return unless focus && project_id.present?
+    return unless focus && board.project_id.present?
 
-    errors.add(:focus_id, 'Subject must belong to project') if focus.project_id != project_id
+    errors.add(:focus_id, 'Subject must belong to project') if focus.project_id != board.project_id
   end
 
   protected

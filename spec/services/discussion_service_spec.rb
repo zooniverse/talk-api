@@ -35,26 +35,53 @@ RSpec.describe DiscussionService, type: :service do
     end
 
     context 'with a focused comment' do
-      let(:focus){ create :subject }
-      let(:create_params) do
-        {
-          discussions: {
-            title: 'works',
-            board_id: board.id,
-            comments: [{
-              body: 'works',
-              focus_id: focus.id,
-              focus_type: 'Subject'
-            }]
+      context 'with a related focus to project board' do
+        let(:project_board) { create :board, section: 'project-212' }
+        let(:related_project) { create :project, id: 212}
+        let(:focus) { create :subject, project: related_project }
+        let(:create_params) do
+          {
+            discussions: {
+              title: 'works',
+              board_id: project_board.id,
+              comments: [{
+                body: 'works',
+                focus_id: focus.id,
+                focus_type: 'Subject'
+              }]
+            }
           }
-        }
+        end
+
+        it 'should set focus of discussion and comment' do
+          service.create
+          created_discussion = service.resource
+          expect(created_discussion.focus).to eq(focus)
+          expect(created_discussion.comments.first.focus).to eq(focus)
+        end
       end
 
-      before(:each){ service.create }
-      subject{ service.resource }
+      context 'with focus validation' do
+        let(:project_unrelated_to_board) { create :project, id: 101 }
+        let(:subject_unrelated_to_board) { create :subject, project: project_unrelated_to_board }
+        let(:create_params) do
+          {
+            discussions: {
+              title: 'works',
+              board_id: board.id,
+              comments: [{
+                body: 'works',
+                focus_id: subject_unrelated_to_board.id,
+                focus_type: 'Subject'
+              }]
+            }
+          }
+        end
 
-      its(:focus){ is_expected.to eql focus }
-      its('comments.first.focus'){ is_expected.to eql focus }
+        it 'should not create discussion or comment if focus is not a subject to board project' do
+          expect { service.create }.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Focus Subject must belong to project')
+        end
+      end
     end
 
     it_behaves_like 'a service updating', Discussion do
