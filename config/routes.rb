@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         get :autocomplete
       end
     end
+    resources :votable_tags
   end
 
   root 'application#root'
