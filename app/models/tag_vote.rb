@@ -4,5 +4,4 @@ class TagVote < ApplicationRecord
   belongs_to :user, required: true
   belongs_to :votable_tag, counter_cache: true, required: true, touch: true
   validates :user_id, uniqueness: { scope: :votable_tag_id }
-  scope :highest_vote, -> { order(vote_count: :desc)}
 end
