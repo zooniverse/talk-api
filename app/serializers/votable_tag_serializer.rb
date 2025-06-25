@@ -6,4 +6,5 @@ class VotableTagSerializer
   can_sort_by :name, :vote_count
   embed_attributes_from :project
   self.includes = [:project]
+  self.default_sort = '-vote_count'
 end

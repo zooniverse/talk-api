@@ -25,6 +25,10 @@ module EmbeddedAttributes
     %w(slug title)
   end
 
+  def votable_tag_attributes
+    %w(name project_id section taggable_type taggable_id)
+  end
+
   def custom_attributes
     super.tap do |custom_attrs|
       self._embedded_attributes.each do |relation|
