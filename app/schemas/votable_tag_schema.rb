@@ -12,6 +12,7 @@ class VotableTagSchema
       string :name, required: true
       string :section, required: true
       id :taggable_id, null: true
+      id :created_by_user_id, required: true
       entity :taggable_type, null: true do
         enum %w[Subject]
       end

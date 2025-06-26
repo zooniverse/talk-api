@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_06_24_143152) do
+ActiveRecord::Schema[7.0].define(version: 2025_06_26_170913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_trgm"
@@ -354,6 +354,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_06_24_143152) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "vote_count", default: 0, null: false
+    t.integer "created_by_user_id"
+    t.boolean "is_deleted", default: false
     t.index ["section", "taggable_type", "name"], name: "index_votable_tags_on_section_and_taggable_type_and_name"
     t.index ["section", "taggable_type"], name: "index_votable_tags_on_section_and_taggable_type"
     t.index ["taggable_id", "taggable_type", "name"], name: "index_votable_tags_on_taggable_id_and_taggable_type_and_name", unique: true

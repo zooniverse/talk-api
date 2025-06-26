@@ -5,18 +5,20 @@ class TagVoteSerializer
 
   all_attributes
   attributes :votable_tag
-  can_filter_by :project_id, :taggable_id, :taggable_type, :section
+  can_filter_by :taggable_id, :taggable_type, :section
+
 
   def self.page(params = {}, scope = nil, context = {})
     page_with_options CustomScopeFilterOptions.new(self, params, scope, context)
   end
 
   def votable_tag
-    VotableTagSerializer.as_json(model.votable_tag, current_user: current_user)
+    VotableTagSerializer.as_json model.votable_tag
   end
 
   class CustomScopeFilterOptions < RestPack::Serializer::Options
-    CUSTOM_SCOPE_FILTERS = %i[section project_id taggable_type taggable_id section].freeze
+    # why is project_id not working?
+    CUSTOM_SCOPE_FILTERS = %i[section taggable_type taggable_id].freeze
 
     def scope_with_filters
       non_custom_filters = @filters.except(*CUSTOM_SCOPE_FILTERS)
