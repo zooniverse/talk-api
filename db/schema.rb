@@ -2,16 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_02_094638) do
-
+ActiveRecord::Schema[7.0].define(version: 2025_06_30_225249) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_trgm"
@@ -292,6 +291,16 @@ ActiveRecord::Schema.define(version: 2024_04_02_094638) do
     t.index ["name", "section"], name: "index_suggested_tags_on_name_and_section", unique: true
   end
 
+  create_table "tag_votes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.bigint "votable_tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "votable_tag_id"], name: "index_tag_votes_on_user_id_and_votable_tag_id", unique: true
+    t.index ["user_id"], name: "index_tag_votes_on_user_id"
+    t.index ["votable_tag_id"], name: "index_tag_votes_on_votable_tag_id"
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "section", null: false
@@ -336,4 +345,24 @@ ActiveRecord::Schema.define(version: 2024_04_02_094638) do
     t.index ["ip"], name: "index_user_ip_bans_on_ip"
   end
 
+  create_table "votable_tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "project_id"
+    t.string "section"
+    t.string "taggable_type"
+    t.bigint "taggable_id"
+    t.integer "created_by_user_id"
+    t.boolean "is_deleted", default: false
+    t.integer "vote_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_user_id"], name: "index_votable_tags_on_created_by_user_id"
+    t.index ["section", "taggable_type", "name"], name: "index_votable_tags_on_section_and_taggable_type_and_name"
+    t.index ["section", "taggable_type"], name: "index_votable_tags_on_section_and_taggable_type"
+    t.index ["taggable_id", "taggable_type", "name"], name: "index_votable_tags_by_name_and_taggable", unique: true, where: "(is_deleted = false)"
+    t.index ["taggable_id", "taggable_type"], name: "index_votable_tags_on_taggable_id_and_taggable_type"
+    t.index ["taggable_type", "taggable_id"], name: "index_votable_tags_on_taggable"
+  end
+
+  add_foreign_key "tag_votes", "votable_tags"
 end
