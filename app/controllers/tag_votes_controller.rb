@@ -7,6 +7,6 @@ class TagVotesController < ApplicationController
     vote.destroy!
     votable_tag.reload
     votable_tag.soft_destroy if votable_tag.vote_count.zero?
-    render json: { }, status: :no_content
+    render json: {}, status: :no_content
   end
 end
