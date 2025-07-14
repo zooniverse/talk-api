@@ -15,8 +15,6 @@ class VotableTagPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.all if zooniverse_admin?
-
       scope.where(is_deleted: false)
     end
   end
