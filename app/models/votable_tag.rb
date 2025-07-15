@@ -12,4 +12,11 @@ class VotableTag < ApplicationRecord
   def soft_destroy
     update is_deleted: true
   end
+
+  def create_vote
+    TagVote.create(
+      user_id: created_by_user_id,
+      votable_tag_id: id
+    )
+  end
 end
