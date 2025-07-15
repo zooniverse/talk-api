@@ -9,6 +9,14 @@ class VotableTagPolicy < ApplicationPolicy
     logged_in? && confirmed?
   end
 
+  def update?
+    false
+  end
+
+  def destroy?
+    false
+  end
+
   class Scope < Scope
     def resolve
       scope.where(is_deleted: false)
