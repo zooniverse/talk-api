@@ -33,6 +33,18 @@ RSpec.describe VotableTag, type: :model do
     end
   end
 
+  describe '#create_vote' do
+    let(:user) { create :user }
+    it 'creates an associated tag_vote for votable_tag' do
+      votable_tag = create :votable_tag, is_deleted: false, created_by_user_id: user.id
+      votable_tag.create_vote
+      tag_votes = TagVote.where(votable_tag_id: votable_tag.id)
+      expect(tag_votes.count).to eql 1
+      tag_vote = tag_votes[0]
+      expect(tag_vote.user_id).to eql(votable_tag.created_by_user_id)
+    end
+  end
+
   describe '#soft_destroy' do
     it 'should set is_deleted to true' do
       votable_tag = create :votable_tag, is_deleted: false
