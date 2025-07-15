@@ -2,7 +2,7 @@
 
 class VotableTagsController < ApplicationController
   include TalkResource
-  disallow :destroy
+  disallow :destroy, :update
 
   def create
     service.create
