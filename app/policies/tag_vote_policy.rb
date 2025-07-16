@@ -5,10 +5,6 @@ class TagVotePolicy < ApplicationPolicy
     record.user_id == user.id && logged_in? && confirmed? && !record.votable_tag.is_deleted
   end
 
-  def update?
-    false
-  end
-
   def destroy?
     record.user_id == user.id && logged_in? && confirmed?
   end
