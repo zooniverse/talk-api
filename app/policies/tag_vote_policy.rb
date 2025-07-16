@@ -2,7 +2,7 @@
 
 class TagVotePolicy < ApplicationPolicy
   def create?
-    record.user_id == user.id && logged_in? && confirmed? && !record.votable_tag.is_deleted
+    record.user_id == user.id && logged_in? && confirmed? && !record.votable_tag&.is_deleted
   end
 
   def destroy?
