@@ -7,6 +7,7 @@ class TagVoteSchema
 
   def create
     root do
+      additional_properties false
       id :user_id, required: true
       id :votable_tag_id, required: true
     end
