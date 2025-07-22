@@ -4,6 +4,11 @@ class VotableTagsController < ApplicationController
   include TalkResource
   disallow :destroy, :update
 
+  def index
+    params[:name]&.downcase!
+    super
+  end
+
   def create
     service.create
     service.resource.create_vote
