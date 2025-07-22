@@ -5,7 +5,7 @@ class VotableTagsController < ApplicationController
   disallow :destroy, :update
 
   def index
-    params[:name]&.downcase!
+    params[:name].try :downcase!
     super
   end
 
