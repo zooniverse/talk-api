@@ -4,6 +4,19 @@ class TagVotesController < ApplicationController
   include TalkResource
   disallow :update
 
+  def create
+    service.build unless service.resource
+    service.authorize unless service.authorized?
+    service.validate unless service.validated?
+    votable_tag = VotableTag.find service.unrooted_params[:votable_tag_id]
+    TagVote.transaction do
+      votable_tag.lock!
+      service.resource.save!
+      votable_tag.reload
+    end
+    render json: serializer_class.resource({ id: service.resource.id }, nil, current_user:)
+  end
+
   def destroy
     vote = TagVote.find params[:id]
     authorize vote
