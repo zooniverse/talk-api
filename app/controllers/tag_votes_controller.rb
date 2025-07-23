@@ -8,9 +8,13 @@ class TagVotesController < ApplicationController
     vote = TagVote.find params[:id]
     authorize vote
     votable_tag = vote.votable_tag
-    vote.destroy!
-    votable_tag.reload
-    votable_tag.soft_destroy if votable_tag.vote_count.zero?
+
+    TagVote.transaction do
+      votable_tag.lock!
+      vote.destroy!
+      votable_tag.reload
+      votable_tag.soft_destroy if votable_tag.vote_count.zero?
+    end
     render json: {}, status: :no_content
   end
 end

@@ -10,7 +10,7 @@ class VotableTag < ApplicationRecord
   validates :taggable_id, presence: true, if: -> { taggable_type.present? }
 
   def soft_destroy
-    update is_deleted: true
+    update! is_deleted: true
   end
 
   def create_vote
