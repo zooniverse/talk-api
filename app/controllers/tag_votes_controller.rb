@@ -6,13 +6,13 @@ class TagVotesController < ApplicationController
 
   def create
     service.build unless service.resource
-    service.authorize unless service.authorized?
-    service.validate unless service.validated?
     votable_tag = VotableTag.find service.unrooted_params[:votable_tag_id]
     TagVote.transaction do
       votable_tag.lock!
-      service.resource.save!
       votable_tag.reload
+      service.authorize unless service.authorized?
+      service.validate unless service.validated?
+      service.resource.save!
     end
     render json: serializer_class.resource({ id: service.resource.id }, nil, current_user:)
   end
