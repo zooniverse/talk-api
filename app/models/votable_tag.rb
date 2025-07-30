@@ -13,7 +13,7 @@ class VotableTag < ApplicationRecord
   before_save :downcase_name
 
   def soft_destroy
-    update is_deleted: true
+    update! is_deleted: true
   end
 
   def create_vote

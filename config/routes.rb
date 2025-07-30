@@ -34,6 +34,7 @@ Rails.application.routes.draw do
         get :autocomplete
       end
     end
+    resources :tag_votes
     resources :user_ip_bans
     resources :users do
       collection do
