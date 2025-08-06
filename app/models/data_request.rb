@@ -23,6 +23,7 @@ class DataRequest < ApplicationRecord
   def self.kinds
     {
       tags: TagExportWorker,
+      votable_tags: VotableTagExportWorker,
       comments: CommentExportWorker
     }
   end
