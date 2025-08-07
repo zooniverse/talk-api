@@ -24,6 +24,7 @@ class VotableTagExportWorker
 
   def create_view
     view_model.connection.query <<-SQL
+      create or replace view #{ @view_name } as
       select
         votable_tags.id as tag_id,
         votable_tags.name as tag_name,
