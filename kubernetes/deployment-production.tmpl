@@ -92,7 +92,7 @@ spec:
               exec:
                 command: ["/bin/bash", "-c", "cp -R /rails_app/public/* /static-assets"]
         - name: talk-production-nginx
-          image: zooniverse/nginx
+          image: ghcr.io/zooniverse/docker-nginx
           resources:
             requests:
               memory: "30Mi"
