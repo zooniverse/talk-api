@@ -64,6 +64,11 @@ RSpec.describe DataRequest, type: :model do
       data_request = create :tags_data_request
       expect(data_request.worker).to eql TagExportWorker
     end
+
+    it 'should find VotableTagExportWorker' do
+      data_request = create :votable_tags_data_request
+      expect(data_request.worker).to eql VotableTagExportWorker
+    end
   end
 
   describe '#set_expiration' do
