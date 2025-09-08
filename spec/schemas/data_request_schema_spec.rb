@@ -14,7 +14,7 @@ RSpec.describe DataRequestSchema, type: :schema do
       with :properties do
         its(:user_id){ is_expected.to eql id_schema }
         its(:section){ is_expected.to eql type: 'string' }
-        its(:kind){ is_expected.to eql type: 'string', enum: %w(tags comments) }
+        its(:kind){ is_expected.to eql type: 'string', enum: %w(tags votable_tags comments) }
       end
     end
   end

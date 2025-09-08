@@ -51,7 +51,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe '.kinds' do
     subject{ DataRequest.kinds }
-    it{ is_expected.to eql tags: TagExportWorker, comments: CommentExportWorker }
+    it{ is_expected.to eql tags: TagExportWorker, comments: CommentExportWorker, votable_tags: VotableTagExportWorker }
   end
 
   describe '#worker' do
