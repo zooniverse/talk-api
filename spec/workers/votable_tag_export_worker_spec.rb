@@ -108,7 +108,7 @@ RSpec.describe VotableTagExportWorker, type: :worker do
   end
 
   describe '#perform' do
-    let(:data_request){ create :comments_data_request }
+    let!(:data_request) { create :votable_tags_data_request }
     before(:each) do
       allow(subject).to receive :process_data
     end
