@@ -8,7 +8,7 @@ class DataRequest < ApplicationRecord
   validates :section, presence: true
   validates :kind, presence: true,
     uniqueness: { scope: [:section, :user_id], message: 'has already been created' },
-    inclusion: { in: %w(tags comments), message: 'must be "tags" or "comments"' }
+    inclusion: { in: %w(tags comments votable_tags), message: 'must be "tags" or "comments" or "votable_tags"' }
 
   before_create :set_expiration
   after_commit :spawn_worker, on: :create
@@ -23,6 +23,7 @@ class DataRequest < ApplicationRecord
   def self.kinds
     {
       tags: TagExportWorker,
+      votable_tags: VotableTagExportWorker,
       comments: CommentExportWorker
     }
   end
