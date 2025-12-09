@@ -4,7 +4,7 @@ end
 source 'https://rubygems.org'
 
 if next?
-  gem 'rails', '7.0.8.7'
+  gem 'rails', '7.1.6'
 else
   gem 'rails', '7.0.8.7'
 end
@@ -29,7 +29,7 @@ gem 'puma'
 gem 'pundit', '~> 1.1.0'
 gem 'rack-cors', '~> 1.0.5'
 gem 'redis', '~> 3.3.0'
-gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializer.git', branch: 'talk-api-version', ref: '32268d26c2c6'
+gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializer.git', branch: 'talk-api-version', ref: 'ef87bcf1fafe'
 gem 'sidekiq', '< 6'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
