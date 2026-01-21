@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 if next?
   gem 'rails', '7.1.6'
 else
-  gem 'rails', '7.0.8.7'
+  gem 'rails', '7.1.6'
 end
 
 gem 'aws-sdk-kinesis', '~> 1'
