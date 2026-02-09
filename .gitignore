@@ -12,3 +12,6 @@
 .vagrant
 /spec/support/awful_strings.json
 .ruby-*
+/config/credentials/panoptes_test.key
+
+/config/credentials/panoptes_development.key
