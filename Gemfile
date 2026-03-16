@@ -4,9 +4,11 @@ end
 source 'https://rubygems.org'
 
 if next?
-  gem 'rails', '7.1.6'
+  gem 'rails', '7.2.3'
+  gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: 'd8a6ada822'
 else
   gem 'rails', '7.1.6'
+  gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: '5e39cae16a'
 end
 
 gem 'aws-sdk-kinesis', '~> 1'
@@ -21,7 +23,6 @@ gem 'faraday'
 gem 'faraday_middleware'
 gem 'honeybadger', '~> 4.5.0'
 gem 'json-schema', '~> 2.8'
-gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: '5e39cae16a'
 gem 'logstasher', '~> 0.9.0'
 gem 'newrelic_rpm'
 gem 'pg'
