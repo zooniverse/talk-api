@@ -113,38 +113,19 @@ spec:
       targetPort: 80
   type: NodePort
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
 metadata:
   name: talk-staging-canary-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/canary: "true"
-    nginx.ingress.kubernetes.io/canary-by-header: "Canary-Testing-Opt-In"
 spec:
+  entryPoints:
+    - websecure
   tls:
-  - hosts:
-    - talk-staging.zooniverse.org
-    - talk-staging.azure.zooniverse.org
     secretName: talk-staging-tls
-  rules:
-  - host: talk-staging.zooniverse.org
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: talk-staging-canary
-            port:
-              number: 80
-  - host: talk-staging.azure.zooniverse.org
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: talk-staging-canary
-            port:
-              number: 80
+  routes:
+      # Header must be set to `Canary-Testing-Opt-In: always` or `Canary-Testing-Opt-In: true`
+    - match: (Host(`talk-staging.zooniverse.org`) || Host(`talk-staging.azure.zooniverse.org`)) && HeadersRegexp(`Canary-Testing-Opt-In`, `always|true`)
+      kind: Rule
+      services:
+        - name: talk-staging-canary
+          port: 80

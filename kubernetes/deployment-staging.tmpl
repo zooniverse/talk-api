@@ -340,39 +340,18 @@ spec:
     - talk-staging.zooniverse.org
     - talk-staging.azure.zooniverse.org
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
 metadata:
   name: talk-staging-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-    nginx.ingress.kubernetes.io/set-real-ip-from: "10.0.0.0/8"
 spec:
+  entryPoints:
+    - websecure
   tls:
-  - hosts:
-    - talk-staging.zooniverse.org
-    - talk-staging.azure.zooniverse.org
     secretName: talk-staging-tls
-  rules:
-  - host: talk-staging.zooniverse.org
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: talk-staging-app
-            port:
-              number: 80
-  - host: talk-staging.azure.zooniverse.org
-    http:
-      paths:
-      - pathType: Prefix
-        path: /
-        backend:
-          service:
-            name: talk-staging-app
-            port:
-              number: 80
+  routes:
+    - match: Host(`talk-staging.zooniverse.org`) || Host(`talk-staging.azure.zooniverse.org`)
+      kind: Rule
+      services:
+        - name: talk-staging-app
+          port: 80
