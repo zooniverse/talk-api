@@ -3,14 +3,8 @@ def next?
 end
 source 'https://rubygems.org'
 
-if next?
-  gem 'rails', '7.2.3'
-  gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: 'd8a6ada822'
-else
-  gem 'rails', '7.1.6'
-  gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: '5e39cae16a'
-end
-
+gem 'rails', '7.2.3'
+gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: 'd8a6ada822'
 gem 'aws-sdk-kinesis', '~> 1'
 gem 'aws-sdk-s3', '~> 1'
 # lock concurrent-ruby to 1.3.4 since 1.3.5 breaks active support
