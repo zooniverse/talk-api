@@ -124,7 +124,7 @@ spec:
     secretName: talk-staging-tls
   routes:
       # Header must be set to `Canary-Testing-Opt-In: always` or `Canary-Testing-Opt-In: true`
-    - match: (Host(`talk-staging.zooniverse.org`) || Host(`talk-staging.azure.zooniverse.org`)) && HeadersRegexp(`Canary-Testing-Opt-In`, `always|true`)
+    - match: (Host(`talk-staging.zooniverse.org`) || Host(`talk-staging.azure.zooniverse.org`)) && HeaderRegexp(`Canary-Testing-Opt-In`, `always|true`)
       kind: Rule
       services:
         - name: talk-staging-canary
