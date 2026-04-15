@@ -1,4 +1,4 @@
-FROM ruby:3.1-slim-bookworm
+FROM ruby:3.2-slim-bookworm
 
 WORKDIR /rails_app
 
