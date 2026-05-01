@@ -49,11 +49,19 @@ spec:
           image: ghcr.io/zooniverse/talk-api:__IMAGE_TAG__
           resources:
             requests:
-              memory: "200Mi"
+              memory: "500Mi"
               cpu: "500m"
             limits:
-              memory: "750Mi"
+              memory: "1000Mi"
               cpu: "1000m"
+          startupProbe:
+            httpGet:
+              path: /
+              port: 81
+              httpHeaders:
+                 - name: X-Forwarded-Proto
+                   value: https
+            failureThreshold: 6
           livenessProbe:
             httpGet:
               path: /
@@ -92,7 +100,8 @@ spec:
               exec:
                 command: ["/bin/bash", "-c", "cp -R /rails_app/public/* /static-assets"]
         - name: talk-production-nginx
-          image: ghcr.io/zooniverse/docker-nginx
+          image: ghcr.io/zooniverse/docker-nginx:latest
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "30Mi"
