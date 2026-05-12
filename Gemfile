@@ -25,7 +25,7 @@ gem 'pundit', '~> 1.1.0'
 gem 'rack-cors', '~> 1.0.5'
 gem 'redis', '~> 3.3.0'
 gem 'restpack_serializer', git: 'https://github.com/zooniverse/restpack_serializer.git', branch: 'talk-api-version', ref: 'ef87bcf1fafe'
-gem 'sidekiq', '< 6'
+gem 'sidekiq', '< 9'
 gem 'sidekiq-congestion', '~> 0.1.0'
 gem 'sidekiq-cron'
 gem 'spring', group: :development
