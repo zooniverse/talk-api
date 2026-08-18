@@ -7,34 +7,35 @@ class Rack::Attack
     url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0')
   )
 
-  def self.throttled_user_id(req)
+  def self.current_user_id(req)
     auth = req.get_header('HTTP_AUTHORIZATION')
     return nil unless auth&.start_with?('Bearer ')
+
     token = auth.split(' ').last
-    user_id = JWT.decode(token, nil, false)&.first&.dig('data', 'id')
+    JWT.decode(token, nil, false)&.first&.dig('data', 'id')
+  end
 
-    # Skip the throttle if unauthenticated OR if the user is an admin
-    return nil if user_id.nil? || Role.exists?(user_id: user_id, name: 'admin')
-
-    user_id
+  def self.admin?(req)
+    user_id = current_user_id(req)
+    user_id.present? && Role.exists?(user_id: user_id, name: 'admin')
   end
 
   # New conversations
   throttle('conversations/create/user', limit: 10, period: 1.hour) do |req|
-    throttled_user_id(req) if req.path == '/conversations' && req.post?
+    current_user_id(req) if req.path == '/conversations' && req.post? && !admin?(req)
   end
 
   throttle('conversations/create/ip', limit: 10, period: 1.hour) do |req|
-    throttled_user_id(req) if req.path == '/conversations' && req.post?
+    req.ip if req.path == '/conversations' && req.post? && !admin?(req)
   end
 
   # Replies to existing conversations
   throttle('messages/create/user', limit: 20, period: 1.hour) do |req|
-    throttled_user_id(req) if req.path == '/messages' && req.post?
+    current_user_id(req) if req.path == '/messages' && req.post? && !admin?(req)
   end
 
   throttle('messages/create/ip', limit: 20, period: 1.hour) do |req|
-    throttled_user_id(req) if req.path == '/messages' && req.post?
+    req.ip if req.path == '/messages' && req.post? && !admin?(req)
   end
 
   # User enumeration
@@ -70,7 +71,7 @@ class Rack::Attack
           throttle: throttle_name,
           ip: request.ip,
           path: request.path,
-          user_id: throttled_user_id(request),
+          user_id: current_user_id(request),
           method: request.request_method,
           period: match_data[:period],
           limit: match_data[:limit],
