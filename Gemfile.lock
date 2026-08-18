@@ -213,6 +213,8 @@ GEM
     jmespath (1.6.2)
     json-schema (2.8.1)
       addressable (>= 2.4)
+    jwt (3.2.0)
+      base64
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -292,6 +294,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (2.2.23)
+    rack-attack (6.8.0)
+      rack (>= 1.0, < 4)
     rack-cors (1.0.6)
       rack (>= 1.6.0)
     rack-protection (3.2.0)
@@ -343,7 +347,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis (3.3.5)
+    redis (4.1.4)
     reline (0.6.3)
       io-console (~> 0.5)
     request_store (1.7.0)
@@ -444,6 +448,7 @@ DEPENDENCIES
   honeybadger (~> 4.5.0)
   json-schema (~> 2.8)
   json-schema_builder!
+  jwt
   logstasher
   mock_redis
   newrelic_rpm
@@ -451,9 +456,10 @@ DEPENDENCIES
   pry
   puma
   pundit (~> 1.1.0)
+  rack-attack
   rack-cors (~> 1.0.5)
   rails (= 7.2.3)
-  redis (~> 3.3.0)
+  redis (~> 4)
   restpack_serializer!
   rspec-its
   rspec-rails
