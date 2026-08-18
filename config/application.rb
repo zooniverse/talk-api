@@ -83,6 +83,7 @@ module Talk
       'app/workers'
     ].collect{ |path| Rails.root.join path }
 
+    config.middleware.use Rack::Attack
 
     config.middleware.insert_before 0, Rack::Cors do
       allow do
