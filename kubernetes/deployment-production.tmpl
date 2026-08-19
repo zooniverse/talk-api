@@ -100,6 +100,9 @@ spec:
           volumeMounts:
             - name: static-assets
               mountPath: "/static-assets"
+            - name: jwt-production
+              mountPath: "/rails_app/config/keys"
+              readOnly: true
           lifecycle:
             postStart:
               exec:
@@ -151,6 +154,9 @@ spec:
         - name: talk-nginx-config
           configMap:
             name: talk-nginx-conf-production
+        - name: jwt-production
+          secret:
+            secretName: talk-doorkeeper-jwt-production
 ---
 apiVersion: v1
 kind: ConfigMap
