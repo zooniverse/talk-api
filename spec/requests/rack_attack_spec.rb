@@ -3,12 +3,14 @@
 require 'spec_helper'
 
 RSpec.describe 'Rate limiting', type: :request do
+  let(:signing_key) { OpenSSL::PKey::RSA.generate(2048) }
   def jwt_token(user_id)
-    JWT.encode({ 'data' => { 'id' => user_id } }, nil, 'none')
+    JWT.encode({ 'data' => { 'id' => user_id } }, signing_key, 'RS512')
   end
 
   before(:each) do
     Rack::Attack.cache.store.clear
+    allow(Rack::Attack).to receive(:jwt_signing_public_key).and_return(signing_key.public_key)
   end
 
   let(:user) { create(:user, id: 11223344) }
@@ -150,6 +152,53 @@ RSpec.describe 'Rate limiting', type: :request do
       )
 
       post '/comments', headers: auth_headers
+    end
+  end
+
+  describe 'JWT token verification' do
+    before do
+      allow_any_instance_of(ConversationsController).to receive(:create).and_return(nil)
+    end
+
+    it 'loads the correct key for the current environment' do
+      allow(Rack::Attack).to receive(:jwt_signing_public_key).and_call_original
+      allow(File).to receive(:read).with('/rails_app/config/keys/doorkeeper-jwt-test.pub').and_return(signing_key.public_key)
+
+      expect(Rack::Attack).to receive(:key_file_path).and_return(Rails.root.join('config', 'keys', "doorkeeper-jwt-#{Rails.env}.pub").to_s)
+      Rack::Attack.jwt_signing_public_key
+    end
+
+    it 'throttles based on user ID from a valid signed token' do
+      20.times do |i|
+        post '/conversations', headers: auth_headers.merge('REMOTE_ADDR' => "10.0.0.#{i}")
+      end
+
+      expect(response.status).to eq(429)
+    end
+
+    # Somebody else's key, invalid for our public key
+    let(:spooky_signing_key) { OpenSSL::PKey::RSA.generate(2048) }
+
+    it 'does not use the user ID from a token with an invalid signature' do
+      invalid_token = JWT.encode( { 'data' => { 'id' => user.id } }, spooky_signing_key, 'RS512')
+
+      # Rotate IP to test only user throttling
+      20.times do |i|
+        post '/conversations', headers: { 'Authorization' => "Bearer #{invalid_token}", 'REMOTE_ADDR' => "10.0.0.#{i}" }
+      end
+
+      # Req still allowed, so user ID from invalid token wasn't used for throttling
+      expect(response.status).to eq(204)
+    end
+
+    it 'rejects unsigned tokens' do
+      unsigned_token = JWT.encode( { 'data' => { 'id' => user.id } }, nil, 'none')
+
+      20.times do |i|
+        post '/conversations', headers: { 'Authorization' => "Bearer #{unsigned_token}", 'REMOTE_ADDR' => "10.0.0.#{i}" }
+      end
+
+      expect(response.status).to eq(204)
     end
   end
 end
