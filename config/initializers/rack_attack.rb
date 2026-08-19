@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'rack/attack'
 
 class Rack::Attack
@@ -12,7 +11,23 @@ class Rack::Attack
     return nil unless auth&.start_with?('Bearer ')
 
     token = auth.split(' ').last
-    JWT.decode(token, nil, false)&.first&.dig('data', 'id')
+    begin
+      decode_token(token)&.dig('data', 'id')
+    rescue JWT::DecodeError
+      nil
+    end
+  end
+
+  def self.decode_token(token)
+    JWT.decode(token, jwt_signing_public_key, true, algorithm: 'RS512').first
+  end
+
+  def self.key_file_path
+    Rails.root.join('config', 'keys', "doorkeeper-jwt-#{Rails.env.to_s}.pub").to_s
+  end
+
+  def self.jwt_signing_public_key
+    @jwt_signing_public_key ||= OpenSSL::PKey::RSA.new(File.read(key_file_path))
   end
 
   def self.admin?(req)
