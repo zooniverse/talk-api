@@ -162,9 +162,10 @@ RSpec.describe 'Rate limiting', type: :request do
 
     it 'loads the correct key for the current environment' do
       allow(Rack::Attack).to receive(:jwt_signing_public_key).and_call_original
-      allow(File).to receive(:read).with('/rails_app/config/keys/doorkeeper-jwt-test.pub').and_return(signing_key.public_key)
+      key_file_path = Rails.root.join('config', 'keys', "doorkeeper-jwt-test.pub").to_s
+      allow(File).to receive(:read).with(key_file_path).and_return(signing_key.public_key)
 
-      expect(Rack::Attack).to receive(:key_file_path).and_return(Rails.root.join('config', 'keys', "doorkeeper-jwt-#{Rails.env}.pub").to_s)
+      expect(Rack::Attack).to receive(:key_file_path).and_return(key_file_path)
       Rack::Attack.jwt_signing_public_key
     end
 
