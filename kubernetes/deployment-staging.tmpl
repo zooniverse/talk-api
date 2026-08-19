@@ -96,6 +96,9 @@ spec:
           volumeMounts:
             - name: static-assets
               mountPath: "/static-assets"
+            - name: jwt-staging
+              mountPath: "/rails_app/config/keys"
+              readOnly: true
           lifecycle:
             postStart:
               exec:
@@ -146,6 +149,9 @@ spec:
         - name: talk-nginx-config
           configMap:
             name: talk-nginx-conf-staging
+        - name: jwt-staging
+          secret:
+            secretName: talk-doorkeeper-jwt-staging
 ---
 apiVersion: v1
 kind: ConfigMap

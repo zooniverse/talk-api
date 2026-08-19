@@ -5,6 +5,7 @@
 /tmp
 /config/*.yml
 !/config/schedule.yml
+/config/keys/*
 /.rvmrc
 /coverage
 **.orig
