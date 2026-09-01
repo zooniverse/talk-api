@@ -2,10 +2,6 @@ require 'spec_helper'
 
 RSpec.describe CommentExportWorker, type: :worker do
   describe 'a data export worker' do
-    before(:each) do
-      allow_any_instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter).to receive(:query)
-    end
-
     it_behaves_like 'a data export worker'
   end
 
