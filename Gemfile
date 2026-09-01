@@ -3,7 +3,7 @@ def next?
 end
 source 'https://rubygems.org'
 
-gem 'rails', '7.2.3'
+gem 'rails', '7.2.3.2'
 gem 'json-schema_builder', git: 'https://github.com/zooniverse/json-schema_builder.git', branch: 'talk-version', ref: 'd8a6ada822'
 gem 'aws-sdk-kinesis', '~> 1'
 gem 'aws-sdk-s3', '~> 1'
