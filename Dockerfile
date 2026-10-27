@@ -11,8 +11,10 @@ RUN --mount=type=cache,id=talk-apt-cache,target=/var/cache/apt --mount=type=cach
     git \
     libpq-dev \
     tmpreaper \
-    libyaml-dev
-# libyaml for compatible psych native extension one on rails 7.1
+    # libyaml for compatible psych native extension one on rails 7.1
+    libyaml-dev \
+    ca-certificates \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ARG RAILS_ENV=production
 
