@@ -54,14 +54,14 @@ RSpec.describe MessagesController, type: :controller do
     describe '#show' do
       context 'getting multiple messages' do
         context 'when the user is not a participant to at least one of the messages' do
-          let(:other_user){ create :user }
-          let(:other_conversation){ create :conversation_with_messages, user: other_user }
+          let(:other_user) { create :user }
+          let(:other_conversation) { create :conversation_with_messages, user: other_user }
 
           it 'returns 401 if the user is not a participant to at least one of the messages' do
             get :show, params: { id: [record.id, other_conversation.messages.first.id] }
             expect(response.status).to eq 401
           end
-  
+
           it 'returns 401 if the unauthorized message is the first in the list' do
             get :show, params: { id: [other_conversation.messages.first.id, record.id] }
             expect(response.status).to eq 401

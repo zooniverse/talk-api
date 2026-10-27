@@ -21,6 +21,7 @@ class MessagePolicy < ApplicationPolicy
 
   def participant?
     return false unless logged_in?
+
     Array.wrap(record).all? do |r|
       if r.persisted?
         r.users.exists?(id: user.id)
