@@ -21,15 +21,16 @@ class MessagePolicy < ApplicationPolicy
 
   def participant?
     return false unless logged_in?
-    Array.wrap(record).each do |r|
+
+    Array.wrap(record).all? do |r|
       if r.persisted?
-        return r.users.exists?(id: user.id)
+        r.users.exists?(id: user.id)
       elsif r.conversation
-        return r.conversation.users.exists?(id: user.id)
+        r.conversation.users.exists?(id: user.id)
+      else
+        false
       end
-      return false
     end
-    true
   end
 
   class Scope < Scope
